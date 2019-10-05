@@ -31,5 +31,6 @@
   //echo fread($myfile, filesize("chp_incidents.xml"));
   //fclose($myfile);
   
-  echo "Script Complete.\n\n";
+  echo "Finished. Parsing CHP XML.\n";
+  shell_exec('php chp_parse.php');
 ?>
