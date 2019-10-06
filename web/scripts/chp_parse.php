@@ -75,7 +75,7 @@
       if (strstr($line, '</Dispatch>')) {
         $isChico = false;
         break;
-      } else {echo "Continue\n";}
+      }
     }
     echo "~~~ DEBUG ~~~\n";
     foreach($newIncidents as $key => $value) {
@@ -102,15 +102,18 @@
           
         echo 'LAT('.$latitude.')'."\n";
         echo 'LONG('.$longitude.')'."\n";
-        $qGrid = "SELECT COUNT(*) FROM locations WHERE longitude = :long AND latitude = :lat";
+        $qGrid = "SELECT COUNT(*) AS count,idLocation AS id FROM locations WHERE longitude = :long AND latitude = :lat";
         $gCheck = $db->prepare($qGrid);
         $gCheck->bindParam(':lat', $latitude);
         $gCheck->bindParam(':long', $longitude);
         $gCheck->execute();
         
-        $gridExists = $gCheck->fetchColumn();
-        if ($gridExists < 1) {
-          echo "idLocation for (".$longitate.":".$latitude.") not found.\n";
+        $fetcher = $gCheck->fetch(PDO::FETCH_ASSOC);
+        $locExist = $fetcher['count'];
+        $idLocn = $fetcher['id'];
+        echo "DEBUG ~ locExist:".$locExist." idLocn:".$idLocn."\n";
+        if ($locExist < 1) {
+          echo "idLocation for (".$longitude.":".$latitude.") not found.\n";
           echo "Generating a new idLocation for coordinates.\n";
           
           // DEBUG - Must be changed later to a stored procedure that
@@ -124,27 +127,31 @@
           if ($locInsert->execute()) {
             $idLocn = $locInsert->fetchColumn();
             echo "Successfully added idLocation #".$idLocn."\n";
-            echo "Adding CHP Incident #".$value[0]." to Database...\n";
-            
-            $qInc = "SELECT AddCHPInc(:loc, :deets, :titlename, :oride, :num)";
-            $newInc = $db->prepare($qInc);
-            $newInc->bindParam(':loc', $idLocn);
-            $newInc->bindValue(':deets', 'Reported by CA Highway Patrol');
-            $newInc->bindParam(':titlename', $value[1]);
-            $newInc->bindValue(':oride', 1);
-            $newInc->bindParam(':num', $value[0]);
-            $newInc->execute();
-
-            echo "Created SceneAlert Incident #".$newInc->fetchColumn().".\n";
-            
           } else {
             echo "Failed to add coordinates into MySQL.\n";
             echo "The incident failed to be created due to errors.\n";
-          }          
+          }
         } else {
           echo "Grid coordinates exist. Using existing SQL data.\n";
         }
-        
+        if ($idLocn) {
+          echo "Adding CHP Incident to SceneAlert Database...\n";
+          echo "DEBUG ~ idLocn:".$idLocn." 0:".$value[0]." 1:".$value[1]."\n";
+          $qInc = "SELECT InsertCHP(:loc, :deets, :titlename, :oride, :num)";
+          $newInc = $db->prepare($qInc);
+          $newInc->bindParam(':loc', $idLocn);
+          $newInc->bindValue(':deets', 'Reported by CA Highway Patrol');
+          $newInc->bindParam(':titlename', $value[1]);
+          $newInc->bindValue(':oride', 1);
+          $newInc->bindParam(':num', $value[0]);
+          if($newInc->execute()) {
+            echo "Created SceneAlert Incident #".$newInc->fetchColumn().".\n";
+          } else {
+            echo "Failed to create SceneAlert Incident due to a SQL Error.\n";
+          }
+        } else {
+          echo "Failed to create SceneAlert Incident. No idLocation found.\n";
+        }
       } else {
         echo "CHP Incident ".$value[0]." already exists in the MySQL Database!\n";
       }
