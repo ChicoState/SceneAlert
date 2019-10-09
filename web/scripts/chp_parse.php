@@ -86,7 +86,14 @@
       $qChk = $db->prepare($qCheck);
       $qChk->bindParam(':log', $value[0]);
       $qChk->execute();
-      
+
+      // THIS IS A BANDAID!!! My computer was dying
+      $aCheck = "UPDATE incidents SET active = 1 WHERE chp = :log";
+      $aChk = $db->prepare($aCheck);
+      $aChk->bindparam(':log', $value[0]);
+      $aChk->execute();
+      /////////////////////////////
+
       $chpLog = $qChk->fetchColumn();
       if ($chpLog < 1) {
         echo "New CHP Incident Detected (CHP ".$value[0].")\n";
@@ -168,12 +175,16 @@
     echo "Found CHP Incidents in the MySQL Database.\n";
     while($row = $oldInc->fetch(PDO::FETCH_ASSOC)) {
       $in = $row['chp'];
-      if(in_array($in, $value)) {
-        echo "INC #".$in." found. Event is still active.\n";
+      $stale = true;
+      for($n = 0; $n < sizeof($newIncidents); $n++) {
+        if(in_array($in, $newIncidents[$n])) {
+          echo "INC #".$in." found. Event is still active.\n";
+          $stale = false;
+        }
       }
-      else {
-        echo "INC #".$in." not found. Event is stale. Removing...\n";
-        $q = "UPDATE incidents SET active = 0 WHERE chp = :iNum";
+        if($stale) {
+        echo "INC #".$in." stale. Removing!\n";
+        /*$q = "UPDATE incidents SET active = 0 WHERE chp = :iNum";
         $closer = $db->prepare($q);
         $closer->bindParam(':iNum', $in);
         $closer->execute();
@@ -181,8 +192,9 @@
           echo "INC #".$in." closed successfully.\n";
         } else {
           echo "Failed to close INC #".$in."!\n";
-        }
-      } 
+        }*/
+        }  
+      
     } 
   }
 ?>
