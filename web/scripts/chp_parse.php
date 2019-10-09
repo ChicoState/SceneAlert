@@ -161,4 +161,33 @@
   else {
     echo "No incidents currently in the Chico Dispatch area.\nNothing to do.\nTerminating.\n\n";
   }
+  echo "Cleaning up old CHP Incidents...\n";
+  $q = "SELECT chp FROM incidents WHERE active = 1 AND chp IS NOT NULL";
+  $oldInc = $db->prepare($q);
+  if($oldInc->execute()) {
+    echo "Found CHP Incidents in the MySQL Database.\n";
+    while($row = $oldInc->fetch(PDO::FETCH_ASSOC)) {
+      $in = $row['chp'];
+      if(in_array($in, $value)) {
+        echo "INC #".$in." found. Event is still active.\n";
+      }
+      else {
+        echo "INC #".$in." not found. Event is stale. Removing...\n";
+        $q = "UPDATE incidents SET active = 0 WHERE chp = :iNum";
+        $closer = $db->prepare($q);
+        $closer->bindParam(':iNum', $in);
+        $closer->execute();
+        if($closer) {
+          echo "INC #".$in." closed successfully.\n";
+        } else {
+          echo "Failed to close INC #".$in."!\n";
+        }
+      } 
+    } 
+  }
 ?>
+
+
+
+
+
