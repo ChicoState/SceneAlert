@@ -8,6 +8,7 @@ import 'dart:convert';
 class CrimeMap extends StatefulWidget {
   @override
   State<CrimeMap> createState() => CrimeMapState();
+ 
 }
 
 class CrimeMapState extends State<CrimeMap> {
@@ -27,21 +28,19 @@ class CrimeMapState extends State<CrimeMap> {
   // Placeholder for dynamic icons
   BitmapDescriptor markerIcon;
 
+
+
+
+
   // Beginning of the rendering code
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Scene Alert'),
-      ),
-      body: GoogleMap(
+    return new  GoogleMap(
         mapType: MapType.normal,  // Flat image
         initialCameraPosition: chico,
         markers: myMarkers,
         onMapCreated: mapCreated, // Calls when map is finished creating
-      ),
-    );
+      );
   }
 
   /*
