@@ -4,9 +4,9 @@ import 'package:scene_alert/map.dart';
 
 void main() => runApp(MyApp());
 
- CrimeMap _map = CrimeMap();
 class MyApp extends StatefulWidget {
   @override
+     
   State<StatefulWidget> createState() {
     return MyAppState();
   }
@@ -16,7 +16,7 @@ class MyApp extends StatefulWidget {
 class MyAppState extends State<MyApp> {
   int _selectedPage = 0;
   final _pageOptions = [
-   _map,
+    CrimeMap(),
     Text('adsf 1'),
     Text('Work 2'),
 
@@ -25,7 +25,6 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-   
     return MaterialApp(
       title: 'Scene Alert',
       home: Scaffold(
@@ -33,7 +32,14 @@ class MyAppState extends State<MyApp> {
         centerTitle: true,
         title: Text('Scene Alert'),
       ),
-      body: _pageOptions[_selectedPage],
+      body: 
+      
+      IndexedStack(
+    index: _selectedPage,
+    children: _pageOptions,
+  ),
+      
+      //  _pageOptions[_selectedPage],
       bottomNavigationBar: BottomNavigationBar( 
         currentIndex: _selectedPage,
         onTap: (int index){

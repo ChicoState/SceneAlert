@@ -39,15 +39,15 @@ class CrimeMapState extends State<CrimeMap> {
   @override
   Widget build(BuildContext context) {
 
-       if (_map == null){
+      //  if (_map == null){
        return _map =  GoogleMap(
         mapType: MapType.normal,  // Flat image
         initialCameraPosition: chico,
         markers: myMarkers,
         onMapCreated: mapCreated, // Calls when map is finished creating
       );
-      }
-      return _map;
+      // }
+      // return _map;
    
   }
   /*
