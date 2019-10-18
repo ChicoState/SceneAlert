@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
+  GoogleMap _map;
+
 class CrimeMap extends StatefulWidget {
   @override
   State<CrimeMap> createState() => CrimeMapState();
@@ -30,19 +32,24 @@ class CrimeMapState extends State<CrimeMap> {
 
 
 
+ 
 
 
   // Beginning of the rendering code
   @override
   Widget build(BuildContext context) {
-    return new  GoogleMap(
+
+       if (_map == null){
+       return _map =  GoogleMap(
         mapType: MapType.normal,  // Flat image
         initialCameraPosition: chico,
         markers: myMarkers,
         onMapCreated: mapCreated, // Calls when map is finished creating
       );
+      }
+      return _map;
+   
   }
-
   /*
     Pulls CHP data from the server
     Transforms response to JSON
