@@ -14,3 +14,5 @@ Application for reporting crime, fires, and other events that affects you and yo
 * [Conor Moening](https://github.com/mrteddi)
 
 
+### Code Smells (10-21-2019) Task
+* [Type Embedded](code-smells/type-embed.md)
