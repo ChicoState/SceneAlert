@@ -13,6 +13,4 @@ Application for reporting crime, fires, and other events that affects you and yo
 * [Justin Miller](https://github.com/DoctorNeyNey)
 * [Conor Moening](https://github.com/mrteddi)
 
-### 10-21-2019 "Code Smells"
-*[Type Embedded](code-smells/type-embed.md)
-*[Temporary Fields](code-smells/temp-fields.md)
+
