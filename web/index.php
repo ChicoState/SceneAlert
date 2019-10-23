@@ -29,6 +29,11 @@
       // Add to marker tracker
       blips.push([position[0], position[1]]);
       */
+      var mapOptions = {
+        center: centre, zoom: 10,
+        streetViewControl: false,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
     }
     
     function IsLocationMarked(posn) {
@@ -43,7 +48,9 @@
     </script>
     <script
       async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDoJlDW6nV05ZxSPXeHIi5KYTJEonBcdGs&callback=initMap"
+      src="https://maps.googleapis.com/maps/api/js?key=<?php
+        include('api/maps_dynamic.php');
+      ?>&callback=initMap"
       type="text/javascript">
     </script>
   </head>
