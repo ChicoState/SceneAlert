@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:scene_alert/map.dart';
 
 void main() => runApp(MyApp());
@@ -19,8 +18,6 @@ class MyAppState extends State<MyApp> {
     CrimeMap(),
     Text('adsf 1'),
     Text('Work 2'),
-
-    
   ];
 
   @override
@@ -29,43 +26,41 @@ class MyAppState extends State<MyApp> {
       title: 'Scene Alert',
       home: Scaffold(
         appBar: AppBar(
-        centerTitle: true,
-        title: Text('Scene Alert'),
-      ),
-      body: 
+          centerTitle: true,
+          title: Text('Scene Alert', style: TextStyle( color: Color.fromARGB( 255, 49, 182, 235 ) )),
+          backgroundColor: Color.fromARGB( 255, 255, 255, 255 ),
+        ),
+        body: 
       
-      IndexedStack(
-    index: _selectedPage,
-    children: _pageOptions,
-  ),
+        IndexedStack(
+          index: _selectedPage,
+          children: _pageOptions,
+        ),
       
-      //  _pageOptions[_selectedPage],
-      bottomNavigationBar: BottomNavigationBar( 
-        currentIndex: _selectedPage,
-        onTap: (int index){
-          setState(() {
-            _selectedPage = index;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text('Home')
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.work),
-            title: Text('Work')
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.landscape),
-            title: Text('Landscape')
-          )
+        //  _pageOptions[_selectedPage],
+        bottomNavigationBar: BottomNavigationBar( 
+          currentIndex: _selectedPage,
+          onTap: (int index){
+            setState(() {
+              _selectedPage = index;
+            });
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              title: Text('Home')
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.work),
+              title: Text('Work')
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.landscape),
+              title: Text('Landscape')
+            )
 
-        ],
-      
-      
-      ),
-
+          ],
+        ),
       )  
     );
   }

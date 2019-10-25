@@ -31,23 +31,19 @@ class CrimeMapState extends State<CrimeMap> {
   BitmapDescriptor markerIcon;
 
 
-
- 
-
-
   // Beginning of the rendering code
   @override
   Widget build(BuildContext context) {
 
-      //  if (_map == null){
-       return _map =  GoogleMap(
-        mapType: MapType.normal,  // Flat image
-        initialCameraPosition: chico,
-        markers: myMarkers,
-        onMapCreated: mapCreated, // Calls when map is finished creating
-      );
-      // }
-      // return _map;
+    //  if (_map == null){
+      return _map =  GoogleMap(
+      mapType: MapType.normal,  // Flat image
+      initialCameraPosition: chico,
+      markers: myMarkers,
+      onMapCreated: mapCreated, // Calls when map is finished creating
+    );
+    // }
+    // return _map;
    
   }
   /*
