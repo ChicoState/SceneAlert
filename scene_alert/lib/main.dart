@@ -1,68 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:scene_alert/map.dart';
+import 'package:scene_alert/landing.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
   @override
-     
-  State<StatefulWidget> createState() {
-    return MyAppState();
-  }
- 
+  State<MyApp> createState() => MyAppState();
 }
 
 class MyAppState extends State<MyApp> {
-  int _selectedPage = 0;
-  final _pageOptions = [
-    CrimeMap(),
-    Text('adsf 1'),
-    Text('Work 2'),
-  ];
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Scene Alert',
-      home: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('Scene Alert', style: TextStyle( color: Color.fromARGB( 255, 49, 182, 235 ) )),
-          backgroundColor: Color.fromARGB( 255, 255, 255, 255 ),
-        ),
-        body: 
-      
-        IndexedStack(
-          index: _selectedPage,
-          children: _pageOptions,
-        ),
-      
-        //  _pageOptions[_selectedPage],
-        bottomNavigationBar: BottomNavigationBar( 
-          currentIndex: _selectedPage,
-          onTap: (int index){
-            setState(() {
-              _selectedPage = index;
-            });
-          },
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              title: Text('Home')
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.work),
-              title: Text('Work')
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.landscape),
-              title: Text('Landscape')
-            )
+    return LandingPage();
+  }
 
+  /*
+    Login page will go here. 
+    Having trouble getting textfields to render,
+    waiting on backend database atm anyway
+  */
+
+  /*
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body:
+        Column(
+          children: <Widget>[
+            Text("Testing"),
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Email Address'
+              ),
+            ),
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Password'
+              ),
+            )
           ],
         ),
-      )  
     );
   }
+  */
 }
-

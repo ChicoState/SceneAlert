@@ -5,12 +5,11 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
-  GoogleMap _map;
+GoogleMap _map;
 
 class CrimeMap extends StatefulWidget {
   @override
   State<CrimeMap> createState() => CrimeMapState();
- 
 }
 
 class CrimeMapState extends State<CrimeMap> {
