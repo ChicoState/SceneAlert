@@ -1,3 +1,5 @@
 gitscript.sh
 scene_alert/key.sh
 web/scripts/database.php
+web/api/maps_dynamic.php
+web/api/maps_static.php
