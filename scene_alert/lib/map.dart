@@ -20,7 +20,7 @@ class CrimeMapState extends State<CrimeMap> {
   */
   static final CameraPosition chico = CameraPosition(
     target: LatLng( 39.7250751,-121.8367999 ),
-    zoom: 9,
+    zoom: 11,
   );
 
   // Store markers in a set to be later passed to GoogleMap()
@@ -29,22 +29,21 @@ class CrimeMapState extends State<CrimeMap> {
   // Placeholder for dynamic icons
   BitmapDescriptor markerIcon;
 
-
   // Beginning of the rendering code
   @override
   Widget build(BuildContext context) {
 
-    //  if (_map == null){
-      return _map =  GoogleMap(
-      mapType: MapType.normal,  // Flat image
-      initialCameraPosition: chico,
-      markers: myMarkers,
-      onMapCreated: mapCreated, // Calls when map is finished creating
-    );
-    // }
-    // return _map;
-   
+    tmpMarkers();
+
+    return _map = 
+      GoogleMap(
+        mapType: MapType.normal,  // Flat image
+        initialCameraPosition: chico,
+        markers: myMarkers,
+        onMapCreated: mapCreated, // Calls when map is finished creating
+      );
   }
+
   /*
     Pulls CHP data from the server
     Transforms response to JSON
@@ -85,12 +84,48 @@ class CrimeMapState extends State<CrimeMap> {
     }
   }
 
+  Future tmpMarkers() async {
+
+    var tmpLocations = [
+      [ 39.726421, -121.842728 ],
+      [ 39.737559, -121.863048 ],
+      [ 39.756677, -121.838937 ],
+      [ 39.761417, -121.878801 ],
+    ];
+    for( var i = 0; i < tmpLocations.length; i++ ) {
+      myMarkers.add(
+        Marker(
+          markerId: MarkerId( i.toString() ),
+          position: LatLng( tmpLocations[i][0], tmpLocations[i][1] ),
+          infoWindow: InfoWindow(
+            title: "Test " + i.toString(),
+            snippet: "Description " + i.toString(),
+          ),
+          icon: markerIcon,
+          onTap: () {
+            handleTap( "Test " + i.toString() );
+          },
+        ),
+      );
+    }
+  }
+
   /*
     TODO
     See marker onTap()
   */
   void handleTap(String title) {
-    print( title );
+
+    /*
+    Going to use FutureBuilder here to pull more info from the database 
+    for the particular incident that was tapped
+
+    Future Builder will
+      - Make query for specific incident information
+      - Build widget on the side/bottom/whole page
+      - Fill widget with more information
+        - Pictures/videos, deeper description ( follow ups example from CHP ), comments
+    */
   }
 
   /*
@@ -108,7 +143,7 @@ class CrimeMapState extends State<CrimeMap> {
           });
         });
 
-    getCHP();
+    //getCHP();
   }
 
   void mapCreated( controller ) {
