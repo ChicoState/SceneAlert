@@ -31,7 +31,8 @@
   
   
   <body>
-  
+    <!-- If you can see this it worked -->
+    
     <!-- The Map -->
     <div id="gmap"></div>
     
