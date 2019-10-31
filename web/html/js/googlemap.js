@@ -1,5 +1,5 @@
 
-      var marks = []; // Keeps tracks of markers
+      var marks = []; // Keeps tracks of markers {0:idIncident, 1:Object}
       var gMap;
       
       
@@ -8,7 +8,7 @@
        */
       function HasMarker(idIncident) {
         for (var i = 0; i < marks.length; i++) {
-          if (marks[i] == idIncident) {
+          if (marks[i][0] == idIncident) {
             return true; // Marker Exists for idIncident
           }
         }
@@ -22,11 +22,32 @@
        */
       function MarkerExpired(idList) {
         var contains = false;
-        for (var i = 0; i < idList.length; i++) {
-          if (marks.includes(idList[i])) {
-            console.log('Marker ' + idList[i] + ' is still active. Ignoring.');
-          } else {
-            console.log('Marker ' + idList[i] + ' has expired. Removing.');
+        var expired  = [];
+        // Checking the list of existing markers
+        for (var i = 0; i < marks.length; i++) {
+          // Against the list of active incidents
+          var idExists = false;
+          for (var j = 0; j < idList.length; j++) {
+            if (marks[i][0] == idList[j]) {
+              idExists = true;
+              j = idList.length; // End Loop
+            }
+          }
+          if (idExists) { console.log('Marker '+marks[i][0]+' still active'); }
+          else {
+            console.log('Removed Marker '+marks[i][0]+' (expired)');
+            marks[i][1].setMap(null); // Remove Marker
+            expired.push(marks[i][0]); // Add to array for deletion
+          }
+        }
+        
+        // Remove all expired entries and remove from 'marks'
+        for (var i = 0; i < expired.length; i++) {
+          for (var j = 0; j < marks.length; j++) {
+            if (marks[j][0] == expired[i]) {
+              marks.splice(j, 1); // Remove from Markers Array
+              j = marks.length; // Safe Break the Loop
+            }
           }
         }
       }
@@ -37,8 +58,9 @@
        * param Result {id, title, details, created, type, upvote, downvote}
        */
       function CreateMarker(latt, lngt, result) {
-        if (!HasMarker(latt, lngt)) {
-          console.log('Creating Marker ['+result[0])+']';
+        if (!HasMarker(result[0])) {
+          
+          console.log('Creating Marker ['+result[0]+']');
           var latLong = new google.maps.LatLng(latt, lngt);
           var marker  = new google.maps.Marker({
             position: latLong,
@@ -48,8 +70,7 @@
             size: new google.maps.Size(26, 32),
             visible: true
           });
-        
-          marks.push(result[0]); // Add to marker tracker by idIncident
+          marks.push([result[0], marker]); // Add to marker tracker by idIncident
         
         } else {
           console.log('Marker ['+result[0]+'] exists');
