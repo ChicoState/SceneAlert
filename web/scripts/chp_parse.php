@@ -1,4 +1,5 @@
-<?php
+  
+  <?php
 
   require_once('database.php');
 
@@ -118,9 +119,10 @@
         $fetcher = $gCheck->fetch(PDO::FETCH_ASSOC);
         $locExist = $fetcher['count'];
         $idLocn = $fetcher['id'];
-        echo "DEBUG ~ locExist:".$locExist." idLocn:".$idLocn."\n";
+        echo "// DEBUG -> locExist:".$locExist." idLocn:".$idLocn."\n";
         if ($locExist < 1) {
           echo "idLocation for (".$longitude.":".$latitude.") not found.\n";
+          echo "// DEBUG -> (".$value[2].")\n";
           echo "Generating a new idLocation for coordinates.\n";
           
           // DEBUG - Must be changed later to a stored procedure that
@@ -182,9 +184,9 @@
           $stale = false;
         }
       }
-        if($stale) {
+      if($stale) {
         echo "INC #".$in." stale. Removing!\n";
-        /*$q = "UPDATE incidents SET active = 0 WHERE chp = :iNum";
+        $q = "UPDATE incidents SET active = 0 WHERE chp = :iNum";
         $closer = $db->prepare($q);
         $closer->bindParam(':iNum', $in);
         $closer->execute();
@@ -192,9 +194,8 @@
           echo "INC #".$in." closed successfully.\n";
         } else {
           echo "Failed to close INC #".$in."!\n";
-        }*/
         }  
-      
+      }
     } 
   }
 ?>
