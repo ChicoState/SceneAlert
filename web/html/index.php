@@ -3,11 +3,72 @@
   <head>
     <title>SceneAlert - Real Time Incident Reporting</title>
     <link rel="stylesheet" href="inc/index.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript">
-      var map;
+    
+      var marks = [];
+      var gMap;
+      
+      
+      function HasMarker(latt, lngt) {
+        for (var i = 0, l = marks.length; i < l; i++) {
+          if (marks[i][0] === latt && marks[i][1] === lngt) {
+            return true;
+          }
+        }
+        return false;
+      }
+      
+      /*
+        Result: id, title, details, created, type, upvote, downvote
+      */
+      function CreateMarker(latt, lngt, result) {
+        console.log(
+          'LAT: ' + latt + '(' + typeof(latt) +
+          ')/ LNG: ' + lngt + '('+ typeof(lngt) + ')'
+        );
+        if (!HasMarker(latt, lngt)) {
+          
+          console.log('Adding: ' + result[1]);
+          
+          var latLong = new google.maps.LatLng(latt, lngt);
+          
+          var marker = new google.maps.Marker({
+            position: latLong,
+            map: gMap,
+            title: result[1],
+            visible: true
+          });
+        
+          marks.push([latt, lngt]);
+        
+        } else {
+          console.log('NOT Adding: Marker Exists.');
+        }
+      }
+      
+      
+      function LoadMarkers() {
+        $.ajax({
+          url: "php/incidents.php",
+          success: function(result) {
+            var jsn = JSON.parse(result);
+            for (var i = 0; i < jsn.length; i++) {
+              CreateMarker(Number(jsn[i][2]), Number(jsn[i][1]), [
+                jsn[i][0], jsn[i][3], jsn[i][5], jsn[i][4], jsn[i][6], jsn[i][7], jsn[i][8]
+              ]);
+            }
+          },
+          error: function(result) {
+            console.log("Failed. ["+result.responseText+"]");
+          }
+        });
+      }
+      
+      
       function initMap() {
-        map = new google.maps.Map(document.getElementById('gmap'), {
+        gMap = new google.maps.Map(document.getElementById('gmap'), {
           center: {lat: 37.0902, lng: -95.7129},
           zoom: 5,
           zoomControl: true,
@@ -18,7 +79,9 @@
           rotateControl: true,
           fullscreenControl: false
         });
+        LoadMarkers();
       }
+      
       
     </script>
     <script
@@ -31,7 +94,6 @@
   
   
   <body>
-    <!-- If you can see this it worked -->
     
     <!-- The Map -->
     <div id="gmap"></div>
@@ -64,7 +126,6 @@
     </div>
     
     <script type="text/javascript" src="js/clock.js"></script>
-    
   </body>
   
 </html>
