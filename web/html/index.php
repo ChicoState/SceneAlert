@@ -10,7 +10,6 @@
       var marks = [];
       var gMap;
       
-      
       function HasMarker(latt, lngt) {
         for (var i = 0, l = marks.length; i < l; i++) {
           if (marks[i][0] === latt && marks[i][1] === lngt) {
@@ -38,6 +37,8 @@
             position: latLong,
             map: gMap,
             title: result[1],
+            icon: 'img/pins/' + result[4] + 's.png',
+            size: new google.maps.Size(26, 32),
             visible: true
           });
         
