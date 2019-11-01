@@ -6,12 +6,12 @@
   
   /* GetIncidentTitle()
     * Uses the first part of the CHP incident name to write a proper title
-    * param val The unmodified title of the CHP Incident
+    * param name The unmodified title of the CHP Incident
     * returns String; "CHP Incident" if not found
     */
-  function GetIncidentTitle($val) {
+  function GetIncidentTitle($name) {
     
-    if (!$val) {return "CHP Incident";echo "\n// DEBUG ~ No value supplied.\n";}
+    if (!$name) {return "CHP Incident";}
     
     $titles = array(
       "1125" => "Traffic Hazard",
@@ -39,14 +39,26 @@
       "WW" => "Wrong Way Vehicle"
     );
     
-    echo "\n\n// DEBUG ~ Received ".$val."\n\n";
-    $temp = explode('-', $val)[0];
-    if ($temp) {return ($titles[$temp] ? $titles[$temp] : "CHP Incident");
-      echo ($titles[$temp] ? $titles[$temp] : "\n// DEBUG ~ No Title found\n");
-    }
-    echo "\n\n// DEBUG ~ Final Return.\n\n";
+    $temp = explode('-', $name)[0];
+    if ($temp) {return ($titles[$temp] ? $titles[$temp] : "CHP Incident");}
     return "CHP Incident";
   }
+  
+  /* DetermineService()
+    * Checks if the CHP incident involves fire/police and changes type accordingly
+    * 1=Police 2=Fire 3=EMS 4=All 5=Military
+    */
+  function DetermineService($name) {
+    if (!$name) {return 1;} // If no title given, assume it's a CHP Police issue
+    $agencies = array(
+      "1144" => 4, "1179" => 4, "1180" => 4, "1181" => 4,
+      "1183" => 4, "20001" => 4, "CFIRE" => 2, "FIRE" => 2,
+    );
+    $temp = explode('-', $name)[0];
+    if ($temp) {return ($agencies[$temp] ? $agencies[$temp] : 1);}
+    return 1; // Assume a police issue
+  }
+
 
   echo "Preparing to parse [chp_incidents.xml].\n";
 
@@ -123,7 +135,7 @@
         break;
       }
     }
-    echo "~~~ DEBUG ~~~\n";
+    
     foreach($newIncidents as $key => $value) {
       echo $key.' -> 0:'.$value[0].' 1:'.$value[1].' 2:'.$value[2].' 3:'.$value[3];
       echo "\n";
@@ -164,10 +176,8 @@
         $fetcher = $gCheck->fetch(PDO::FETCH_ASSOC);
         $locExist = $fetcher['count'];
         $idLocn = $fetcher['id'];
-        echo "// DEBUG -> locExist:".$locExist." idLocn:".$idLocn."\n";
         if ($locExist < 1) {
           echo "idLocation for (".$longitude.":".$latitude.") not found.\n";
-          echo "// DEBUG -> (".$value[2].")\n";
           echo "Generating a new idLocation for coordinates.\n";
           
           // DEBUG - Must be changed later to a stored procedure that
@@ -190,16 +200,13 @@
         }
         if ($idLocn) {
           echo "Adding CHP Incident to SceneAlert Database...\n";
-          echo "DEBUG ~ idLocn:".$idLocn." 0:".$value[0]." 1:".$value[1]."\n";
           
-          // Get proper incident title
-          $newTitle = GetIncidentTitle($value[1]);
-          
-          $qInc = "SELECT InsertCHP(:loc, :deets, :titlename, :oride, :num)";
+          $qInc = "SELECT InsertCHP(:loc, :deets, :ctype, :titlename, :oride, :num)";
           $newInc = $db->prepare($qInc);
           $newInc->bindParam(':loc', $idLocn);
           $newInc->bindValue(':deets', 'Reported by CA Highway Patrol');
-          $newInc->bindParam(':titlename', $newTitle);
+          $newInc->bindValue(':ctype',     DetermineService($value[1]));
+          $newInc->bindParam(':titlename', GetIncidentTitle($value[1]));
           $newInc->bindValue(':oride', 1);
           $newInc->bindParam(':num', $value[0]);
           if($newInc->execute()) {
