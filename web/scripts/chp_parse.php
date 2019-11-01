@@ -2,6 +2,51 @@
   <?php
 
   require_once('database.php');
+  
+  
+  /* GetIncidentTitle()
+    * Uses the first part of the CHP incident name to write a proper title
+    * param val The unmodified title of the CHP Incident
+    * returns String; "CHP Incident" if not found
+    */
+  function GetIncidentTitle($val) {
+    
+    if (!$val) {return "CHP Incident";echo "\n// DEBUG ~ No value supplied.\n";}
+    
+    $titles = array(
+      "1125" => "Traffic Hazard",
+      "1125A" => "Animal Hazard",
+      "1144" => "Fatal Incident",
+      "1166" => "Defective Signal",
+      "1179" => "Crash - EMS Enroute",
+      "1180" => "Crash / Major Injury",
+      "1181" => "Crash with Injuries",
+      "1182" => "Crash without Injury",
+      "1183" => "Crash - Unknown Injuries",
+      "1184" => "Officer Controlling Traffic",
+      "20001" => "Hit and Run - Injury",
+      "20002" => "Hit and Run - No Injury",
+      "23114" => "Objects Loose from Vehicle",
+      "ANIMAL" => "Animal Hazard",
+      "CFIRE" => "Vehicle Fire",
+      "CORD" => "County Roads",
+      "CZP" => "Construction",
+      "DOT" => "CalTrans Requested",
+      "ESCORT" => "Traffic Escort",
+      "FIRE" => "Fire Affecting Traffic",
+      "MZP" => "Construction",
+      "TADV" => "Traffic Advisory to Media",
+      "WW" => "Wrong Way Vehicle"
+    );
+    
+    echo "\n\n// DEBUG ~ Received ".$val."\n\n";
+    $temp = explode('-', $val)[0];
+    if ($temp) {return ($titles[$temp] ? $titles[$temp] : "CHP Incident");
+      echo ($titles[$temp] ? $titles[$temp] : "\n// DEBUG ~ No Title found\n");
+    }
+    echo "\n\n// DEBUG ~ Final Return.\n\n";
+    return "CHP Incident";
+  }
 
   echo "Preparing to parse [chp_incidents.xml].\n";
 
@@ -146,11 +191,15 @@
         if ($idLocn) {
           echo "Adding CHP Incident to SceneAlert Database...\n";
           echo "DEBUG ~ idLocn:".$idLocn." 0:".$value[0]." 1:".$value[1]."\n";
+          
+          // Get proper incident title
+          $newTitle = GetIncidentTitle($value[1]);
+          
           $qInc = "SELECT InsertCHP(:loc, :deets, :titlename, :oride, :num)";
           $newInc = $db->prepare($qInc);
           $newInc->bindParam(':loc', $idLocn);
           $newInc->bindValue(':deets', 'Reported by CA Highway Patrol');
-          $newInc->bindParam(':titlename', $value[1]);
+          $newInc->bindParam(':titlename', $newTitle);
           $newInc->bindValue(':oride', 1);
           $newInc->bindParam(':num', $value[0]);
           if($newInc->execute()) {
