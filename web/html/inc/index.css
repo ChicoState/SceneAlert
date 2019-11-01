@@ -14,6 +14,35 @@ body {
   min-width: 768px;
 }
 
+#legend {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  width: 196px;
+  background: rgba(255,255,255,0.45);
+  border-radius: 4px;
+  margin: 0;
+  padding: 2px;
+  border: 2px ridge silver;
+  box-sizing: border-box;
+}
+
+#legshow {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+}
+
+#legend table {
+  width: 100%;
+  text-align: center;
+}
+
+#legend table td {
+  font-size: 14px;
+  color: white;
+  text-shadow: 1px 1px 2px black;
+}
 
 #nav-topbar {
   position: relative;
@@ -22,9 +51,7 @@ body {
   border: 2px ridge #565656;
   border-radius: 16px;
   width: calc(90% - 16px);
-  background-image: url('../img/bkg03.png');
-  background-repeat: repeat;
-  background-size: 25% 25%;
+  background: rgba(40,40,40,0.85);
   min-width: 768px;
   z-index: 8;
 }
