@@ -1,5 +1,6 @@
 
       var marks = []; // Keeps tracks of markers {0:idIncident, 1:Object}
+      var listn = []; // List of listeners {0:idIncident, 1:Object}
       var gMap;
       
       
@@ -33,9 +34,9 @@
               j = idList.length; // End Loop
             }
           }
-          if (idExists) { console.log('Marker '+marks[i][0]+' still active'); }
-          else {
-            console.log('Removed Marker '+marks[i][0]+' (expired)');
+          
+          // If incident doesn't exist (is inactive), remove stuff
+          if (!idExists) {
             marks[i][1].setMap(null); // Remove Marker
             expired.push(marks[i][0]); // Add to array for deletion
           }
@@ -46,6 +47,7 @@
           for (var j = 0; j < marks.length; j++) {
             if (marks[j][0] == expired[i]) {
               marks.splice(j, 1); // Remove from Markers Array
+              listn.splice(j, 1); // Remove corresponding listener
               j = marks.length; // Safe Break the Loop
             }
           }
@@ -53,14 +55,22 @@
       }
       
       
+      function GetMarkerColor($cType) {
+        if ($cType == 1) {return '#0bf';}
+        else if ($cType ==2) {return '#f50';}
+        else if ($cType == 3) {return '#ddd';}
+        else if ($cType == 5) {return '#0a0';}
+        return '#fff';
+      }
+      
+      
       /* CreateMarker()
        * Creates a marker if it doesn't already exist
-       * param Result {id, title, details, created, type, upvote, downvote}
+       * param Result {[0]id, title, details, created, type, upvote, downvote}
        */
       function CreateMarker(latt, lngt, result) {
         if (!HasMarker(result[0])) {
-          
-          console.log('Creating Marker ['+result[0]+']');
+          // Set up the marker
           var latLong = new google.maps.LatLng(latt, lngt);
           var marker  = new google.maps.Marker({
             position: latLong,
@@ -70,10 +80,18 @@
             size: new google.maps.Size(26, 32),
             visible: true
           });
+          // Add listener for click
+          var listen = marker.addListener('click', function() {
+            gMap.setZoom(12);
+            gMap.setCenter(marker.getPosition());
+            
+            // Retrieve call info and open info div
+            $("#info-window").fadeIn(100);
+            
+          });
           marks.push([result[0], marker]); // Add to marker tracker by idIncident
+          listn.push([result[0], listen]); // Corresponding listener
         
-        } else {
-          console.log('Marker ['+result[0]+'] exists');
         }
       }
       
@@ -82,7 +100,6 @@
        * Loads current incident markers when map loads
        */
       function LoadMarkers() {
-        console.log('Loading Markers.');
         $.ajax({
           url: "php/incidents.php",
           success: function(result) {
@@ -108,7 +125,7 @@
             console.log("Failed. ["+result.responseText+"]");
           }
         });
-        setTimeout(LoadMarkers, 10000);
+        setTimeout(LoadMarkers, 12000);
       }
       
       
@@ -121,7 +138,7 @@
           zoom: 5,
           zoomControl: true,
           mapTypeControl: false,
-          mapTypeId: 'terrain',
+          //mapTypeId: 'terrain',
           scaleControl: true,
           streetViewControl: false,
           rotateControl: true,

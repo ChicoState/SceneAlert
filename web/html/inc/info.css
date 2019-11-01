@@ -1,0 +1,67 @@
+
+#info-window {
+	position: absolute;
+  right: 5%;
+  top: 15%;
+	background: rgba(255, 255, 255, 0.85);
+  border: 2px ridge #0bf;
+	border-radius: .4em .4em 0 0;
+  z-index: 10;
+  height: 60%;
+  width: 40%;
+  min-height: 256px;
+  max-width: 768px;
+  min-width: 256px;
+}
+
+#info-type {
+  position: relative;
+  margin: 0; padding: 0;
+  font-size: 1.2em;
+  font-family: Impact;
+  letter-spacing: 4px;
+  text-align: center;
+}
+
+#info-title {
+  text-align: center;
+  font-size: 1.4em;
+}
+
+#info-report table {
+  width: 95%;
+  text-align: center;
+}
+
+#info-help {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+}
+
+#info-votes {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  height: 90px;
+  width: 42px;
+}
+
+#info-vup, #info-vdn {
+  text-align: center;
+  width: 100%;
+  height: auto;
+}
+
+#info-vcount {
+  position: relative;
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+#info-vup {
+}
+
+#info-vdn {
+}
