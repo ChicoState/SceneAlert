@@ -32,20 +32,24 @@
     </div>
     
     <!-- Infowindow on Pin Click -->
-    <div id="info-window">
-      <div id="info-type">SYSTEM ADMINISTRATOR</div>
-      <div id="info-title">This is just a test</div>
-      <div id="info-report">
-        <table>
-          <tr>
-            <th width="20%">Reported:</th>
-            <td width="80%" id="info-rtime">4 Hours Ago</td>
-          </tr>
-          <tr>
-            <th>Reporter:</th>
-            <td id="info-rname">CHP Dispatch (Auto)</td>
-          </tr>
-        </table>
+    <div id="info-window" style="display: none;">
+      <div id="info-details">
+        <div id="info-title">THIS IS JUST A TEST</div>
+        <div id="info-report">
+          Created By
+          <span id="info-creator"></span> about 
+          <span id="info-since"></span>
+        </div>
+        <div id="info-more">
+          <button class="btn-more"><img src="img/info/view.png" width="32px" height="32px"/></button>
+          <button class="btn-more"><img src="img/info/msg.png" width="32px" height="32px"/></button>
+          <button class="btn-more"><img src="img/info/alert.png" width="32px" height="32px"/></button>
+        </div>
+      </div>
+      <div id="info-body">
+        <ul>
+        
+        </ul>
       </div>
       <div id="info-votes">
         <div id="info-vup">
@@ -55,10 +59,6 @@
         <div id="info-vdn">
           <img src="img/vote-down.png" width="32px" height="32px"/>
         </div>
-      </div>
-      <div id="info-help">
-        <button>ISSUE</button>
-        <button>REPORT</button>
       </div>
     </div>
     

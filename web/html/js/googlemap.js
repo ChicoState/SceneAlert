@@ -63,6 +63,19 @@
         return '#fff';
       }
       
+      function getWidth() {
+        if (self.innerWidth) {
+          return self.innerWidth;
+        }
+      
+        if (document.documentElement && document.documentElement.clientWidth) {
+          return document.documentElement.clientWidth;
+        }
+      
+        if (document.body) {
+          return document.body.clientWidth;
+        }
+      }
       
       /* CreateMarker()
        * Creates a marker if it doesn't already exist
@@ -78,15 +91,37 @@
             title: result[1],
             icon: 'img/pins/' + result[4] + 's.png', // Choses icon img by type
             size: new google.maps.Size(26, 32),
-            visible: true
+            visible: true,
+            inc: {
+              db: result[0],
+              iName: result[1], iDetails: result[2],
+              iCreated: result[4], iType: result[4],
+              iVotes: (result[5] - result[6]),
+            }
           });
           // Add listener for click
           var listen = marker.addListener('click', function() {
-            gMap.setZoom(12);
+            
+            var scrW = getWidth();
             gMap.setCenter(marker.getPosition());
+            gMap.setZoom(14);
+            if (scrW) {
+              gMap.panBy(scrW * 0.2, 0);
+            }
             
             // Retrieve call info and open info div
             $("#info-window").fadeIn(100);
+            $("#info-title").html("LOADING INFORMATION");
+            $("#info-title").html(this.inc.iName);
+            $("#info-creator").html("(Coming Soon!)");
+            $("#info-since").html("(Coming Soon!)");
+            var divBody = $("#info-body").find("ul");
+            divBody.empty();
+            divBody.append(
+              "<li>" + (this.inc.iDetails) + "</li>"
+            );
+            $("#info-vcount").html(this.inc.iVotes);
+            $("#info-title").html(this.inc.iName);
             
           });
           marks.push([result[0], marker]); // Add to marker tracker by idIncident
