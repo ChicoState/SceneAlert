@@ -99,15 +99,14 @@
               iVotes: (result[5] - result[6]),
             }
           });
+          
           // Add listener for click
           var listen = marker.addListener('click', function() {
             
             var scrW = getWidth();
             gMap.setCenter(marker.getPosition());
             gMap.setZoom(14);
-            if (scrW) {
-              gMap.panBy(scrW * 0.2, 0);
-            }
+            if (scrW) { gMap.panBy(scrW * 0.175, 0); }
             
             // Retrieve call info and open info div
             $("#info-window").fadeIn(100);
@@ -168,6 +167,8 @@
        * Initializes the Google Map upon page load
        */
       function initMap() {
+        
+        // Creates the Google Map 'gMap'
         gMap = new google.maps.Map(document.getElementById('gmap'), {
           center: {lat: 37.0902, lng: -95.7129},
           zoom: 5,
@@ -179,5 +180,14 @@
           rotateControl: true,
           fullscreenControl: false
         });
+        
+        
+        // Adds a listener to close the info-window
+        gMap.addListener('click', function() {
+          $("#info-window").hide();
+        });
+        
+        // Creates applicable markers
         LoadMarkers();
+        
       }
