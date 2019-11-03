@@ -269,5 +269,27 @@
         
         // Creates applicable markers
         LoadMarkers();
+        getLocation(); // DEBUG
+        
+      } // End function initMap()
+      
+      // DEBUG - Stuff
+      function getLocation() {
+        if (navigator.geolocation) {
+          console.log('Requesting users location');
+          navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+          console.log('GeoLocation not supported.');
+          alert("Geolocation is not supported by this browser.");
+        }
+      }
+      function showPosition(position) {
+        var lat = position.coords.latitude;
+        var lng = position.coords.longitude;
+        console.log('Moving based on location!');
+        
+        // Moves map to the user's current location
+        gMap.setCenter(new google.maps.LatLng(lat, lng));
+        gMap.setZoom(12);
         
       }
