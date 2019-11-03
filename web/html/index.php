@@ -1,8 +1,6 @@
 <html>
   <?php
-  
     require_once('inc/database.php');
-    
   ?>
   <head>
     <title>SceneAlert - Real Time Incident Reporting</title>
@@ -27,6 +25,8 @@
     <script type="text/javascript">
       
       var showLegend = true;
+      
+      
       function ToggleLegend() {
         showLegend = !showLegend;
         if (showLegend) {
@@ -36,43 +36,70 @@
           $("#legend").hide();
           $("#legshow").show();
         }
-      }
+      };
+      
       
       function HideLogin() {
         $("#acct-details").fadeOut(200);
-      }
+      };
+      
       
       function SubmitFormData() {
         
         var usr = $("#uname").val();
         var pwd = $("#passwd").val();
-        console.log(usr);
-        console.log(pwd);
-        $("#uname").empty(); $("#passwd").empty();
+        
+        $("#uname").val(""); $("#passwd").val("");
+        $("#login-msg").html("PLEASE WAIT");
+        
         $.ajax({
-            url: 'php/login.php',
-            type: 'POST',
-            data: {user: usr, pass: pwd},
+          url: 'php/login.php',
+          type: 'POST',
+          data: {user: usr, pass: pwd},
           success: function(result) {
+            
             var answer = jQuery.parseJSON(result);
-            console.log( 'Flag Bit: ' + answer[0] );
-            console.log( 'Flag Info: ' + answer[1] );
+            console.log( 'Bit Flag: ' + answer[0] );
+            console.log( 'Response: ' + answer[1] );
             
-            $("#login-msg").html(result[1]);
-            
-            if (result[0] == 1) {
+            // Hide login window on success & reload navbar
+            if (answer[0] == 1) {
               $("#acct-details").fadeOut(200);
-            
+              $("#topdiv").load("topbar.php");
             }
             
-          },
-          error: function(result) {
-            console.log("Failed. ["+result.responseText+"]");
           }
         });
       };
+      
+      
+      function doLogoff() {
+        console.log('Received Logoff');
+        $.ajax({
+          url: 'php/logout.php',
+          success: function() {
+            console.log('Success!');
+            $("#topdiv").load("topbar.php"); /*
+            $.get("topbar.php"), function(data) {
+              $("#topdiv").html(data);
+            }*/
+            $("#uname").val('');
+            $("#passwd").val('');
+            $("#acct-details").fadeIn(200);
+            console.log('Finished.');
+          },
+          error: function(result) {
+            console.log('Failure; ' + result.responseText)
+          }
+        });
+        console.log('END~doLoggoff()');
+      };
+      
+      
+      function ShowLoginBlock() {
+        $("#acct-details").fadeIn(200);
+      }
     </script>
-    
   </head>
   
   
@@ -82,7 +109,7 @@
     <div id="gmap"></div>
     
     <!-- Login Block -->
-    <div id="acct-details">
+    <div id="acct-details" style="display: none;">
     
       <h3>Log in to Scene-Alert!</h3>
       
@@ -92,22 +119,27 @@
       </font>
       </u></i></p>
       
-        <form method="post" id="loginform">
-          <input type="text" id="uname" name="uname" placeholder="Username"/>
-          <br/>
-          <input type="password" id="passwd" name="passwd" placeholder="Password"/>
-          <br/>
-          <input type="button" id="btn-submit" value="Submit" name="submit" onclick="SubmitFormData();"/>
-          <div id="login-msg"></div>
-        </form>
+      <form method="post" id="loginform">
+        <input type="text" id="uname" name="uname" placeholder="Username"/>
+        <br/>
+        <input type="password" id="passwd" name="passwd" placeholder="Password"/>
+        <br/>
+        <input type="button" id="btn-submit" value="Submit" name="submit" onclick="SubmitFormData();"/>
+        <div id="login-msg"></div>
+      </form>
         
       <strong>We are not accepting new user registration during development.</strong>
       
     </div>
+<?php
+    if (!isset($_SESSION['user'])) {
+      echo "<script>ShowLoginBlock();</script>";
+    } else { echo "Logged in as ".$_SESSION['user']."<br/>"; }
+?>
     
     <!-- Top Bar: Home/About/Account/FAQ/etc -->
-    <?php include('topbar.php'); ?>
-    <?php include('legend.php'); ?>
+    <div id="topdiv"><?php include('topbar.php'); ?></div>
+    <div id="legdiv"><?php include('legend.php'); ?></div>
     
     
     <!-- Controls -->

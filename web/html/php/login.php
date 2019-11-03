@@ -19,12 +19,14 @@
         
         $retarray[0] = 0; // 0 indicates failure 
         $retarray[1] = "Account has been banned"; 
+        
       }
       elseif (password_verify($pass, $acct['hash'])) {
         
         // Set session variables
         $_SESSION['user']  = $acct['idUser'];	// Username 
-        $_SESSION['rank']  = $qfetch['rank']; // Permission level [0=Ban, 2=Admin]
+        $_SESSION['rank']  = $acct['rank']; // Permission level [0=Ban, 2=Admin]
+        $_SESSION['email'] = $acct['email'];
         
         $retarray[0] = 1; // 1 indicates login success
         $retarray[1] = "Login was Successful";
@@ -32,10 +34,12 @@
       } else {
         $retarray[0] = 0; // 0 indicates login failure
         $retarray[1] = "Username/Password Incorrect";
+        
       }
     } else {
       $retarray[0] = (-1); // -1 indicates an error
       $retarray[1] = "That e-mail is not registered";
+      
     }
     
   } else {
