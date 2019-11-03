@@ -3,43 +3,29 @@
     <div id="legend">
       <table>
           <tr>
-            <td>Law Enforcement</td>
             <th><img src="img/pins/1s.png" width="16px" height="24px"/></th>
-          </tr>
-          <tr>
-            <td>Fire / Rescue</td>
+            <td>Law Enforcement</td>
             <th><img src="img/pins/2s.png" width="16px" height="24px"/></th>
-          </tr>
-          <tr>
-            <td>Medical</td>
+            <td>Fire / Rescue</td>
             <th><img src="img/pins/3s.png" width="16px" height="24px"/></th>
+            <td>Medical</td>
           </tr>
           <tr>
-            <td>Multi-Service</td>
             <th><img src="img/pins/4s.png" width="16px" height="24px"/></th>
-          </tr>
-          <tr>
-            <td>Military</td>
+            <td>Multi-Service</td>
             <th><img src="img/pins/5s.png" width="16px" height="24px"/></th>
-          </tr>
-          <tr>
-            <td>System Admin</td>
+            <td>Military</td>
             <th><img src="img/pins/6s.png" width="16px" height="24px"/></th>
+            <td>System Admin</td>
           </tr>
           <tr>
-          <tr>
-            <td>Report Issue</td>
             <th><img src="img/info/alert.png" width="24px" height="24px"/></th>
-          </tr>
-          <tr>
-            <td>Send Message</td>
+            <td>Report Issue</td>
             <th><img src="img/info/msg.png" width="24px" height="24px"/></th>
-          </tr>
-          <tr>
-            <td>View Details</td>
+            <td>Send Message</td>
             <th><img src="img/info/view.png" width="24px" height="24px"/></th>
+            <td>View Details</td>
           </tr>
-          <tr>
           <tr>
             <td colspan="2"><button onclick="ToggleLegend()">HIDE</button></td>
           </tr>

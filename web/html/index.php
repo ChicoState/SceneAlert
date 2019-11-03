@@ -41,7 +41,38 @@
       function HideLogin() {
         $("#acct-details").fadeOut(200);
       }
-
+      
+      $('#loginform').on('submit', function(e) {
+        console.log('AAAAAAAAAAAAAAAAAAAAAA');
+        e.preventDefault(); // Stops page reloading
+        
+        var usr = $("#uname").val();
+        var pwd = $("#passwd").val();
+        console.log(usr);
+        console.log(pwd);
+        $("#uname").empty(); $("#passwd").empty();
+        $.ajax({
+            url: 'php/login.php',
+            type: 'POST',
+            data: {user: usr, pass: pwd},
+          success: function(result) {
+            
+            console.log('Flag Bit: ' + result[0]);
+            console.log('Flag Info: ' + result[1]);
+            $("#login-msg").html(result[1]);
+            
+            if (result[0] == 1) {
+              $("#acct-details").fadeOut(200);
+            
+            }
+            
+          },
+          error: function(result) {
+            console.log("Failed. ["+result.responseText+"]");
+          }
+        });
+        
+      });
     </script>
     
   </head>
@@ -63,11 +94,16 @@
       </font>
       </u></i></p>
       
-      <input type="text" id="uname" name="uname" placeholder="Username"/>
-      <br/>
-      <input type="password" id="passwd" name="passwd" plaheolder="Password"/>
-      <br/>
-      <input type="submit" value="Submit"/>
+      <form id="loginform">
+        <input type="text" id="uname" name="uname" placeholder="Username"/>
+        <br/>
+        <input type="password" id="passwd" name="passwd" placeholder="Password"/>
+        <br/>
+        <input type="submit" value="Submit" name="submit" />
+        <div id="login-msg"></div>
+      </form>
+      
+      <strong>We are not accepting new user registration during development.</strong>
       
     </div>
     
