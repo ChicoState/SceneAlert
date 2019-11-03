@@ -28,7 +28,7 @@
       
       var showLegend = true;
       function ToggleLegend() {
-        showLegend = !showLegend
+        showLegend = !showLegend;
         if (showLegend) {
           $("#legend").show();
           $("#legshow").hide();
@@ -43,8 +43,6 @@
       }
       
       function SubmitFormData() {
-        console.log('AAAAAAAAAAAAAAAAAAAAAA');
-        e.preventDefault(); // Stops page reloading
         
         var usr = $("#uname").val();
         var pwd = $("#passwd").val();
@@ -56,9 +54,10 @@
             type: 'POST',
             data: {user: usr, pass: pwd},
           success: function(result) {
+            var answer = jQuery.parseJSON(result);
+            console.log( 'Flag Bit: ' + answer[0] );
+            console.log( 'Flag Info: ' + answer[1] );
             
-            console.log('Flag Bit: ' + result[0]);
-            console.log('Flag Info: ' + result[1]);
             $("#login-msg").html(result[1]);
             
             if (result[0] == 1) {
