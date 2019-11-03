@@ -1,5 +1,6 @@
 <?php
   require_once('../inc/database.php');
+  if (session_status() == PHP_SESSION_NONE) {session_start();}
   
 	$usr     = $_POST['user'];
 	$pass    = $_POST['pass'];

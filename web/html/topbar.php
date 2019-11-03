@@ -1,6 +1,6 @@
 <?php
   require_once('inc/database.php');
-  session_start();
+  if (session_status() == PHP_SESSION_NONE) {session_start();}
 ?>
   <div id="nav-topbar">
     
