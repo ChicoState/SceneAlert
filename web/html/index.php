@@ -42,7 +42,7 @@
         $("#acct-details").fadeOut(200);
       }
       
-      $('#loginform').on('submit', function(e) {
+      function SubmitFormData() {
         console.log('AAAAAAAAAAAAAAAAAAAAAA');
         e.preventDefault(); // Stops page reloading
         
@@ -71,8 +71,7 @@
             console.log("Failed. ["+result.responseText+"]");
           }
         });
-        
-      });
+      };
     </script>
     
   </head>
@@ -94,15 +93,15 @@
       </font>
       </u></i></p>
       
-      <form id="loginform">
-        <input type="text" id="uname" name="uname" placeholder="Username"/>
-        <br/>
-        <input type="password" id="passwd" name="passwd" placeholder="Password"/>
-        <br/>
-        <input type="submit" value="Submit" name="submit" />
-        <div id="login-msg"></div>
-      </form>
-      
+        <form method="post" id="loginform">
+          <input type="text" id="uname" name="uname" placeholder="Username"/>
+          <br/>
+          <input type="password" id="passwd" name="passwd" placeholder="Password"/>
+          <br/>
+          <input type="button" id="btn-submit" value="Submit" name="submit" onclick="SubmitFormData();"/>
+          <div id="login-msg"></div>
+        </form>
+        
       <strong>We are not accepting new user registration during development.</strong>
       
     </div>
