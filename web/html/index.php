@@ -26,10 +26,13 @@
       var showLegend = true;
       
       function LocationByAddress(addr) {
+        
         console.log('GeoCoding ' + addr + '...');
         var geocoder = new google.maps.Geocoder();
         
         geocoder.geocode({ 'address' : addr}, function(results, status) {
+          
+          console.log(results[0]);
           
           // Get basic longitude/latitude response first
           var c = results[0].geometry.location;
@@ -49,13 +52,14 @@
             console.log(k + ": " + v);
           });
           
+          var titty = addrInfo.street_number + ' ' + addrInfo.route
           $.ajax({
             url: 'php/new_location.php',
             type: 'POST',
             data: {
               num:    addrInfo.street_number,
               str:    addrInfo.route,
-              title:  addrInfo.street_number + ' ' + addrInfo.route,
+              title:  titty,
               city:   addrInfo.locality,
               county: addrInfo.administrative_area_level_2,
               state:  addrInfo.administrative_area_level_1,
