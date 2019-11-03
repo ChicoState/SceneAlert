@@ -25,6 +25,56 @@
       
       var showLegend = true;
       
+      function LocationByAddress(addr) {
+        console.log('GeoCoding ' + addr + '...');
+        var geocoder = new google.maps.Geocoder();
+        
+        geocoder.geocode({ 'address' : addr}, function(results, status) {
+          
+          // Get basic longitude/latitude response first
+          var c = results[0].geometry.location;
+          var latitude  = ( c.lat() ).toFixed(8);
+          var longitude = ( c.lng() ).toFixed(8);
+          
+          // Try to obtain the rest of the stuff we would like to have
+          var addrResponse = results[0].address_components;
+          var addrInfo = {}; 
+          $.each(addrResponse, function(k,v1) {
+            $.each(v1.types, function(k2, v2){
+              addrInfo[v2] = v1.long_name
+            });
+          });
+          
+          $.each(addrInfo, function(k, v) {
+            console.log(k + ": " + v);
+          });
+          
+          $.ajax({
+            url: 'php/new_location.php',
+            type: 'POST',
+            data: {
+              num:    addrInfo.street_number,
+              str:    addrInfo.route,
+              title:  addrInfo.street_number + ' ' + addrInfo.route,
+              city:   addrInfo.locality,
+              county: addrInfo.administrative_area_level_2,
+              state:  addrInfo.administrative_area_level_1,
+              nation: addrInfo.country,
+              postal: addrInfo.postal_code,
+              longt:  longitude,
+              latt:   latitude
+            },
+            success: function(result) {
+              
+            },
+            error: function(result) {
+              
+            }
+          });
+          
+        });
+      }
+  
       function ToggleLegend() {
         showLegend = !showLegend;
         if (showLegend) {

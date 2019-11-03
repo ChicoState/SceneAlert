@@ -5,9 +5,10 @@
         $("#calldiv").load("controller.php");
       }
       
-      function CreateIncident(cInfo) {
+      function CreateIncident(cInfo, idLoc) {
         console.log('Creating Incident!');
         console.log(cInfo);
+        console.log(idLoc);
       }
       
       // Handles the controller.php function(s)
@@ -32,7 +33,6 @@
         $('#new-title').val('');
         $('#new-details').val('');
         
-        
         // Request previously saved location from SQL
         $.ajax({
           url: '../php/get_location.php',
@@ -51,6 +51,12 @@
             if (answer[0] > 0) {
               console.log('Found idLocation');
               CreateIncident(cInfo, answer[1]);
+            } 
+            
+            // Location did not exist, we will have to GeoCode
+            else if (answer[0] == 0) {
+              console.log('Failed to retrieve idLoc; GeoCoding.');
+              LocationByAddress(answer[1]);
             
             // DEBUG - Log why it failed
             } else {console.log(answer[1]);}
