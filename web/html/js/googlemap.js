@@ -135,7 +135,7 @@
        */
       function LoadMarkers() {
         $.ajax({
-          url: "php/incidents.php",
+          url: "../php/incidents.php",
           success: function(result) {
             var jsn    = JSON.parse(result);
             var idList = [];
