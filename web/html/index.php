@@ -16,12 +16,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
     
-    <!-- The Google Map Script 
+    <!-- The Google Map Script -->
     <script type="text/javascript" src="js/googlemap.js"></script>
     <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBH1jW5Aqd8lHL7RoiiKx9COdioIRdGs8Q&callback=initMap"
       type="text/javascript">
-    </script> -->
+    </script> 
     
     <!-- Loose Javascript -->
     <script type="text/javascript">
