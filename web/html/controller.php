@@ -62,10 +62,11 @@
             </td>
           </tr>
           <tr>
-            <td colspan="3"><button onclick="NewCallCreate(<?php echo $_SESSION['user'];?>)">Submit</button>
+            <td colspan="3"><button onclick="NewCallCreate(
+            <?php echo $_SESSION['user'];?>
+              )">Submit</button>
           </tr>
         </table>
       </div>
       
     </div>
-?>

@@ -1,23 +1,4 @@
 
-#nav-main li {
-  float: left;
-}
-
-#nav-main li a {
-  display: inline;
-  width: 60px;
-}
-
-#nav-main ul {
-  list-style-type: none;
-  margin: 0; padding: 0;
-}
-
-#nav-topbar button {
-  border: 0;
-  background: rgba(0,0,0,0.0);
-}
-
 #nav-topbar {
   position: relative;
   margin: 8px auto;
@@ -30,6 +11,69 @@
   z-index: 8;
 }
 
+#nav-main {
+  margin: 0; padding: 0;
+}
+
+#nav-main li {
+  border-right: 2px ridge #888;
+}
+
+#nav-btns li {
+  border-left: 2px ridge #888;
+}
+
+#nav-main li, #nav-btns li {
+  float: left;
+  text-align: center;
+  margin: 20px 0 0 0; padding: 0;
+}
+
+#nav-main li a, #nav-btns li a {
+  display: inline;
+}
+
+#nav-main ul {
+  list-style-type: none;
+  text-align: center;
+  margin: 0 0 0 0; padding: 0 0 0 0;  
+}
+
+#nav-btns ul {
+  list-style-type: none;
+  text-align: center;
+  margin: 0 0 0 0; padding: 0 0 0 0;  
+}
+
+#nav-topbar button, #nav-btns button {
+  border: 0;
+  background: rgba(0,0,0,0.0);
+  color: #ddd;
+  text-shadow: 1px 1px 2px black;
+  font-size: 1.065em;
+}
+
+#nav-topbar button:hover, #nav-btns button:hover {
+  border: 0;
+  background: rgba(0,0,0,0.0);
+  color: #fff;
+  text-shadow: 1px 1px 2px #ddd;
+}
+
+#nav-topbar button:focus, #nav-btns button:focus {
+  outline: 0;
+}
+
+#nav-btns {
+  float: left;
+  direction: rtl;
+  text-align: center;
+}
+
+#nav-user {
+  position: relative;
+  float: right;
+}
 
 #display-dtime {
   color: #eee;
@@ -38,7 +82,7 @@
   border-radius: 0 16px 16px 0;
   text-align: center;
   margin: 0; padding: 0;
-  width: 128px;
+  min-width: 128px;
   border-left: 1px solid silver; 
   background: linear-gradient(to bottom,
     rgba(56,56,56,1) 0%,
