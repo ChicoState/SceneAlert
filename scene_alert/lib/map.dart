@@ -113,8 +113,8 @@ class CrimeMapState extends State<CrimeMap> {
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque volutpat ultricies sem ac convallis.",
       "CHP"
     ]
-  ]
-  ''';
+    ]
+    ''';
 
     var tempJson = jsonDecode(jsonString);
   
@@ -126,6 +126,7 @@ class CrimeMapState extends State<CrimeMap> {
     ];
     
     for( var i = 0; i < tmpLocations.length; i++ ) {
+      try {
       myMarkers.add(
         Marker(
           markerId: MarkerId( i.toString() ),
@@ -145,6 +146,12 @@ class CrimeMapState extends State<CrimeMap> {
           },
         ),
       );
+      }
+      catch (error) {
+        print( "-----------" );
+        print( error );
+        print( "-----------" );
+      }
     }
   }
 
