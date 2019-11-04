@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resouces>
-    <color name = "saBlue">#31b6eb</color>
+    <color name = "saBlue">#31B6EB</color>
+    <color name = "saWhite">#FFFFFF</color>
 </resouces>

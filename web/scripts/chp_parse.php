@@ -1,6 +1,64 @@
-<?php
+  
+  <?php
 
   require_once('database.php');
+  
+  
+  /* GetIncidentTitle()
+    * Uses the first part of the CHP incident name to write a proper title
+    * param name The unmodified title of the CHP Incident
+    * returns String; "CHP Incident" if not found
+    */
+  function GetIncidentTitle($name) {
+    
+    if (!$name) {return "CHP Incident";}
+    
+    $titles = array(
+      "1125" => "Traffic Hazard",
+      "1125A" => "Animal Hazard",
+      "1144" => "Fatal Incident",
+      "1166" => "Defective Signal",
+      "1179" => "Crash - EMS Enroute",
+      "1180" => "Crash / Major Injury",
+      "1181" => "Crash with Injuries",
+      "1182" => "Crash without Injury",
+      "1183" => "Crash - Unknown Injuries",
+      "1184" => "Officer Controlling Traffic",
+      "20001" => "Hit and Run - Injury",
+      "20002" => "Hit and Run - No Injury",
+      "23114" => "Objects Loose from Vehicle",
+      "ANIMAL" => "Animal Hazard",
+      "CFIRE" => "Vehicle Fire",
+      "CORD" => "County Roads",
+      "CZP" => "Construction",
+      "DOT" => "CalTrans Requested",
+      "ESCORT" => "Traffic Escort",
+      "FIRE" => "Fire Affecting Traffic",
+      "MZP" => "Construction",
+      "TADV" => "Traffic Advisory to Media",
+      "WW" => "Wrong Way Vehicle"
+    );
+    
+    $temp = explode('-', $name)[0];
+    if ($temp) {return ($titles[$temp] ? $titles[$temp] : "CHP Incident");}
+    return "CHP Incident";
+  }
+  
+  /* DetermineService()
+    * Checks if the CHP incident involves fire/police and changes type accordingly
+    * 1=Police 2=Fire 3=EMS 4=All 5=Military
+    */
+  function DetermineService($name) {
+    if (!$name) {return 1;} // If no title given, assume it's a CHP Police issue
+    $agencies = array(
+      "1144" => 4, "1179" => 4, "1180" => 4, "1181" => 4,
+      "1183" => 4, "20001" => 4, "CFIRE" => 2, "FIRE" => 2,
+    );
+    $temp = explode('-', $name)[0];
+    if ($temp) {return ($agencies[$temp] ? $agencies[$temp] : 1);}
+    return 1; // Assume a police issue
+  }
+
 
   echo "Preparing to parse [chp_incidents.xml].\n";
 
@@ -23,7 +81,6 @@
 
   // Read latest CHP XML. If not found, terminate
   $newFile = fopen($read_new, "r") or die("Failed to read chp_incidents.xml.\n");
-  $oldFile = fopen($read_new, "r");
   
   // Read through new file until we get to Chico Dispatch.
   $findChico = 'Dispatch ID = "CHCC"';
@@ -77,7 +134,7 @@
         break;
       }
     }
-    echo "~~~ DEBUG ~~~\n";
+    
     foreach($newIncidents as $key => $value) {
       echo $key.' -> 0:'.$value[0].' 1:'.$value[1].' 2:'.$value[2].' 3:'.$value[3];
       echo "\n";
@@ -86,7 +143,14 @@
       $qChk = $db->prepare($qCheck);
       $qChk->bindParam(':log', $value[0]);
       $qChk->execute();
-      
+
+      // THIS IS A BANDAID!!! My computer was dying
+      $aCheck = "UPDATE incidents SET active = 1 WHERE chp = :log";
+      $aChk = $db->prepare($aCheck);
+      $aChk->bindparam(':log', $value[0]);
+      $aChk->execute();
+      /////////////////////////////
+
       $chpLog = $qChk->fetchColumn();
       if ($chpLog < 1) {
         echo "New CHP Incident Detected (CHP ".$value[0].")\n";
@@ -111,7 +175,6 @@
         $fetcher = $gCheck->fetch(PDO::FETCH_ASSOC);
         $locExist = $fetcher['count'];
         $idLocn = $fetcher['id'];
-        echo "DEBUG ~ locExist:".$locExist." idLocn:".$idLocn."\n";
         if ($locExist < 1) {
           echo "idLocation for (".$longitude.":".$latitude.") not found.\n";
           echo "Generating a new idLocation for coordinates.\n";
@@ -136,12 +199,13 @@
         }
         if ($idLocn) {
           echo "Adding CHP Incident to SceneAlert Database...\n";
-          echo "DEBUG ~ idLocn:".$idLocn." 0:".$value[0]." 1:".$value[1]."\n";
-          $qInc = "SELECT InsertCHP(:loc, :deets, :titlename, :oride, :num)";
+          
+          $qInc = "SELECT InsertCHP(:loc, :deets, :ctype, :titlename, :oride, :num)";
           $newInc = $db->prepare($qInc);
           $newInc->bindParam(':loc', $idLocn);
           $newInc->bindValue(':deets', 'Reported by CA Highway Patrol');
-          $newInc->bindParam(':titlename', $value[1]);
+          $newInc->bindValue(':ctype',     DetermineService($value[1]));
+          $newInc->bindParam(':titlename', GetIncidentTitle($value[1]));
           $newInc->bindValue(':oride', 1);
           $newInc->bindParam(':num', $value[0]);
           if($newInc->execute()) {
@@ -161,4 +225,37 @@
   else {
     echo "No incidents currently in the Chico Dispatch area.\nNothing to do.\nTerminating.\n\n";
   }
+  echo "Cleaning up old CHP Incidents...\n";
+  $q = "SELECT chp FROM incidents WHERE active = 1 AND chp IS NOT NULL";
+  $oldInc = $db->prepare($q);
+  if($oldInc->execute()) {
+    echo "Found CHP Incidents in the MySQL Database.\n";
+    while($row = $oldInc->fetch(PDO::FETCH_ASSOC)) {
+      $in = $row['chp'];
+      $stale = true;
+      for($n = 0; $n < sizeof($newIncidents); $n++) {
+        if(in_array($in, $newIncidents[$n])) {
+          echo "INC #".$in." found. Event is still active.\n";
+          $stale = false;
+        }
+      }
+      if($stale) {
+        echo "INC #".$in." stale. Removing!\n";
+        $q = "UPDATE incidents SET active = 0 WHERE chp = :iNum";
+        $closer = $db->prepare($q);
+        $closer->bindParam(':iNum', $in);
+        $closer->execute();
+        if($closer) {
+          echo "INC #".$in." closed successfully.\n";
+        } else {
+          echo "Failed to close INC #".$in."!\n";
+        }  
+      }
+    } 
+  }
 ?>
+
+
+
+
+
