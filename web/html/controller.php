@@ -42,11 +42,12 @@
             <td>Situation</td>
             <td colspan="2">
               <select name="new-type" id="new-type" autocomplete="off"/>
-                <option value="1">Police Activity</option>
+                <option value="1" selected="selected">Police Activity</option>
                 <option value="2">Fire / Rescue</option>
                 <option value="3">Medical Emergency</option>
                 <option value="4">Multi-Agency</option>
                 <option value="5">Military Operation</option>
+                <option value="6">System Admin / Testing</option>
               </select>
             </td>
           </tr>
