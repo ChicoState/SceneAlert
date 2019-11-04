@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:scene_alert/login.dart';
 import 'package:scene_alert/markerDetail.dart';
 
 GoogleMap _map;
-
-
 
 class CrimeMap extends StatefulWidget {
   
@@ -56,7 +51,7 @@ class CrimeMapState extends State<CrimeMap> {
     Makes a marker and adds it to Set
   */
   Future getCHP() async {
-    var url = 'http://rhapidfyre.com/scenealert/scripts/getincidents.php';
+    var url = 'https://scene-alert.com/inc/getincidents.php';
     http.Response response = await http.get(url);
     var data = jsonDecode(response.body);
 
@@ -92,9 +87,11 @@ class CrimeMapState extends State<CrimeMap> {
       print( "Error" );
     }
   }
-//simulating the json from whats read in from the php request from above
+
+  //simulating the json from whats read in from the php request from above
   Future tmpMarkers() async {
-    var jsonString = '''
+    var jsonString = 
+    '''
     [
     [
       "Missing Dog",
@@ -117,9 +114,9 @@ class CrimeMapState extends State<CrimeMap> {
       "CHP"
     ]
   ]
-''';
+  ''';
 
-var tempJson = jsonDecode(jsonString);
+    var tempJson = jsonDecode(jsonString);
   
     var tmpLocations = [
       [ 39.726421, -121.842728 ],

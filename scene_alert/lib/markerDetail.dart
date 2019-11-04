@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -20,9 +19,7 @@ class MarkerState extends State<MarkerDetail> {
   MarkerState(this.myjson);
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build( BuildContext context ) {
     return WillPopScope(
         onWillPop: () {
           // Write some code to control things, when user press Back navigation button in device navigationBar
@@ -124,7 +121,8 @@ class MarkerState extends State<MarkerDetail> {
               ],
             ),
           ),
-        ));
+        )
+    );
   }
 
   void moveToLastScreen() {
