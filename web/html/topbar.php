@@ -7,21 +7,28 @@
     <!-- Main Page Navigation -->
     <div id="nav-main">
       <ul>
-        <li>About</li>
-        <li>Forums</li>
-        <li>Contact</li>
-        <li>Help</li>
+        <li><button><img src="img/facebook.png" height="30px"></button></li>
+        <li><button><img src="img/twitter.png" height="30px"></button></li>
+        <li><button>About</button></li>
+        <li><button>Forums</button></li>
+        <li><button>Contact</button></li>
+        <li><button>Help</button></li>
       </ul>
     </div>
     
     
     <div id="nav-user">
-    </div>
+      <ul>
 <?php
     if (isset($_SESSION['user'])) {
-      echo '<button onclick="doLogoff();">Log Off</button>';
+      echo '<li><button onclick="doLogoff();">Log Off</button></li>';
+      echo '<li><button onclick="doLogoff();">Settings</button></li>';
+    } else {
+      echo '<li><button onclick="doLogoff();">Sign On</button></li>';
     }
 ?>
+      </ul>
+    </div>
       <!-- Time & Date -->
       <div id="display-dtime">
         <div id="display-date"></div>
