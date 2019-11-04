@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
+//import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scene_alert/landing.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -17,6 +18,17 @@ class LoginState extends State<Login> {
 
   final FocusNode fnEmail = FocusNode();
   final FocusNode fnPassword = FocusNode();
+
+  final storage = new FlutterSecureStorage();
+  bool rememberMe = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    //deleteVal();
+    //rememberValidate( context );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +86,22 @@ class LoginState extends State<Login> {
                               obscureText: true,
                               onSaved: (input) => _password = input,
                             ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Checkbox(
+                                  value: rememberMe,
+                                  checkColor: Colors.white,
+                                  activeColor: Color.fromARGB( 255, 49, 182, 235 ),
+                                  onChanged: (bool remember) {
+                                    setState(() {
+                                      rememberMe = remember;
+                                    });
+                                  },
+                                ),
+                                Text( "Remember Me" )
+                              ],
+                            ),
                             SizedBox(height: 20),
                             Builder( builder: (context) =>
                               MaterialButton(
@@ -85,6 +113,18 @@ class LoginState extends State<Login> {
                                 color: Color.fromARGB( 255, 49, 182, 235 ),
                                 //Labels the button with Submit
                                 child: Text('Login'),
+                              ),
+                            ),
+                            Builder( builder: (context) =>
+                              MaterialButton(
+                                onPressed: () { 
+                                  rememberValidate( context );
+                                },
+                                elevation: 5,
+                                minWidth: 200,
+                                color: Color.fromARGB( 255, 49, 182, 235 ),
+                                //Labels the button with Submit
+                                child: Text('Restore Session'),
                               ),
                             ),
                           ],
@@ -100,7 +140,45 @@ class LoginState extends State<Login> {
     _formkey.currentState.save();
 
     var url = 'https://scene-alert.com/inc/login.php?user=' + _email + '&pass=' + _password;
-    print( url );
+    http.Response response = await http.get(url);
+    var data = jsonDecode(response.body);
+
+    if( rememberMe ) {
+      await storage.write(key: _email, value: _password);
+    }
+
+    if( data[0] == 1 ) {
+      if( rememberMe ) {
+        await storage.write(key: _email, value: _password);
+      }
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LandingPage()),
+      );
+    }
+    else if( data[0] == -1 ) {
+      print( "Incorrect Login" );
+    }
+
+  }
+
+  Future rememberValidate( context ) async {
+
+    var _user, _pass;
+
+    try {
+      Map<String, String> userPass = await storage.readAll();
+      _user = userPass.keys.first;
+      _pass = userPass.values.first;
+    }
+    catch (error) {
+      print( "Keystore error, returning to login" );
+      return;
+    }
+    print( _user );
+    print( _pass );
+
+    var url = 'https://scene-alert.com/inc/login.php?user=' + _user + '&pass=' + _pass;
     http.Response response = await http.get(url);
     var data = jsonDecode(response.body);
 
@@ -115,4 +193,9 @@ class LoginState extends State<Login> {
     }
 
   }
+
+  Future deleteVal() async {
+    await storage.deleteAll();
+  }
+
 }

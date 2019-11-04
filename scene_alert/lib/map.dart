@@ -188,7 +188,7 @@ class CrimeMapState extends State<CrimeMap> {
           });
         });
 
-    //getCHP();
+    getCHP();
   }
 
   void mapCreated( controller ) {

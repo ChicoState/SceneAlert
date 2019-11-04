@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scene_alert/landing.dart';
 import 'package:scene_alert/login.dart';
 
 void main() => runApp(MyApp());
