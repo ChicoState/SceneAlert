@@ -175,8 +175,6 @@ class LoginState extends State<Login> {
       print( "Keystore error, returning to login" );
       return;
     }
-    print( _user );
-    print( _pass );
 
     var url = 'https://scene-alert.com/inc/login.php?user=' + _user + '&pass=' + _pass;
     http.Response response = await http.get(url);
