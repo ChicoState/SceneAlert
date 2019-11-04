@@ -34,8 +34,10 @@ class CrimeMapState extends State<CrimeMap> {
   @override
   Widget build(BuildContext context) {
 
-    tmpMarkers();
+    //tmpMarkers();
 
+    print( "----------------" );
+    print( myMarkers );
     return _map = 
       GoogleMap(
         mapType: MapType.normal,  // Flat image
@@ -55,32 +57,44 @@ class CrimeMapState extends State<CrimeMap> {
     http.Response response = await http.get(url);
     var data = jsonDecode(response.body);
 
+    print( "getCHP --------------------------------------");
+    print( data );
+
     if( data[0] == 0 ) {
       var json = jsonDecode(data[1]);
-      for( var i = 0; i < json.length - 1; i++ ) {
-        myMarkers.add(
-          Marker(
-            markerId: MarkerId( i.toString() ),
-            position: LatLng( double.parse(json[i][4]), double.parse(json[i][3]) ),
-            infoWindow: InfoWindow(
-              title: json[i][0],  // Incident Report name
-              snippet: json[i][2],  // Reported by what agency
-            ),
-            icon: markerIcon,
-            onTap: () {
-              /*
-                TODO
-                Implement a function to open a new page with full information about an incident
-                Mostly likely to come after user input
-              */
-              Navigator.push(context, MaterialPageRoute(builder: (context){
-                return MarkerDetail( myjson: json[i]);
-              }));
-              handleTap(json[i][0]);
-            },
-          )
-        );
+      for( var i = 0; i < json.length; i++ ) {
+        try {
+          myMarkers.add(
+            Marker(
+              markerId: MarkerId( i.toString() ),
+              position: LatLng( double.parse(json[i][4]), double.parse(json[i][3]) ),
+              infoWindow: InfoWindow(
+                title: json[i][0],  // Incident Report name
+                snippet: json[i][2],  // Reported by what agency
+              ),
+              icon: markerIcon,
+              onTap: () {
+                /*
+                  TODO
+                  Implement a function to open a new page with full information about an incident
+                  Mostly likely to come after user input
+                */
+                Navigator.push(context, MaterialPageRoute(builder: (context){
+                  return MarkerDetail( myjson: json[i]);
+                }));
+                handleTap(json[i][0]);
+              },
+            )
+          );
+        }
+        catch (error) {
+          print( error );
+        }
       }
+      setState(() {
+        myMarkers = myMarkers;
+      });
+      print( myMarkers );
     }
     else {
       // HTTP get Failed
@@ -180,6 +194,8 @@ class CrimeMapState extends State<CrimeMap> {
   void initState() {
     super.initState();
 
+    getCHP();
+
     BitmapDescriptor.fromAssetImage(
       ImageConfiguration(), 'images/police128.png')
         .then(( value ) {
@@ -188,7 +204,6 @@ class CrimeMapState extends State<CrimeMap> {
           });
         });
 
-    getCHP();
   }
 
   void mapCreated( controller ) {

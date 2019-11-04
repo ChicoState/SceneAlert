@@ -66,7 +66,7 @@ class MarkerState extends State<MarkerDetail> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 5.0),
                   // child: Container(
-                  child: Text(myjson[1].toString()),
+                  child: Text(myjson[2].toString()),
                 ),
                 //comment text field
                 Padding(
