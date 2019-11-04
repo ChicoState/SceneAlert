@@ -1,19 +1,92 @@
 <html>
   <?php
-  
     require_once('inc/database.php');
-    
+    if (session_status() == PHP_SESSION_NONE) {session_start();}
   ?>
   <head>
     <title>SceneAlert - Real Time Incident Reporting</title>
+    
+    <!-- CSS Stylesheets -->
     <link rel="stylesheet" href="inc/index.css">
     <link rel="stylesheet" href="inc/info.css">
+    <link rel="stylesheet" href="inc/topbar.css">
+    
+    <!-- Javascript SDK -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    
+    <!-- The Google Map Script -->
+    <script type="text/javascript" src="js/googlemap.js"></script>
+    
+    <!-- Loose Javascript -->
+    <script type="text/javascript" src="js/login.js"></script>
+    <script type="text/javascript" src="js/control.js"></script>
     <script type="text/javascript">
+      
       var showLegend = true;
+      
+      function LocationByAddress(addr, cInfo, idMyself) {
+        
+        console.log('GeoCoding ' + addr + '...');
+        var geocoder = new google.maps.Geocoder();
+        
+        geocoder.geocode({ 'address' : addr}, function(results, status) {
+          
+          console.log(results[0]);
+          
+          // Get basic longitude/latitude response first
+          var c = results[0].geometry.location;
+          var latitude  = ( c.lat() ).toFixed(8);
+          var longitude = ( c.lng() ).toFixed(8);
+          
+          // Try to obtain the rest of the stuff we would like to have
+          var addrResponse = results[0].address_components;
+          var addrInfo = {}; 
+          $.each(addrResponse, function(k,v1) {
+            $.each(v1.types, function(k2, v2){
+              addrInfo[v2] = v1.long_name
+            });
+          });
+          
+          $.each(addrInfo, function(k, v) {
+            console.log(k + ": " + v);
+          });
+          
+          var titty = addrInfo.street_number + ' ' + addrInfo.route
+          $.ajax({
+            url: 'php/new_location.php',
+            type: 'POST',
+            data: {
+              num:    addrInfo.street_number,
+              str:    addrInfo.route,
+              title:  titty,
+              city:   addrInfo.locality,
+              county: addrInfo.administrative_area_level_2,
+              state:  addrInfo.administrative_area_level_1,
+              nation: addrInfo.country,
+              postal: addrInfo.postal_code,
+              longt:  longitude,
+              latt:   latitude
+            },
+            success: function(result) {
+              var answer = jQuery.parseJSON(result);
+              if (answer[0] == 1) {
+                console.log('idLoc: ' + answer[1]);
+                CreateFinalReport(answer[1], cInfo, idMyself);
+              } else {
+                console.log('Failure: ' + answer[1]);
+              }
+            },
+            error: function(result) {
+              
+            }
+          });
+          
+        });
+      }
+  
       function ToggleLegend() {
-        showLegend = !showLegend
+        showLegend = !showLegend;
         if (showLegend) {
           $("#legend").show();
           $("#legshow").hide();
@@ -21,16 +94,9 @@
           $("#legend").hide();
           $("#legshow").show();
         }
-      }
+      };
+      
     </script>
-    <!-- The Google Map Script
-    <script type="text/javascript" src="js/googlemap.js"></script>
-    <script
-      async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBH1jW5Aqd8lHL7RoiiKx9COdioIRdGs8Q&callback=initMap"
-      type="text/javascript">
-    </script>
-    -->
   </head>
   
   
@@ -39,14 +105,48 @@
     <!-- The Map -->
     <div id="gmap"></div>
     
-    <?php include('legend.php'); ?>
+    <!-- Login Block -->
+    <div id="acct-details" style="display: none;">
+    
+      <h3>Log in to Scene-Alert!</h3>
+      
+      <p><i><u>
+      <font color="#04f">
+      <a onclick="HideLogin()">No thanks, I want to view as a guest</a>
+      </font>
+      </u></i></p>
+      
+      <form method="post" id="loginform">
+        <input type="text" id="uname" name="uname" placeholder="Username"/>
+        <br/>
+        <input type="password" id="passwd" name="passwd" placeholder="Password"/>
+        <br/>
+        <input type="button" id="btn-submit" value="Submit" name="submit" onclick="SubmitFormData();"/>
+        <div id="login-msg"></div>
+      </form>
+        
+      <strong>We are not accepting new user registration during development.</strong>
+      
+    </div>
+<?php
+    if (!isset($_SESSION['user'])) {
+      echo "<script>ShowLoginBlock();</script>";
+    } else {
+      echo "<script>LoadCallControl();</script>";
+    }
+?>
     
     <!-- Top Bar: Home/About/Account/FAQ/etc -->
-    <div id="nav-topbar">
-      <div id="display-dtime">
-        <div id="display-date"></div>
-        <div id="display-time"></div>
-      </div>
+    <div id="topdiv"><?php include('topbar.php'); ?></div>
+    <div id="legdiv"><?php include('legend.php'); ?></div>
+    
+    
+    <!-- Controls -->
+    <div id="calldiv">
+      <?php if (isset($_SESSION['user'])) {
+        echo "<script>console.log('loading controller');</script>";
+        include('controller.php');
+      } ?>
     </div>
     
     <!-- Infowindow on Pin Click -->
@@ -80,7 +180,11 @@
       </div>
     </div>
     
-    <script type="text/javascript" src="js/clock.js"></script>
+    <!-- Load the Google Map -->
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBH1jW5Aqd8lHL7RoiiKx9COdioIRdGs8Q&callback=initMap"
+      type="text/javascript">
+    </script> 
   </body>
   
 </html>

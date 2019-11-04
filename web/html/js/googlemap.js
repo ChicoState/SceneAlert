@@ -99,15 +99,14 @@
               iVotes: (result[5] - result[6]),
             }
           });
+          
           // Add listener for click
           var listen = marker.addListener('click', function() {
             
             var scrW = getWidth();
             gMap.setCenter(marker.getPosition());
             gMap.setZoom(14);
-            if (scrW) {
-              gMap.panBy(scrW * 0.2, 0);
-            }
+            if (scrW) { gMap.panBy(scrW * 0.145, 0); }
             
             // Retrieve call info and open info div
             $("#info-window").fadeIn(100);
@@ -136,7 +135,7 @@
        */
       function LoadMarkers() {
         $.ajax({
-          url: "php/incidents.php",
+          url: "../php/incidents.php",
           success: function(result) {
             var jsn    = JSON.parse(result);
             var idList = [];
@@ -168,6 +167,8 @@
        * Initializes the Google Map upon page load
        */
       function initMap() {
+        
+        // Creates the Google Map 'gMap'
         gMap = new google.maps.Map(document.getElementById('gmap'), {
           center: {lat: 37.0902, lng: -95.7129},
           zoom: 5,
@@ -177,7 +178,118 @@
           scaleControl: true,
           streetViewControl: false,
           rotateControl: true,
-          fullscreenControl: false
+          fullscreenControl: false,
+          styles: [
+            {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
+            {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
+            {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
+            {
+              featureType: 'administrative.locality',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#d59563'}]
+            },
+            {
+              featureType: 'poi',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#d59563'}]
+            },
+            {
+              featureType: 'poi.park',
+              elementType: 'geometry',
+              stylers: [{color: '#263c3f'}]
+            },
+            {
+              featureType: 'poi.park',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#6b9a76'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'geometry',
+              stylers: [{color: '#38414e'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'geometry.stroke',
+              stylers: [{color: '#212a37'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#9ca5b3'}]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'geometry',
+              stylers: [{color: '#746855'}]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'geometry.stroke',
+              stylers: [{color: '#1f2835'}]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#f3d19c'}]
+            },
+            {
+              featureType: 'transit',
+              elementType: 'geometry',
+              stylers: [{color: '#2f3948'}]
+            },
+            {
+              featureType: 'transit.station',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#d59563'}]
+            },
+            {
+              featureType: 'water',
+              elementType: 'geometry',
+              stylers: [{color: '#17263c'}]
+            },
+            {
+              featureType: 'water',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#515c6d'}]
+            },
+            {
+              featureType: 'water',
+              elementType: 'labels.text.stroke',
+              stylers: [{color: '#17263c'}]
+            }
+          ]
         });
+        
+        
+        // Adds a listener to close the info-window
+        gMap.addListener('click', function() {
+          $("#info-window").hide();
+        });
+        
+        // Creates applicable markers
         LoadMarkers();
+        getLocation(); // DEBUG
+        
+      } // End function initMap()
+      
+      // DEBUG - Stuff
+      function getLocation() {
+        if (navigator.geolocation) {
+          console.log('Requesting users location');
+          navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+          console.log('GeoLocation not supported.');
+          alert("Geolocation is not supported by this browser.");
+        }
+      }
+      function showPosition(position) {
+        var lat = position.coords.latitude;
+        var lng = position.coords.longitude;
+        console.log('Moving based on location!');
+        
+        // Moves map to the user's current location
+        gMap.setCenter(new google.maps.LatLng(lat, lng));
+        gMap.setZoom(12);
+        
       }

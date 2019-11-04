@@ -81,7 +81,6 @@
 
   // Read latest CHP XML. If not found, terminate
   $newFile = fopen($read_new, "r") or die("Failed to read chp_incidents.xml.\n");
-  $oldFile = fopen($read_new, "r");
   
   // Read through new file until we get to Chico Dispatch.
   $findChico = 'Dispatch ID = "CHCC"';
