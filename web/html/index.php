@@ -25,7 +25,7 @@
       
       var showLegend = true;
       
-      function LocationByAddress(addr) {
+      function LocationByAddress(addr, cInfo, idMyself) {
         
         console.log('GeoCoding ' + addr + '...');
         var geocoder = new google.maps.Geocoder();
@@ -69,7 +69,13 @@
               latt:   latitude
             },
             success: function(result) {
-              
+              var answer = jQuery.parseJSON(result);
+              if (answer[0] == 1) {
+                console.log('idLoc: ' + answer[1]);
+                CreateFinalReport(answer[1], cInfo, idMyself);
+              } else {
+                console.log('Failure: ' + answer[1]);
+              }
             },
             error: function(result) {
               
