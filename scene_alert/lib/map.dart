@@ -5,9 +5,15 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:scene_alert/login.dart';
+import 'package:scene_alert/markerDetail.dart';
+
 GoogleMap _map;
 
+
+
 class CrimeMap extends StatefulWidget {
+  
   @override
   State<CrimeMap> createState() => CrimeMapState();
 }
@@ -72,6 +78,9 @@ class CrimeMapState extends State<CrimeMap> {
                 Implement a function to open a new page with full information about an incident
                 Mostly likely to come after user input
               */
+              Navigator.push(context, MaterialPageRoute(builder: (context){
+                return MarkerDetail( myjson: json[i]);
+              }));
               handleTap(json[i][0]);
             },
           )
@@ -83,27 +92,59 @@ class CrimeMapState extends State<CrimeMap> {
       print( "Error" );
     }
   }
-
+//simulating the json from whats read in from the php request from above
   Future tmpMarkers() async {
+    var jsonString = '''
+    [
+    [
+      "Missing Dog",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque volutpat ultricies sem ac convallis. Sed ut viverra arcu. Nunc ullamcorper augue sit amet velit dignissim, at ultrices velit tincidunt.",
+      "Joe Joe"
+    ],
+    [
+      "House Break In at...",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque volutpat ultricies sem ac convallis. Sed ut viverra arcu.",
+      "Marry Sue"
+    ],
+    [
+      "Fire in tree",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque volutpat ultricies sem ac convallis. ",
+      "Fire Department"
+    ],
+    [
+      "Car Wreck At 423 Esplande",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque volutpat ultricies sem ac convallis.",
+      "CHP"
+    ]
+  ]
+''';
 
+var tempJson = jsonDecode(jsonString);
+  
     var tmpLocations = [
       [ 39.726421, -121.842728 ],
       [ 39.737559, -121.863048 ],
       [ 39.756677, -121.838937 ],
       [ 39.761417, -121.878801 ],
     ];
+    
     for( var i = 0; i < tmpLocations.length; i++ ) {
       myMarkers.add(
         Marker(
           markerId: MarkerId( i.toString() ),
           position: LatLng( tmpLocations[i][0], tmpLocations[i][1] ),
           infoWindow: InfoWindow(
-            title: "Test " + i.toString(),
-            snippet: "Description " + i.toString(),
+            title: tempJson[i][0].toString(),
+            snippet: tempJson[i][2].toString(),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context){
+                return MarkerDetail(myjson: tempJson[i]);
+              }));
+            }
           ),
           icon: markerIcon,
           onTap: () {
-            handleTap( "Test " + i.toString() );
+            handleTap( "Test " + tempJson[i][0] );
           },
         ),
       );
@@ -115,7 +156,7 @@ class CrimeMapState extends State<CrimeMap> {
     See marker onTap()
   */
   void handleTap(String title) {
-
+        
     /*
     Going to use FutureBuilder here to pull more info from the database 
     for the particular incident that was tapped
