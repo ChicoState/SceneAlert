@@ -27,9 +27,11 @@ class MarkerState extends State<MarkerDetail> {
         },
         child: Scaffold(
           appBar: AppBar(
-            title: Text("View Event"),
+            centerTitle: true,
+            title: Text("View Event", style: TextStyle( color: Color.fromARGB( 255, 49, 182, 235 ) )),
+            backgroundColor: Color.fromARGB( 255, 255, 255, 255 ),
             leading: IconButton(
-                icon: Icon(Icons.arrow_back),
+                icon: Icon(Icons.arrow_back, color: Color.fromARGB( 255, 49, 182, 235 ) ),
                 onPressed: () {
                   // Write some code to control things, when user press back button in AppBar
                   moveToLastScreen();
@@ -86,8 +88,8 @@ class MarkerState extends State<MarkerDetail> {
                     children: <Widget>[
                       Expanded(
                         child: RaisedButton(
-                          color: Theme.of(context).primaryColorDark,
-                          textColor: Theme.of(context).primaryColorLight,
+                          color: Color.fromARGB( 255, 49, 182, 235 ),
+                          textColor: Colors.white,
                           child: Text(
                             'Comment',
                             textScaleFactor: 1.5,
@@ -102,8 +104,8 @@ class MarkerState extends State<MarkerDetail> {
                       ),
                       Expanded(
                         child: RaisedButton(
-                          color: Theme.of(context).primaryColorDark,
-                          textColor: Theme.of(context).primaryColorLight,
+                          color: Color.fromARGB( 255, 49, 182, 235 ),
+                          textColor: Colors.white,
                           child: Text(
                             'Follow',
                             textScaleFactor: 1.5,
