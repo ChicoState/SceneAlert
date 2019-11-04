@@ -16,13 +16,12 @@
     
     
     <div id="nav-user">
+    </div>
 <?php
     if (isset($_SESSION['user'])) {
-      echo "Logged in as <strong>" . $_SESSION['email'] . "</strong><br>";
       echo '<button onclick="doLogoff();">Log Off</button>';
     }
 ?>
-    </div>
       <!-- Time & Date -->
       <div id="display-dtime">
         <div id="display-date"></div>

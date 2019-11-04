@@ -24,7 +24,6 @@
         $('#new-zip').val('');
         $('#new-city').val('');
         $('#new-state').val('');
-        $('#new-type').val('');
         $('#new-title').val('');
         $('#new-details').val('');
         
