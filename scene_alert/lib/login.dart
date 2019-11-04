@@ -15,66 +15,80 @@ class LoginState extends State<Login> {
   String _email, _password;
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
+  final FocusNode fnEmail = FocusNode();
+  final FocusNode fnPassword = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home:
         Scaffold(
+          //resizeToAvoidBottomInset: false,
           body:
-            Form(
-              key: _formkey,
+            SingleChildScrollView( 
               child:
-                Container(
-                  padding: new EdgeInsets.all(25.0),
+                Form(
+                  key: _formkey,
                   child:
-                    Column(
-                      children: <Widget>[
-                        SizedBox(height: 50),
-                        Image.asset(
-                          'images/blue_foreground.png',
-                          height: 200,
-                          width: 200,
-                        ),
-                        SizedBox(height: 50),
-                        TextFormField(
-                          decoration: new InputDecoration(
-                            helperText: "Email", 
-                            focusedBorder:UnderlineInputBorder(
-                            borderSide: const BorderSide(color: Color.fromARGB( 255, 49, 182, 235 ), width: 2.0),
+                    Container(
+                      padding: new EdgeInsets.all(25.0),
+                      child:
+                        Column(
+                          children: <Widget>[
+                            SizedBox(height: 50),
+                            Image.asset(
+                              'images/blue_foreground.png',
+                              height: 200,
+                              width: 200,
                             ),
-                          ),
-                          cursorColor: Colors.black,
-                          onSaved: (input) {
-                            setState(() {
-                              _email = input;
-                            });
-                          }
-                        ),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            helperText: "Password", 
-                            focusedBorder:UnderlineInputBorder(
-                            borderSide: const BorderSide(color: Color.fromARGB( 255, 49, 182, 235 ), width: 2.0),
+                            SizedBox(height: 50),
+                            TextFormField(
+                              focusNode: fnEmail,
+                              textInputAction: TextInputAction.next,
+                              onFieldSubmitted: (term) {
+                                fnEmail.unfocus();
+                                FocusScope.of(context).requestFocus(fnPassword);
+                              },
+                              decoration: new InputDecoration(
+                                helperText: "Email", 
+                                focusedBorder:UnderlineInputBorder(
+                                borderSide: const BorderSide(color: Color.fromARGB( 255, 49, 182, 235 ), width: 2.0),
+                                ),
+                              ),
+                              cursorColor: Colors.black,
+                              onSaved: (input) {
+                                setState(() {
+                                  _email = input;
+                                });
+                              }
                             ),
-                          ),
-                          cursorColor: Colors.black,
-                          obscureText: true,
-                          onSaved: (input) => _password = input,
-                        ),
-                        SizedBox(height: 20),
-                        Builder( builder: (context) =>
-                          MaterialButton(
-                            onPressed: () { 
-                              validate( context );
-                            },
-                            elevation: 5,
-                            minWidth: 200,
-                            color: Color.fromARGB( 255, 49, 182, 235 ),
-                            //Labels the button with Submit
-                            child: Text('Login'),
-                          ),
-                        ),
-                      ],
+                            TextFormField(
+                              focusNode: fnPassword,
+                              decoration: InputDecoration(
+                                helperText: "Password",
+                                focusedBorder:UnderlineInputBorder(
+                                borderSide: const BorderSide(color: Color.fromARGB( 255, 49, 182, 235 ), width: 2.0),
+                                ),
+                              ),
+                              cursorColor: Colors.black,
+                              obscureText: true,
+                              onSaved: (input) => _password = input,
+                            ),
+                            SizedBox(height: 20),
+                            Builder( builder: (context) =>
+                              MaterialButton(
+                                onPressed: () { 
+                                  validate( context );
+                                },
+                                elevation: 5,
+                                minWidth: 200,
+                                color: Color.fromARGB( 255, 49, 182, 235 ),
+                                //Labels the button with Submit
+                                child: Text('Login'),
+                              ),
+                            ),
+                          ],
+                        )
                     )
                 )
             )
