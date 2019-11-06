@@ -46,6 +46,7 @@ flutter:
   assets:
     - images/police128.png
     - images/blue_foreground.png
+    - images/404_image.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
