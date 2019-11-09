@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:scene_alert/globals.dart' as globals;
+
 
 class CrimeHistory extends StatefulWidget {
   @override
@@ -17,7 +19,7 @@ class CrimeHistoryState extends State<CrimeHistory> {
   @override
   void initState() {
     super.initState();
-    historyList = getHistory("");
+    historyList = getHistory( "" );
   }
   
   @override
@@ -36,7 +38,7 @@ class CrimeHistoryState extends State<CrimeHistory> {
                   itemCount: snapshot.data.length,
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
-                      title: Text(snapshot.data[index][0]),
+                      title: Text( snapshot.data[index][3] + " " + snapshot.data[index][0] ),
                     );
                   },
                 );
@@ -60,7 +62,6 @@ class CrimeHistoryState extends State<CrimeHistory> {
                 dropdownValue = newValue;
                 historyList = getHistory( newValue );
               });
-              //getHistory( newValue );
             },
             items: <String>[ '1 Day', '1 Week', '1 Month', '3 Months', '6 Months', '1 Year']
               .map<DropdownMenuItem<String>>((String value) {
@@ -81,7 +82,9 @@ class CrimeHistoryState extends State<CrimeHistory> {
       return new List<List>(0);
     }
     timeRange = timeRange.replaceAll(new RegExp(r"\s|s"), "").toLowerCase();
-    var url = 'https://scene-alert.com/inc/gethistory.php?range=' + timeRange;
+    var url = 'https://scene-alert.com/inc/gethistory.php?lat=' + 
+      globals.lat.toString() + '&lon=' + globals.lon.toString() + '&radius=' + globals.radius.toString() + '&time=' + timeRange;
+    print( url );
     http.Response response = await http.get(url);
     var data = jsonDecode(response.body);
     print( data );

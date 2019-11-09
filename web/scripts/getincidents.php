@@ -6,7 +6,7 @@
 
   $lat = $_GET['lat'];
   $lon = $_GET['lon'];
-  $range = $_GET['range'];
+  $radius = $_GET['radius'];
 
   function getRadius( $latArg, $longArg, $latDb, $longDb ) {
     
@@ -35,8 +35,8 @@
     $err = 0;
     $jsonarray = array();
     while($row = $getCalls->fetch(PDO::FETCH_ASSOC)) {
-      $radius = getRadius( $lat, $lon, $row['latitude'], $row['longitude'] );
-      if( $radius <= $range ) {
+      $rowRadius = getRadius( $lat, $lon, $row['latitude'], $row['longitude'] );
+      if( $rowRadius <= $radius ) {
         $jsonarray[] = array(
             $row['title'], $row['type'], $row['details'],
             $row['longitude'], $row['latitude']

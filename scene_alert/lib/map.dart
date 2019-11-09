@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'package:scene_alert/markerDetail.dart';
+import 'package:scene_alert/globals.dart' as globals;
 
 GoogleMap _map;
 
@@ -81,6 +82,7 @@ class CrimeMapState extends State<CrimeMap> {
               },
               onChangeEnd: (newVal) {
                 getCHP( rangeOptions[newVal.ceil()] );
+                globals.radius = rangeOptions[newVal.ceil()];
               },
             ),
           bottom: 5,
@@ -95,8 +97,8 @@ class CrimeMapState extends State<CrimeMap> {
     Transforms response to JSON
     Makes a marker and adds it to Set
   */
-  Future getCHP( range ) async {
-    var url = 'https://scene-alert.com/inc/getincidents.php?lat=39.7250751&lon=-121.8367999&range=' + range.toString();
+  Future getCHP( radius ) async {
+    var url = 'https://scene-alert.com/inc/getincidents.php?lat=39.7250751&lon=-121.8367999&radius=' + radius.toString();
     http.Response response = await http.get(url);
     var data = jsonDecode(response.body);
 
