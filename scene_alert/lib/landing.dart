@@ -13,8 +13,8 @@ class LandingPageState extends State<LandingPage> {
 
   int _selectedPage = 1;
   final _pageOptions = [
-    Logout(),
-    //Center( child: Text('Future Widget') ),
+    //Logout(),
+    Center( child: Text('Future Widget') ),
     CrimeMap(),
     CrimeHistory(),
   ];

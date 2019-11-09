@@ -24,23 +24,70 @@ class CrimeMapState extends State<CrimeMap> {
     zoom: 11,
   );
 
+  /*
+    Overrides the initial state so data is loaded before the map is
+  */
+  @override
+  void initState() {
+    super.initState();
+
+    getCHP( 3 );
+
+    BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(), 'images/police128.png')
+        .then(( value ) {
+          setState(() {
+            markerIcon = value;
+          });
+        });
+
+  }
+
   // Store markers in a set to be later passed to GoogleMap()
   Set<Marker> myMarkers = {};
   GoogleMapController _controller;
   // Placeholder for dynamic icons
   BitmapDescriptor markerIcon;
 
+  double radius = 0;
+  List<int> rangeOptions = [ 3, 5, 10, 15, 20, 30, 50, 100 ];
+
   // Beginning of the rendering code
   @override
   Widget build(BuildContext context) {
 
-    return _map = 
-      GoogleMap(
-        mapType: MapType.normal,  // Flat image
-        initialCameraPosition: chico,
-        markers: myMarkers,
-        onMapCreated: mapCreated, // Calls when map is finished creating
-      );
+    return Stack(
+      children: <Widget>[
+        GoogleMap(
+          mapType: MapType.normal,  // Flat image
+          initialCameraPosition: chico,
+          markers: myMarkers,
+          onMapCreated: mapCreated, // Calls when map is finished creating
+        ),
+        Positioned(
+          child:
+            Slider(
+              activeColor: Theme.of(context).primaryColor,
+              min: 0,
+              max: 7,
+              label: rangeOptions[radius.ceil()].toString(),
+              divisions: 7,
+              value: radius,
+              onChanged: (newVal) {
+                setState(() {
+                  radius = newVal;
+                  //print( radius.toString() + "|" + rangeOptions[radius.ceil()].toString() );
+                });
+              },
+              onChangeEnd: (newVal) {
+                getCHP( rangeOptions[newVal.ceil()] );
+              },
+            ),
+          bottom: 5,
+          width: MediaQuery.of(context).size.width,
+        )
+      ],
+    );
   }
 
   /*
@@ -48,8 +95,8 @@ class CrimeMapState extends State<CrimeMap> {
     Transforms response to JSON
     Makes a marker and adds it to Set
   */
-  Future getCHP() async {
-    var url = 'https://scene-alert.com/inc/getincidents.php?lat=39.7250751&lon=-121.8367999&range=30';
+  Future getCHP( range ) async {
+    var url = 'https://scene-alert.com/inc/getincidents.php?lat=39.7250751&lon=-121.8367999&range=' + range.toString();
     http.Response response = await http.get(url);
     var data = jsonDecode(response.body);
 
@@ -86,25 +133,6 @@ class CrimeMapState extends State<CrimeMap> {
       // HTTP get Failed
       print( "Error" );
     }
-  }
-
-  /*
-    Overrides the initial state so data is loaded before the map is
-  */
-  @override
-  void initState() {
-    super.initState();
-
-    getCHP();
-
-    BitmapDescriptor.fromAssetImage(
-      ImageConfiguration(), 'images/police128.png')
-        .then(( value ) {
-          setState(() {
-            markerIcon = value;
-          });
-        });
-
   }
 
   void mapCreated( controller ) {
