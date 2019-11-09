@@ -49,7 +49,7 @@ class CrimeMapState extends State<CrimeMap> {
     Makes a marker and adds it to Set
   */
   Future getCHP() async {
-    var url = 'https://scene-alert.com/inc/getincidents.php';
+    var url = 'https://scene-alert.com/inc/getincidents.php?lat=39.7250751&lon=-121.8367999&range=30';
     http.Response response = await http.get(url);
     var data = jsonDecode(response.body);
 

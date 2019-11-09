@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scene_alert/history.dart';
 import 'package:scene_alert/map.dart';
+import 'package:geolocator/geolocator.dart';
 
 class LandingPage extends StatefulWidget {
   @override
@@ -89,6 +90,15 @@ class LandingPageState extends State<LandingPage> {
         ),
       )  
     );
+  }
+
+  Future getLocation() async {
+    Position position = await Geolocator().getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
+    if( !(position ?? false) ) {
+      position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    }
+
+    return position;
   }
 
 }
