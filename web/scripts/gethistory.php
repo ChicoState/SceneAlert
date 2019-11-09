@@ -76,7 +76,7 @@
             $rowRadius = getRadius( $lat, $lon, $row['latitude'], $row['longitude'] );
             if( $rowRadius <= $radius ) {
                 $jsonarray[] = array(
-                    $row['title'], $row['details'], $row['type'], $row['created']
+                    $row['title'], $row['type'], $row['details'], $row['created']
                 );
             }
         }
