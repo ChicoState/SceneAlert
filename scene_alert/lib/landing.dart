@@ -20,11 +20,41 @@ class LandingPageState extends State<LandingPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Scene Alert',
+
+      theme: ThemeData(
+        accentColor: Colors.white,
+        primaryColor: Color.fromARGB( 255, 49, 182, 235 ),
+        primaryTextTheme: 
+          TextTheme(
+            title: TextStyle( color: Color.fromARGB( 255, 49, 182, 235 ), )
+          ),
+        appBarTheme: 
+          AppBarTheme(
+            color: Colors.white,
+            textTheme:
+              TextTheme(
+                body1: TextStyle( color: Color.fromARGB( 255, 49, 182, 235 ), )
+              ),
+          ),
+        primaryIconTheme:
+          IconThemeData(
+            color: Colors.blueGrey,
+          ),
+        accentIconTheme:
+          IconThemeData(
+            color: Colors.grey,
+          ),
+        buttonTheme:
+          ButtonThemeData(
+            buttonColor: Color.fromARGB( 255, 49, 182, 235 ),
+            textTheme: ButtonTextTheme.accent,
+          )
+      ),
+
       home: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Scene Alert', style: TextStyle( color: Color.fromARGB( 255, 49, 182, 235 ) )),
-          backgroundColor: Color.fromARGB( 255, 255, 255, 255 ),
+          title: Text('Scene Alert'),
         ),
         body:
       
@@ -60,4 +90,5 @@ class LandingPageState extends State<LandingPage> {
       )  
     );
   }
+
 }
