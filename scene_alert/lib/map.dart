@@ -21,7 +21,7 @@ class CrimeMapState extends State<CrimeMap> {
     Will be Chico until present location data is used
   */
   static final CameraPosition chico = CameraPosition(
-    target: LatLng( 39.7250751,-121.8367999 ),
+    target: LatLng( globals.lat, globals.lon ),
     zoom: 11,
   );
 
@@ -114,7 +114,8 @@ class CrimeMapState extends State<CrimeMap> {
     Makes a marker and adds it to Set
   */
   Future getCHP( radius ) async {
-    var url = 'https://scene-alert.com/inc/getincidents.php?lat=39.7250751&lon=-121.8367999&radius=' + radius.toString();
+    var url = 'https://scene-alert.com/inc/getincidents.php?' + 
+      'lat=' + globals.lat.toString() + '&lon=' + globals.lon.toString() +'&radius=' + radius.toString();
     http.Response response = await http.get(url);
     var data = jsonDecode(response.body);
 

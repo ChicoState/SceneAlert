@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:scene_alert/markerDetail.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;

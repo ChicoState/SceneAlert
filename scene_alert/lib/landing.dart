@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scene_alert/history.dart';
 import 'package:scene_alert/map.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:scene_alert/globals.dart' as globals;
 import 'package:scene_alert/logout.dart';
 
 class LandingPage extends StatefulWidget {
@@ -18,6 +19,12 @@ class LandingPageState extends State<LandingPage> {
     CrimeMap(),
     CrimeHistory(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    getLocation();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,10 +102,17 @@ class LandingPageState extends State<LandingPage> {
   }
 
   Future getLocation() async {
+    GeolocationStatus geolocationStatus  = await Geolocator().checkGeolocationPermissionStatus();
+
+    print( "Checking Location------------------------------------------");
+    print( geolocationStatus.value );
     Position position = await Geolocator().getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
     if( !(position ?? false) ) {
       position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     }
+
+    globals.lat = position.latitude;
+    globals.lon = position.longitude;
 
     return position;
   }
