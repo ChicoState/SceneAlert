@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:scene_alert/markerDetail.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -27,12 +28,13 @@ class CrimeHistoryState extends State<CrimeHistory> {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        Center(
+        Positioned.fill(
+          top: 45,
           child:
             FutureBuilder(
               future: historyList,
               builder: (BuildContext context, AsyncSnapshot snapshot ) {
-                if (!snapshot.hasData) {
+                if ( !snapshot.hasData || snapshot.data.length == 0 ) {
                   return Center( child: Text("Please select a time range.") );
                 }
                 return ListView.builder(
@@ -66,35 +68,38 @@ class CrimeHistoryState extends State<CrimeHistory> {
                   },
                 );
               },
-            )
+            ),
         ),
         Positioned(
-          top: 10,
-          right: 10,
-          child: DropdownButton<String>(
-            value: dropdownValue,
-            icon: Icon(Icons.arrow_downward),
-            iconSize: 24,
-            elevation: 16,
-            underline: Container(
-              height: 2,
-              color: Color.fromARGB( 255, 49, 182, 235 ),
+          top: 0,
+          left: MediaQuery.of(context).size.width/3,
+          right: MediaQuery.of(context).size.width/3,
+          child: 
+            DropdownButton<String>(
+              isExpanded: true,
+              value: dropdownValue,
+              icon: Icon(Icons.arrow_downward),
+              iconSize: 24,
+              elevation: 16,
+              underline: Container(
+                height: 2,
+                color: Color.fromARGB( 255, 49, 182, 235 ),
+              ),
+              onChanged: (String newValue) {
+                setState(() {
+                  dropdownValue = newValue;
+                  historyList = getHistory( newValue );
+                });
+              },
+              items: <String>[ '1 Day', '1 Week', '1 Month', '3 Months', '6 Months', '1 Year']
+                .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                })
+                .toList(),
             ),
-            onChanged: (String newValue) {
-              setState(() {
-                dropdownValue = newValue;
-                historyList = getHistory( newValue );
-              });
-            },
-            items: <String>[ '1 Day', '1 Week', '1 Month', '3 Months', '6 Months', '1 Year']
-              .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              })
-              .toList(),
-          ),
         ),
       ],
     );
