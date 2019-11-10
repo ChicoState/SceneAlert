@@ -32,15 +32,29 @@ class CrimeMapState extends State<CrimeMap> {
   void initState() {
     super.initState();
 
-    getCHP( 3 );
-
     BitmapDescriptor.fromAssetImage(
-      ImageConfiguration(), 'images/police128.png')
+      ImageConfiguration(), 'images/policeMarker128.png')
         .then(( value ) {
           setState(() {
-            markerIcon = value;
+            policeMarkerIcon = value;
           });
         });
+    BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(), 'images/fireMarker128.png')
+        .then(( value ) {
+          setState(() {
+            fireMarkerIcon = value;
+          });
+        });
+    BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(), 'images/multiMarker128.png')
+        .then(( value ) {
+          setState(() {
+            multiMarkerIcon = value;
+          });
+        });
+
+    getCHP( 3 );
 
   }
 
@@ -48,7 +62,10 @@ class CrimeMapState extends State<CrimeMap> {
   Set<Marker> myMarkers = {};
   GoogleMapController _controller;
   // Placeholder for dynamic icons
-  BitmapDescriptor markerIcon;
+  BitmapDescriptor policeMarkerIcon;
+  BitmapDescriptor fireMarkerIcon;
+  BitmapDescriptor multiMarkerIcon;
+
 
   double radius = 0;
   List<int> rangeOptions = [ 3, 5, 10, 15, 20, 30, 50, 100 ];
@@ -77,7 +94,6 @@ class CrimeMapState extends State<CrimeMap> {
               onChanged: (newVal) {
                 setState(() {
                   radius = newVal;
-                  //print( radius.toString() + "|" + rangeOptions[radius.ceil()].toString() );
                 });
               },
               onChangeEnd: (newVal) {
@@ -102,10 +118,21 @@ class CrimeMapState extends State<CrimeMap> {
     http.Response response = await http.get(url);
     var data = jsonDecode(response.body);
 
+    BitmapDescriptor marker;
+
     if( data[0] == 0 ) {
       var json = jsonDecode(data[1]);
       for( var i = 0; i < json.length; i++ ) {
         try {
+          if( json[i][1] == "2" ) {
+            marker = fireMarkerIcon;
+          }
+          else if( json[i][1] == "4" ) {
+            marker = multiMarkerIcon;
+          }
+          else {
+            marker = policeMarkerIcon;
+          }
           myMarkers.add(
             Marker(
               markerId: MarkerId( i.toString() ),
@@ -114,7 +141,7 @@ class CrimeMapState extends State<CrimeMap> {
                 title: json[i][0],  // Incident Report name
                 snippet: json[i][2],  // Reported by what agency
               ),
-              icon: markerIcon,
+              icon: marker,
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context){
                   return MarkerDetail( myjson: json[i]);

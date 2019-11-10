@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scene_alert/markerDetail.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -39,6 +40,11 @@ class CrimeHistoryState extends State<CrimeHistory> {
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
                       title: Text( snapshot.data[index][3] + " " + snapshot.data[index][0] ),
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context){
+                          return MarkerDetail( myjson: snapshot.data[index] );
+                        }));
+                      },
                     );
                   },
                 );

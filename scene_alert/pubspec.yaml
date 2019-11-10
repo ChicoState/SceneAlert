@@ -45,7 +45,9 @@ flutter:
   uses-material-design: true
 
   assets:
-    - images/police128.png
+    - images/policeMarker128.png
+    - images/fireMarker128.png
+    - images/multiMarker128.png
     - images/blue_foreground.png
     - images/404_image.png
 
