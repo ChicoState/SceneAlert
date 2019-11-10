@@ -38,13 +38,30 @@ class CrimeHistoryState extends State<CrimeHistory> {
                 return ListView.builder(
                   itemCount: snapshot.data.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      title: Text( snapshot.data[index][3] + " " + snapshot.data[index][0] ),
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context){
-                          return MarkerDetail( myjson: snapshot.data[index] );
-                        }));
-                      },
+                    return Card(
+                      child:
+                        ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Theme.of(context).accentColor,
+                            backgroundImage: ( () {
+                              if( snapshot.data[index][1] == "2" ) {
+                                return AssetImage('images/fireMarker128.png');
+                              }
+                              else if( snapshot.data[index][1] == "4" ) {
+                                return AssetImage('images/multiMarker128.png');
+                              }
+                              else {
+                                return AssetImage('images/policeMarker128.png');
+                              }
+                            } () )
+                          ),
+                          title: Text( snapshot.data[index][3] + " " + snapshot.data[index][0] ),
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context){
+                              return MarkerDetail( myjson: snapshot.data[index] );
+                            }));
+                          },
+                        ),
                     );
                   },
                 );
