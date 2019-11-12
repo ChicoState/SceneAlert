@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:scene_alert/globals.dart' as globals;
-import 'package:scene_alert/landing.dart';
+import 'package:scene_alert/theme.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -44,10 +46,10 @@ class SettingsState extends State<Settings> {
                       setState(() {
                         globals.darkMode = value;
                         if( globals.darkMode ) {
-                          globals.theme = globals.darkTheme;
+                          Provider.of<ThemeChanger>(context).setTheme( ThemeData.dark() );
                         }
                         else {
-                          globals.theme = globals.lightTheme;
+                          Provider.of<ThemeChanger>(context).setLightTheme();
                         }
                       });
                       print( globals.darkMode );

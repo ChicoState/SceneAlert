@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:scene_alert/history.dart';
 import 'package:scene_alert/map.dart';
 import 'package:scene_alert/settings.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:scene_alert/globals.dart' as globals;
+import 'package:scene_alert/theme.dart';
 //import 'package:scene_alert/logout.dart';
 
 class LandingPage extends StatefulWidget {
@@ -32,7 +34,7 @@ class LandingPageState extends State<LandingPage> {
     return MaterialApp(
       title: 'Scene Alert',
 
-      theme: globals.theme,
+      theme: Provider.of<ThemeChanger>(context).getTheme(),
 
       home: Scaffold(
         appBar: AppBar(

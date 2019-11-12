@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:scene_alert/landing.dart';
-import 'package:scene_alert/login.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+
+import 'package:scene_alert/landing.dart';
+import 'package:scene_alert/login.dart';
+import 'package:scene_alert/theme.dart';
+import 'package:scene_alert/theme.dart' as themes;
 
 bool validCreds = false;
 
@@ -22,9 +26,25 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return validCreds ? LandingPage() : Login();
+    return ChangeNotifierProvider<ThemeChanger>(
+      builder: (_) => ThemeChanger( themes.lightTheme ),
+      child: new MyAppWithTheme(),
+    );
   }
+}
 
+class MyAppWithTheme extends StatelessWidget {
+  @override
+  Widget build( BuildContext context ) {
+    final theme = Provider.of<ThemeChanger>(context);
+    //theme.setLightTheme();
+    return MaterialApp(
+      home: ( () { 
+        return validCreds ? LandingPage() : Login();
+      } () ),
+      theme: theme.getTheme(),
+    );
+  }
 }
 
 Future rememberValidate() async {
