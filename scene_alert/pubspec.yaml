@@ -51,6 +51,7 @@ flutter:
     - images/multiMarker128.png
     - images/blue_foreground.png
     - images/404_image.png
+    - assets/dark.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:

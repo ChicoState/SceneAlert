@@ -7,6 +7,7 @@ import 'dart:convert';
 
 import 'package:scene_alert/landing.dart';
 import 'package:scene_alert/login.dart';
+import 'package:scene_alert/globals.dart' as globals;
 import 'package:scene_alert/theme.dart';
 import 'package:scene_alert/theme.dart' as themes;
 
@@ -27,7 +28,14 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ThemeChanger>(
-      builder: (_) => ThemeChanger( themes.lightTheme ),
+      builder: (_) {
+        if( globals.darkMode ) {
+          return ThemeChanger( ThemeData.dark() );
+        }
+        else {
+          return ThemeChanger( themes.lightTheme );
+        }
+      },
       child: new MyAppWithTheme(),
     );
   }
@@ -55,8 +63,12 @@ Future rememberValidate() async {
 
   try {
     Map<String, String> userPass = await storage.readAll();
-    _user = userPass.keys.first;
-    _pass = userPass.values.first;
+    print( "Reading keystore-----------------------------------------------------------" );
+    print( userPass );
+    _user = userPass.keys.last;
+    _pass = userPass.values.last;
+    bool darkmode = userPass.values.first == 'true';
+    globals.darkMode = darkmode;
   }
   catch (error) {
     print( "No login in keystore" );

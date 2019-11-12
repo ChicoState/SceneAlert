@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:scene_alert/globals.dart' as globals;
 import 'package:scene_alert/theme.dart';
@@ -10,6 +11,8 @@ class Settings extends StatefulWidget {
 }
 
 class SettingsState extends State<Settings> {
+
+  final storage = new FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +48,7 @@ class SettingsState extends State<Settings> {
                     onChanged: ( value ) {
                       setState(() {
                         globals.darkMode = value;
+
                         if( globals.darkMode ) {
                           Provider.of<ThemeChanger>(context).setTheme( ThemeData.dark() );
                         }
@@ -52,7 +56,7 @@ class SettingsState extends State<Settings> {
                           Provider.of<ThemeChanger>(context).setLightTheme();
                         }
                       });
-                      print( globals.darkMode );
+                      storeMode();
                     },
                   )
                 ],
@@ -60,5 +64,9 @@ class SettingsState extends State<Settings> {
           )
         )
     );
+  }
+
+  Future storeMode() async {
+    await storage.write(key: "darkMode", value: globals.darkMode.toString() );
   }
 }

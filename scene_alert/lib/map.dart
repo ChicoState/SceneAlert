@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter/services.dart' show rootBundle;
+
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -25,12 +27,20 @@ class CrimeMapState extends State<CrimeMap> {
     zoom: 11,
   );
 
+  String _mapStyle;
+
   /*
     Overrides the initial state so data is loaded before the map is
   */
   @override
   void initState() {
     super.initState();
+
+    getCHP( 3 );
+
+    rootBundle.loadString('assets/dark.json').then((string) {
+      _mapStyle = string;
+    });
 
     BitmapDescriptor.fromAssetImage(
       ImageConfiguration(), 'images/policeMarker128.png')
@@ -54,8 +64,6 @@ class CrimeMapState extends State<CrimeMap> {
           });
         });
 
-    getCHP( 3 );
-
   }
 
   // Store markers in a set to be later passed to GoogleMap()
@@ -78,6 +86,7 @@ class CrimeMapState extends State<CrimeMap> {
       children: <Widget>[
         GoogleMap(
           mapType: MapType.normal,  // Flat image
+          mapToolbarEnabled: false,
           initialCameraPosition: chico,
           markers: myMarkers,
           onMapCreated: mapCreated, // Calls when map is finished creating
@@ -168,6 +177,13 @@ class CrimeMapState extends State<CrimeMap> {
   void mapCreated( controller ) {
     setState(() {
       _controller = controller;
+
+      if( globals.darkMode ) {
+        controller.setMapStyle( _mapStyle );
+      }
+      else {
+        controller.setMapStyle( "[]" );
+      }
     });
   }
 }
