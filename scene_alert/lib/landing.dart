@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:scene_alert/history.dart';
 import 'package:scene_alert/map.dart';
+import 'package:scene_alert/settings.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:scene_alert/globals.dart' as globals;
-import 'package:scene_alert/logout.dart';
+//import 'package:scene_alert/logout.dart';
 
 class LandingPage extends StatefulWidget {
   @override
@@ -31,40 +32,25 @@ class LandingPageState extends State<LandingPage> {
     return MaterialApp(
       title: 'Scene Alert',
 
-      theme: ThemeData(
-        accentColor: Colors.white,
-        primaryColor: Color.fromARGB( 255, 49, 182, 235 ),
-        primaryTextTheme: 
-          TextTheme(
-            title: TextStyle( color: Color.fromARGB( 255, 49, 182, 235 ), )
-          ),
-        appBarTheme: 
-          AppBarTheme(
-            color: Colors.white,
-            textTheme:
-              TextTheme(
-                body1: TextStyle( color: Color.fromARGB( 255, 49, 182, 235 ), )
-              ),
-          ),
-        primaryIconTheme:
-          IconThemeData(
-            color: Colors.blueGrey,
-          ),
-        accentIconTheme:
-          IconThemeData(
-            color: Colors.grey,
-          ),
-        buttonTheme:
-          ButtonThemeData(
-            buttonColor: Color.fromARGB( 255, 49, 182, 235 ),
-            textTheme: ButtonTextTheme.accent,
-          )
-      ),
+      theme: globals.theme,
 
       home: Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: Text('Scene Alert'),
+          actions: <Widget>[
+            Builder( 
+              builder: (context) =>
+              IconButton(
+                icon: Icon(Icons.settings),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context){
+                    return Settings();
+                  }));
+                },
+              ),
+            ),
+          ],
         ),
         body:
       
@@ -75,6 +61,7 @@ class LandingPageState extends State<LandingPage> {
       
         //  _pageOptions[_selectedPage],
         bottomNavigationBar: BottomNavigationBar(
+          //backgroundColor: Theme.of(context).accentColor,
           currentIndex: _selectedPage,
           onTap: (int index){
             setState(() {
@@ -84,7 +71,7 @@ class LandingPageState extends State<LandingPage> {
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              title: Text('Home')
+              title: Text('Home'),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.map),
