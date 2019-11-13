@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -15,6 +16,11 @@ bool validCreds = false;
 
 void main() async {
   validCreds = await rememberValidate();
+  final pos = await getLocation();
+
+  globals.lat = pos.latitude;
+  globals.lon = pos.longitude;
+
   runApp(MyApp());
 }
 
@@ -30,7 +36,7 @@ class MyAppState extends State<MyApp> {
     return ChangeNotifierProvider<ThemeChanger>(
       builder: (_) {
         if( globals.darkMode ) {
-          return ThemeChanger( ThemeData.dark() );
+          return ThemeChanger( themes.darkTheme );
         }
         else {
           return ThemeChanger( themes.lightTheme );
@@ -53,6 +59,25 @@ class MyAppWithTheme extends StatelessWidget {
       theme: theme.getTheme(),
     );
   }
+}
+
+Future getLocation() async {
+  GeolocationStatus geolocationStatus  = await Geolocator().checkGeolocationPermissionStatus();
+
+  print( "Checking Location------------------------------------------");
+  print( geolocationStatus.value );
+  Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  /*
+  Position position = await Geolocator().getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
+  if( !(position ?? false) ) {
+    position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  }
+  */
+
+  globals.lat = position.latitude;
+  globals.lon = position.longitude;
+
+  return position;
 }
 
 Future rememberValidate() async {
