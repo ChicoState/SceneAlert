@@ -23,14 +23,6 @@ class LoginState extends State<Login> {
   bool rememberMe = false;
 
   @override
-  void initState() {
-    super.initState();
-
-    //deleteVal();
-    //rememberValidate( context );
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home:
@@ -115,18 +107,6 @@ class LoginState extends State<Login> {
                                 child: Text('Login'),
                               ),
                             ),
-                            Builder( builder: (context) =>
-                              MaterialButton(
-                                onPressed: () { 
-                                  rememberValidate( context );
-                                },
-                                elevation: 5,
-                                minWidth: 200,
-                                color: Color.fromARGB( 255, 49, 182, 235 ),
-                                //Labels the button with Submit
-                                child: Text('Restore Session'),
-                              ),
-                            ),
                           ],
                         )
                     )
@@ -143,10 +123,6 @@ class LoginState extends State<Login> {
     http.Response response = await http.get(url);
     var data = jsonDecode(response.body);
 
-    if( rememberMe ) {
-      await storage.write(key: _email, value: _password);
-    }
-
     if( data[0] == 1 ) {
       if( rememberMe ) {
         await storage.write(key: _email, value: _password);
@@ -160,40 +136,6 @@ class LoginState extends State<Login> {
       print( "Incorrect Login" );
     }
 
-  }
-
-  Future rememberValidate( context ) async {
-
-    var _user, _pass;
-
-    try {
-      Map<String, String> userPass = await storage.readAll();
-      _user = userPass.keys.first;
-      _pass = userPass.values.first;
-    }
-    catch (error) {
-      print( "Keystore error, returning to login" );
-      return;
-    }
-
-    var url = 'https://scene-alert.com/inc/login.php?user=' + _user + '&pass=' + _pass;
-    http.Response response = await http.get(url);
-    var data = jsonDecode(response.body);
-
-    if( data[0] == 1 ) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LandingPage()),
-      );
-    }
-    else if( data[0] == -1 ) {
-      print( "Incorrect Login" );
-    }
-
-  }
-
-  Future deleteVal() async {
-    await storage.deleteAll();
   }
 
 }
