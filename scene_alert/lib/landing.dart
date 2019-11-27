@@ -6,7 +6,7 @@ import 'package:scene_alert/map.dart';
 import 'package:scene_alert/settings.dart';
 import 'package:scene_alert/theme.dart';
 import 'package:scene_alert/globals.dart' as globals;
-//import 'package:scene_alert/logout.dart';
+import 'package:scene_alert/logout.dart';
 
 class LandingPage extends StatefulWidget {
   @override
@@ -17,8 +17,8 @@ class LandingPageState extends State<LandingPage> {
 
   int _selectedPage = 1;
   final _pageOptions = [
-    //Logout(),
-    Center( child: Text('Future Widget') ),
+    Logout(),
+    //Center( child: Text('Future Widget') ),
     CrimeMap(),
     CrimeHistory(),
   ];
