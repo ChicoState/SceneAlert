@@ -10,9 +10,10 @@ class Register extends StatefulWidget {
 
 class RegisterState extends State<Register> {
 
-  String _email, _password;
+  String _user, _email, _password, _password2;
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
+  final FocusNode fnUser = FocusNode();
   final FocusNode fnEmail = FocusNode();
   final FocusNode fnPassword = FocusNode();
   final FocusNode fnPassword2 = FocusNode();
@@ -42,6 +43,22 @@ class RegisterState extends State<Register> {
                             ),
                             SizedBox(height: 50),
                             TextFormField(
+                              focusNode: fnUser,
+                              textInputAction: TextInputAction.next,
+                              onFieldSubmitted: (term) {
+                                fnUser.unfocus();
+                                FocusScope.of(context).requestFocus(fnEmail);
+                              },
+                              decoration: new InputDecoration(
+                                helperText: "Username", 
+                                focusedBorder:UnderlineInputBorder(
+                                borderSide: const BorderSide(color: Color.fromARGB( 255, 49, 182, 235 ), width: 2.0),
+                                ),
+                              ),
+                              cursorColor: Colors.black,
+                              onSaved: (input) => _user = input,
+                            ),
+                            TextFormField(
                               focusNode: fnEmail,
                               textInputAction: TextInputAction.next,
                               onFieldSubmitted: (term) {
@@ -55,11 +72,7 @@ class RegisterState extends State<Register> {
                                 ),
                               ),
                               cursorColor: Colors.black,
-                              onSaved: (input) {
-                                setState(() {
-                                  _email = input;
-                                });
-                              }
+                              onSaved: (input) => _email = input,
                             ),
                             TextFormField(
                               focusNode: fnPassword,
@@ -69,6 +82,10 @@ class RegisterState extends State<Register> {
                                 borderSide: const BorderSide(color: Color.fromARGB( 255, 49, 182, 235 ), width: 2.0),
                                 ),
                               ),
+                              onFieldSubmitted: (term) {
+                                fnPassword.unfocus();
+                                FocusScope.of(context).requestFocus(fnPassword2);
+                              },
                               cursorColor: Colors.black,
                               obscureText: true,
                               onSaved: (input) => _password = input,
@@ -83,7 +100,7 @@ class RegisterState extends State<Register> {
                               ),
                               cursorColor: Colors.black,
                               obscureText: true,
-                              onSaved: (input) => _password = input,
+                              onSaved: (input) => _password2 = input,
                             ),
                             SizedBox(height: 20),
                             Builder( builder: (context) =>
@@ -108,7 +125,12 @@ class RegisterState extends State<Register> {
   }
 
   Future register( context ) async {
-    return;
+    _formkey.currentState.save();
+
+    print( _user );
+    print( _email );
+    print( _password );
+    print( _password2 );
   }
 
 }
