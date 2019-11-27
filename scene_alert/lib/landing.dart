@@ -5,6 +5,7 @@ import 'package:scene_alert/history.dart';
 import 'package:scene_alert/map.dart';
 import 'package:scene_alert/settings.dart';
 import 'package:scene_alert/theme.dart';
+import 'package:scene_alert/globals.dart' as globals;
 //import 'package:scene_alert/logout.dart';
 
 class LandingPage extends StatefulWidget {
@@ -56,7 +57,7 @@ class LandingPageState extends State<LandingPage> {
       
         //  _pageOptions[_selectedPage],
         bottomNavigationBar: BottomNavigationBar(
-          //backgroundColor: Theme.of(context).accentColor,
+          backgroundColor: Theme.of(context).accentColor,
           currentIndex: _selectedPage,
           onTap: (int index){
             setState(() {
@@ -66,17 +67,33 @@ class LandingPageState extends State<LandingPage> {
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
+              activeIcon: ( () {
+                if( globals.darkMode ) {
+                  return Icon( Icons.home, color: Theme.of(context).primaryColor);
+                }
+                else {
+                  return null;
+                }
+              } () ),  
               title: Text('Home'),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.map),
+              activeIcon: Icon( Icons.map, color: Theme.of(context).primaryColor),
               title: Text('Map')
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.history),
+              activeIcon: ( () {
+                if( globals.darkMode ) {
+                  return Icon( Icons.history, color: Theme.of(context).primaryColor);
+                }
+                else {
+                  return null;
+                }
+              } () ),  
               title: Text('History')
             )
-
           ],
         ),
       )  

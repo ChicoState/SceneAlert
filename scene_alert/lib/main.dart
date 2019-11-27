@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+//import 'package:android_intent/android_intent.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -62,11 +63,19 @@ class MyAppWithTheme extends StatelessWidget {
 }
 
 Future getLocation() async {
-  GeolocationStatus geolocationStatus  = await Geolocator().checkGeolocationPermissionStatus();
+  /* Enum
+    Denied 0
+    Disabled 1
+    Granted 2
+    Restricted 3
+    Unknown 4
+  */
+  Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
+  GeolocationStatus geolocationStatus = await geolocator.checkGeolocationPermissionStatus();
 
   print( "Checking Location------------------------------------------");
   print( geolocationStatus.value );
-  Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  Position position = await geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   /*
   Position position = await Geolocator().getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
   if( !(position ?? false) ) {

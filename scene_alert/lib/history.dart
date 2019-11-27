@@ -111,10 +111,8 @@ class CrimeHistoryState extends State<CrimeHistory> {
     timeRange = timeRange.replaceAll(new RegExp(r"\s|s"), "").toLowerCase();
     var url = 'https://scene-alert.com/inc/gethistory.php?lat=' + 
       globals.lat.toString() + '&lon=' + globals.lon.toString() + '&radius=' + globals.radius.toString() + '&time=' + timeRange;
-    print( url );
     http.Response response = await http.get(url);
     var data = jsonDecode(response.body);
-    print( data );
 
     if( data[0] == 0 ) {
       var json = jsonDecode(data[1]);

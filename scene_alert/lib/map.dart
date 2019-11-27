@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'dart:math' as math;
 
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -16,7 +17,7 @@ class CrimeMap extends StatefulWidget {
   State<CrimeMap> createState() => CrimeMapState();
 }
 
-class CrimeMapState extends State<CrimeMap> {
+class CrimeMapState extends State<CrimeMap> with TickerProviderStateMixin {
 
   /*
     Setting initial position
@@ -37,6 +38,11 @@ class CrimeMapState extends State<CrimeMap> {
     super.initState();
 
     getCHP( 3 );
+
+    _aniController = new AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
 
     rootBundle.loadString('assets/dark.json').then((string) {
       _mapStyle = string;
@@ -78,6 +84,9 @@ class CrimeMapState extends State<CrimeMap> {
   double radius = 0;
   List<int> rangeOptions = [ 3, 5, 10, 15, 20, 30, 50, 100 ];
 
+  AnimationController _aniController;
+  static const List<IconData> icons = const [ Icons.home, Icons.map, Icons.history ];
+
   // Beginning of the rendering code
   @override
   Widget build(BuildContext context) {
@@ -90,6 +99,65 @@ class CrimeMapState extends State<CrimeMap> {
           initialCameraPosition: chico,
           markers: myMarkers,
           onMapCreated: mapCreated, // Calls when map is finished creating
+        ),
+        Positioned(
+          bottom: 50,
+          right: 10,
+          child: 
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: new List.generate(icons.length, (int index) {
+                Widget child = new Container(
+                  height: 70.0,
+                  width: 56.0,
+                  alignment: FractionalOffset.topCenter,
+                  child: new ScaleTransition(
+                    scale: new CurvedAnimation(
+                      parent: _aniController,
+                      curve: new Interval(
+                        0.0,
+                        1.0 - index / icons.length / 2.0,
+                        curve: Curves.easeOut
+                      ),
+                    ),
+                    child: new FloatingActionButton(
+                      heroTag: null,
+                      backgroundColor: Theme.of(context).accentColor,
+                      mini: true,
+                      child: new Icon(icons[index], color: Theme.of(context).primaryColor),
+                      onPressed: () {
+                        // Action for each button
+                        print( index );
+                      },
+                    ),
+                  ),
+                );
+                return child;
+              }).toList()..add(
+                new FloatingActionButton(
+                  heroTag: null,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  foregroundColor: Theme.of(context).accentColor,
+                  child: new AnimatedBuilder(
+                    animation: _aniController,
+                    builder: (BuildContext context, Widget child) {
+                      return new Transform(
+                        transform: new Matrix4.rotationZ(_aniController.value * 0.5 * math.pi),
+                        alignment: FractionalOffset.center,
+                        child: new Icon(_aniController.isDismissed ? Icons.add : Icons.close),
+                      );
+                    },
+                  ),
+                  onPressed: () {
+                    if (_aniController.isDismissed) {
+                      _aniController.forward();
+                    } else {
+                      _aniController.reverse();
+                    }
+                  },
+                ),
+              ),
+            ),
         ),
         Positioned(
           child:
@@ -147,10 +215,12 @@ class CrimeMapState extends State<CrimeMap> {
             Marker(
               markerId: MarkerId( i.toString() ),
               position: LatLng( double.parse(json[i][4]), double.parse(json[i][3]) ),
+              /*
               infoWindow: InfoWindow(
                 title: json[i][0],  // Incident Report name
                 snippet: json[i][2],  // Reported by what agency
               ),
+              */
               icon: marker,
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context){

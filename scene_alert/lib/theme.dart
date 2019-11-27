@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
+  //ThemeData darkTheme = ThemeData.dark();
   ThemeData darkTheme = 
-    ThemeData(
+    ThemeData(//.dark().copyWith(
       accentColor: Colors.grey[900],
       primaryColor: Color.fromARGB( 255, 49, 182, 235 ),
       primaryTextTheme: 
@@ -18,11 +19,11 @@ import 'package:flutter/material.dart';
         ),
       primaryIconTheme:
         IconThemeData(
-          color: Colors.blueGrey,
+          color: Colors.white,
         ),
       accentIconTheme:
         IconThemeData(
-          color: Colors.grey,
+          color: Colors.white,
         ),
       buttonTheme:
         ButtonThemeData(
