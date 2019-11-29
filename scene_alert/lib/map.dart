@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'package:scene_alert/markerDetail.dart';
+import 'package:scene_alert/report.dart';
 import 'package:scene_alert/globals.dart' as globals;
 
 GoogleMap _map;
@@ -100,6 +101,7 @@ class CrimeMapState extends State<CrimeMap> with TickerProviderStateMixin {
           markers: myMarkers,
           onMapCreated: mapCreated, // Calls when map is finished creating
         ),
+        // Report button
         Positioned(
           bottom: 50,
           right: 10,
@@ -128,6 +130,9 @@ class CrimeMapState extends State<CrimeMap> with TickerProviderStateMixin {
                       onPressed: () {
                         // Action for each button
                         print( index );
+                        Navigator.push(context, MaterialPageRoute(builder: (context){
+                          return Report( type: index );
+                        }));
                       },
                     ),
                   ),
@@ -136,8 +141,8 @@ class CrimeMapState extends State<CrimeMap> with TickerProviderStateMixin {
               }).toList()..add(
                 new FloatingActionButton(
                   heroTag: null,
-                  backgroundColor: Theme.of(context).primaryColor,
-                  foregroundColor: Theme.of(context).accentColor,
+                  backgroundColor: Theme.of(context).accentColor,
+                  foregroundColor: Theme.of(context).primaryColor,
                   child: new AnimatedBuilder(
                     animation: _aniController,
                     builder: (BuildContext context, Widget child) {
@@ -159,6 +164,7 @@ class CrimeMapState extends State<CrimeMap> with TickerProviderStateMixin {
               ),
             ),
         ),
+        // Radius Slider
         Positioned(
           child:
             Slider(

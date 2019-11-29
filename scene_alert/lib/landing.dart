@@ -57,7 +57,7 @@ class LandingPageState extends State<LandingPage> {
       
         //  _pageOptions[_selectedPage],
         bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Theme.of(context).accentColor,
+          //backgroundColor: Theme.of(context).accentColor,
           currentIndex: _selectedPage,
           onTap: (int index){
             setState(() {
