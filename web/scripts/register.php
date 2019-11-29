@@ -19,10 +19,9 @@
     
     if( $fetcher < 1 ) {
         $insertion = $db->prepare(
-            "INSERT INTO accounts (email, hash, username) VALUES ($email, $phash, $user)"
+            "INSERT INTO accounts (email, hash, username) VALUES ('$email', '$phash', '$user')"
         );
         if( $insertion->execute() ) {
-            echo "User <strong>".$user."</strong> created.";
             $retarray[0] = 1;
             $retarray[1] = "$user successfully made.";
         }

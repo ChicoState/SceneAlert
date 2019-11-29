@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:scene_alert/login.dart';
+
 class Register extends StatefulWidget {
   @override
   State<Register> createState() => RegisterState();
@@ -111,7 +113,6 @@ class RegisterState extends State<Register> {
                                 elevation: 5,
                                 minWidth: 200,
                                 color: Color.fromARGB( 255, 49, 182, 235 ),
-                                //Labels the button with Submit
                                 child: Text('Submit'),
                               ),
                             ),
@@ -131,6 +132,23 @@ class RegisterState extends State<Register> {
     print( _email );
     print( _password );
     print( _password2 );
+
+    if( _password == _password2 ) {
+      var url = 'https://scene-alert.com/inc/register.php?user=' + _user + '&email=' + _email + '&pass=' + _password;
+      http.Response response = await http.get(url);
+      var data = jsonDecode(response.body);
+
+      if( data[0] == 1 ) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Login()),
+        );
+      }
+      else if( data[0] == -1 ) {
+        print( "Incorrect Login" );
+      }
+    }
+
   }
 
 }
