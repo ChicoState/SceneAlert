@@ -14,7 +14,7 @@ class ReportState extends State<Report>  {
   var type;
   ReportState(this.type);
 
-  var reportTypes = { 0:"Police", 1:"Fire", 2:"Medical" };
+  var reportTypes = { 0:"Crime", 1:"Fire", 2:"Medical" };
 
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 

@@ -101,9 +101,44 @@ class CrimeMapState extends State<CrimeMap> with TickerProviderStateMixin {
           markers: myMarkers,
           onMapCreated: mapCreated, // Calls when map is finished creating
         ),
+        // Radius Slider
+        Positioned(
+          bottom: 0,
+          width: MediaQuery.of(context).size.width,
+          child:
+            Padding(
+              padding: EdgeInsets.all(20.0),
+              child:
+                Container(
+                  decoration: 
+                    BoxDecoration( 
+                      borderRadius: BorderRadius.circular(20.0), 
+                      color: Color.fromARGB( 200, 255, 255, 255 ),
+                    ),
+                  child:
+                    Slider(
+                      activeColor: Theme.of(context).primaryColor,
+                      min: 0,
+                      max: 7,
+                      label: rangeOptions[radius.ceil()].toString(),
+                      divisions: 7,
+                      value: radius,
+                      onChanged: (newVal) {
+                        setState(() {
+                          radius = newVal;
+                        });
+                      },
+                      onChangeEnd: (newVal) {
+                        getCHP( rangeOptions[newVal.ceil()] );
+                        globals.radius = rangeOptions[newVal.ceil()];
+                      },
+                    ),
+                ),
+            ),
+        ),
         // Report button
         Positioned(
-          bottom: 50,
+          bottom: 80,
           right: 10,
           child: 
             Column(
@@ -164,29 +199,6 @@ class CrimeMapState extends State<CrimeMap> with TickerProviderStateMixin {
               ),
             ),
         ),
-        // Radius Slider
-        Positioned(
-          child:
-            Slider(
-              activeColor: Theme.of(context).primaryColor,
-              min: 0,
-              max: 7,
-              label: rangeOptions[radius.ceil()].toString(),
-              divisions: 7,
-              value: radius,
-              onChanged: (newVal) {
-                setState(() {
-                  radius = newVal;
-                });
-              },
-              onChangeEnd: (newVal) {
-                getCHP( rangeOptions[newVal.ceil()] );
-                globals.radius = rangeOptions[newVal.ceil()];
-              },
-            ),
-          bottom: 5,
-          width: MediaQuery.of(context).size.width,
-        )
       ],
     );
   }
