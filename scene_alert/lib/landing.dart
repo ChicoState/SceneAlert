@@ -5,7 +5,8 @@ import 'package:scene_alert/history.dart';
 import 'package:scene_alert/map.dart';
 import 'package:scene_alert/settings.dart';
 import 'package:scene_alert/theme.dart';
-//import 'package:scene_alert/logout.dart';
+import 'package:scene_alert/globals.dart' as globals;
+import 'package:scene_alert/logout.dart';
 
 class LandingPage extends StatefulWidget {
   @override
@@ -16,8 +17,8 @@ class LandingPageState extends State<LandingPage> {
 
   int _selectedPage = 1;
   final _pageOptions = [
-    //Logout(),
-    Center( child: Text('Future Widget') ),
+    Logout(),
+    //Center( child: Text('Future Widget') ),
     CrimeMap(),
     CrimeHistory(),
   ];
@@ -66,17 +67,33 @@ class LandingPageState extends State<LandingPage> {
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
+              activeIcon: ( () {
+                if( globals.darkMode ) {
+                  return Icon( Icons.home, color: Theme.of(context).primaryColor);
+                }
+                else {
+                  return null;
+                }
+              } () ),  
               title: Text('Home'),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.map),
+              activeIcon: Icon( Icons.map, color: Theme.of(context).primaryColor),
               title: Text('Map')
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.history),
+              activeIcon: ( () {
+                if( globals.darkMode ) {
+                  return Icon( Icons.history, color: Theme.of(context).primaryColor);
+                }
+                else {
+                  return null;
+                }
+              } () ),  
               title: Text('History')
             )
-
           ],
         ),
       )  
