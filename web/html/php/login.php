@@ -26,8 +26,6 @@
                 
                 $retarray[0] = 1; // 1 indicates login success
                 $retarray[1] = "Login was Successful";
-                $retarray[2] = $acct['idUser'];
-                $retarray[3] = $acct['username'];
             }
             else {
                 $retarray[0] = 0; // 0 indicates login failure

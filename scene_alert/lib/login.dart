@@ -136,11 +136,7 @@ class LoginState extends State<Login> {
     var url = 'https://scene-alert.com/inc/login.php?user=' + _email + '&pass=' + _password;
     http.Response response = await http.get(url);
     var data = jsonDecode(response.body);
-    print(data[2]);
-      print(data[3]);
     if( data[0] == 1 ) {
-      globals.loggedUserId = data[2];
-      globals.loggedUserNam = data[3];
       if( rememberMe ) {
         await storage.write(key: _email, value: _password);
       }

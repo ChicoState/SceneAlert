@@ -112,11 +112,7 @@ Future rememberValidate() async {
   var url = 'https://scene-alert.com/inc/login.php?user=' + _user + '&pass=' + _pass;
   http.Response response = await http.get(url);
   var data = jsonDecode(response.body);
-  print(data.toString());
   if( data[0] == 1 ) {
-    print("bub");
-    globals.loggedUserId = data[2];
-    // globals.loggedUserNam = data[3];
     return true;
   }
   else if( data[0] == -1 ) {

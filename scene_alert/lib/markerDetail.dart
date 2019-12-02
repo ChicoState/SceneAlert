@@ -135,11 +135,11 @@ class MarkerState extends State<MarkerDetail> {
   // Convert int priority to String priority and display it to user in DropDown
 
   void addComment() async {
-    print(globals.loggedUserId);
-      print(globals.loggedUserNam);
-      if(globals.loggedUserId == -1){
-        globals.loggedUserId = 100;
-      }
+    // print(globals.loggedUserId);
+    //   print(globals.loggedUserNam);
+    //   if(globals.loggedUserId == -1){
+    //     globals.loggedUserId = 100;
+    //   }
     // timeRange = timeRange.replaceAll(new RegExp(r"\s|s"), "").toLowerCase();
     // var url = 'https://scene-alert.com/inc/addComment.php?incident=' + "..." + '&parent=' + '...' + '&user=' + '&comment' + '...';
     // print( url );
