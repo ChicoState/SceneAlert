@@ -16,11 +16,11 @@ import 'package:scene_alert/theme.dart' as themes;
 bool validCreds = false;
 
 void main() async {
-  validCreds = await rememberValidate();
-  final pos = await getLocation();
+   validCreds = await rememberValidate();
+  // final pos = await getLocation();
 
-  globals.lat = pos.latitude;
-  globals.lon = pos.longitude;
+ // globals.lat = pos.latitude;
+ // globals.lon = pos.longitude;
 
   runApp(MyApp());
 }
@@ -112,7 +112,6 @@ Future rememberValidate() async {
   var url = 'https://scene-alert.com/inc/login.php?user=' + _user + '&pass=' + _pass;
   http.Response response = await http.get(url);
   var data = jsonDecode(response.body);
-
   if( data[0] == 1 ) {
     return true;
   }

@@ -5,6 +5,7 @@ import 'package:scene_alert/register.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'package:scene_alert/globals.dart' as globals;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Login extends StatefulWidget {
@@ -132,11 +133,9 @@ class LoginState extends State<Login> {
 
   Future validate( context ) async {
     _formkey.currentState.save();
-
     var url = 'https://scene-alert.com/inc/login.php?user=' + _email + '&pass=' + _password;
     http.Response response = await http.get(url);
     var data = jsonDecode(response.body);
-
     if( data[0] == 1 ) {
       if( rememberMe ) {
         await storage.write(key: _email, value: _password);
