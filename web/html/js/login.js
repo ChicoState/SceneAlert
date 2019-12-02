@@ -28,6 +28,7 @@
               $("#acct-details").fadeOut(200);
               $("#topdiv").load("topbar.php");      // Reload topbar
               $("#calldiv").load("controller.php"); // Load call controller
+              console.log("LOADED CALLDIV");
             }
             
           }

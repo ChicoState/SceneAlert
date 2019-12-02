@@ -1,6 +1,7 @@
 //import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scene_alert/landing.dart';
+import 'package:scene_alert/register.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -21,14 +22,6 @@ class LoginState extends State<Login> {
 
   final storage = new FlutterSecureStorage();
   bool rememberMe = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    //deleteVal();
-    //rememberValidate( context );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,16 +108,17 @@ class LoginState extends State<Login> {
                                 child: Text('Login'),
                               ),
                             ),
+                            //SizedBox(height: 10),
                             Builder( builder: (context) =>
                               MaterialButton(
                                 onPressed: () { 
-                                  rememberValidate( context );
+                                  register( context );
                                 },
-                                elevation: 5,
+                                elevation: 0,
                                 minWidth: 200,
-                                color: Color.fromARGB( 255, 49, 182, 235 ),
+                                color: Colors.grey[0],
                                 //Labels the button with Submit
-                                child: Text('Restore Session'),
+                                child: Text('Register'),
                               ),
                             ),
                           ],
@@ -143,10 +137,6 @@ class LoginState extends State<Login> {
     http.Response response = await http.get(url);
     var data = jsonDecode(response.body);
 
-    if( rememberMe ) {
-      await storage.write(key: _email, value: _password);
-    }
-
     if( data[0] == 1 ) {
       if( rememberMe ) {
         await storage.write(key: _email, value: _password);
@@ -162,40 +152,10 @@ class LoginState extends State<Login> {
 
   }
 
-  Future rememberValidate( context ) async {
-
-    var _user, _pass;
-
-    try {
-      Map<String, String> userPass = await storage.readAll();
-      _user = userPass.keys.first;
-      _pass = userPass.values.first;
-    }
-    catch (error) {
-      print( "Keystore error, returning to login" );
-      return;
-    }
-    print( _user );
-    print( _pass );
-
-    var url = 'https://scene-alert.com/inc/login.php?user=' + _user + '&pass=' + _pass;
-    http.Response response = await http.get(url);
-    var data = jsonDecode(response.body);
-
-    if( data[0] == 1 ) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LandingPage()),
-      );
-    }
-    else if( data[0] == -1 ) {
-      print( "Incorrect Login" );
-    }
-
-  }
-
-  Future deleteVal() async {
-    await storage.deleteAll();
+  Future register( context ) async {
+    Navigator.push(context, MaterialPageRoute(builder: (context){
+      return Register();
+    }));
   }
 
 }

@@ -1,0 +1,28 @@
+#footer {
+  position: absolute;
+  margin: 0; padding: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 32px;
+  background: rgba(40,40,40,0.8);
+}
+
+#foot-left {
+  float: left;
+  color: #ccc;
+  text-shadow: 1px 1px 2px black;
+  margin: 8px 0 0 12px;
+  padding: 0;
+}
+
+#foot-right {
+  float: right;
+}
+
+#footer button {
+  position: relative;
+  margin: 0 4px 0 4px; padding: 2px 0 0 0;
+  border: 0;
+  background: transparent;
+}

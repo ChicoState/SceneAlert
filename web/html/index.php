@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="inc/index.css">
     <link rel="stylesheet" href="inc/info.css">
     <link rel="stylesheet" href="inc/topbar.css">
+    <link rel="stylesheet" href="inc/footer.css">
     
     <!-- Javascript SDK -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -17,7 +18,8 @@
     
     <!-- The Google Map Script -->
     <script type="text/javascript" src="js/googlemap.js"></script>
-    
+     
+     
     <!-- Loose Javascript -->
     <script type="text/javascript" src="js/login.js"></script>
     <script type="text/javascript" src="js/control.js"></script>
@@ -111,7 +113,7 @@
       <h3>Log in to Scene-Alert!</h3>
       
       <p><i><u>
-      <font color="#04f">
+      <font color="#aff">
       <a onclick="HideLogin()">No thanks, I want to view as a guest</a>
       </font>
       </u></i></p>
@@ -180,6 +182,7 @@
       </div>
     </div>
     
+    <?php include ('footer.php'); ?>
     <!-- Load the Google Map -->
     <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBH1jW5Aqd8lHL7RoiiKx9COdioIRdGs8Q&callback=initMap"
