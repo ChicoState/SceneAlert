@@ -1,12 +1,15 @@
 <?php
+    require_once('../inc/database.php');
+    if (session_status() == PHP_SESSION_NONE) {session_start();}
 
-  require_once('database.php');
+  // require_once('database.php');
   $err = NULL;
   $msg = "";
 
-  $upvote = $_POST['upvote'];
-  $query = "UPDATE incidents SET upvotes = 1 WHERE id= upvote";
-
+  $markId = $_POST['markId'];
+  $query = "UPDATE incidents SET upvotes = 1 WHERE id= markId";
+  $getCalls = $db->prepare($query);
+  $getCalls->execute();
   
   exit();
 ?>

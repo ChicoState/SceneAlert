@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:scene_alert/globals.dart' as globals;
+import 'package:http/http.dart' as http;
 
 class MarkerDetail extends StatefulWidget {
   var myjson;
+  
+
   MarkerDetail({Key key, @required this.myjson}) : super(key: key);
 
   @override
@@ -15,7 +19,6 @@ class MarkerState extends State<MarkerDetail> {
   String appBarTitle;
   Marker marker;
   var myjson;
-
   MarkerState(this.myjson);
 
   @override
@@ -91,6 +94,7 @@ class MarkerState extends State<MarkerDetail> {
                             textScaleFactor: 1.5,
                           ),
                           onPressed: () {
+                            addComment();
                             setState(() {});
                           },
                         ),
@@ -129,5 +133,18 @@ class MarkerState extends State<MarkerDetail> {
   void updatePriorityAsInt(String value) {}
 
   // Convert int priority to String priority and display it to user in DropDown
+
+  void addComment() async {
+    print(globals.loggedUserId);
+      print(globals.loggedUserNam);
+      if(globals.loggedUserId == -1){
+        globals.loggedUserId = 100;
+      }
+    // timeRange = timeRange.replaceAll(new RegExp(r"\s|s"), "").toLowerCase();
+    // var url = 'https://scene-alert.com/inc/addComment.php?incident=' + "..." + '&parent=' + '...' + '&user=' + '&comment' + '...';
+    // print( url );
+    // http.Response response = await http.post(url);
+  }
+
 
 }
