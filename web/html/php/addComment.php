@@ -1,6 +1,5 @@
 <?php
-    require_once('../inc/database.php');
-    ERROR_REPORTING(E_ALL);
+    include('../inc/database.php');
 
     $idIncident = $_GET['incident'];
     $idParentComment = $_GET['parent'];
@@ -36,5 +35,6 @@
     // }
 
     echo json_encode($retarray);
+    $db = null;
     exit();
 ?>

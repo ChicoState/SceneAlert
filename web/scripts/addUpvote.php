@@ -1,6 +1,5 @@
 <?php
-    require_once('../inc/database.php');
-    if (session_status() == PHP_SESSION_NONE) {session_start();}
+    include('database.php');
 
   // require_once('database.php');
   $err = NULL;
@@ -11,5 +10,6 @@
   $getCalls = $db->prepare($query);
   $getCalls->execute();
   
+  $db = null;
   exit();
 ?>

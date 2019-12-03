@@ -1,6 +1,5 @@
 <?php
-    require_once('database.php');
-    if (session_status() == PHP_SESSION_NONE) {session_start();}
+    include('database.php');
   
 	$usr = $_GET['user'];
 	$pass = $_GET['pass'];
@@ -44,7 +43,7 @@
 
     // If result exists, verify the information
     echo json_encode($retarray);
-
+  $db = null;
     exit();
 ?>
 

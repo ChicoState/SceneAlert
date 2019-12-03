@@ -1,6 +1,7 @@
 <html>
   <?php
-    require_once('inc/database.php');
+    session_start();
+    include('inc/database.php');
     if (session_status() == PHP_SESSION_NONE) {session_start();}
   ?>
   <head>
@@ -189,5 +190,5 @@
       type="text/javascript">
     </script> 
   </body>
-  
+  <?php $db = null; ?>
 </html>

@@ -1,6 +1,6 @@
 <?php
 
-  require_once('database.php');
+  include('database.php');
   $err = NULL;
   $msg = "";
 
@@ -53,5 +53,6 @@
   $retarray = array($err, $msg);
 
   echo json_encode($retarray);
+  $db = null;
   exit();
 ?>

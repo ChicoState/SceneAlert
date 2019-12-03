@@ -1,5 +1,5 @@
 <?php
-  require_once('../inc/database.php');
+  include('../inc/database.php');
   
   $incidents = $db->prepare(
    "SELECT i.*,l.longitude,l.latitude,l.title AS titl
@@ -24,5 +24,6 @@
   
   
   echo json_encode($retarray);
+  $db = null;
   exit();
 ?>

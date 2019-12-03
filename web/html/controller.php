@@ -1,6 +1,4 @@
 <?php
-  require_once('inc/database.php');
-  if (session_status() == PHP_SESSION_NONE) {session_start();}
 ?>
     <div id="call-control">
     

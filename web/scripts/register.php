@@ -1,6 +1,5 @@
 <?php
-    require_once('../inc/database.php');
-    ERROR_REPORTING(E_ALL);
+    include('database.php');
 
     $user = $_GET['user'];
     $email = $_GET['email'];
@@ -36,5 +35,6 @@
     }
 
     echo json_encode($retarray);
+    $db = null;
     exit();
 ?>
