@@ -113,6 +113,8 @@ Future rememberValidate() async {
   http.Response response = await http.get(url);
   var data = jsonDecode(response.body);
   if( data[0] == 1 ) {
+    globals.loggedUserId = data[2];
+    globals.loggedUserNam = data[3];
     return true;
   }
   else if( data[0] == -1 ) {
