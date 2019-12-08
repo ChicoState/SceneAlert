@@ -31,7 +31,8 @@ class MarkerState extends State<MarkerDetail> {
         child: Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            title: Text("View Event"),
+            //title: Text("View Event"),
+            title: Text( myjson[0].toString() ),
             leading: IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
@@ -43,14 +44,6 @@ class MarkerState extends State<MarkerDetail> {
             padding: EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
             child: ListView(
               children: <Widget>[
-                //event title
-                Padding(
-                  padding: EdgeInsets.only(bottom: 5.0),
-                  child: Text(
-                    myjson[0].toString(),
-                    style: TextStyle(fontSize: 18.0),
-                    ),
-                ),
                 //Image
                 Padding(
                   padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
