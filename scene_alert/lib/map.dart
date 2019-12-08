@@ -1,16 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'dart:math' as math;
-
-import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math' as math;
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:scene_alert/globals.dart' as globals;
 import 'package:scene_alert/markerDetail.dart';
 import 'package:scene_alert/report.dart';
-import 'package:scene_alert/globals.dart' as globals;
-
-//import 'package:scene_alert/sceneAlertIcons.dart' as SceneAlertIcons;
 import 'package:scene_alert/sceneAlertIcons.dart';
 
 GoogleMap _map;

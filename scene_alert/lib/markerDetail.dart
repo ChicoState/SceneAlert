@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:scene_alert/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 
-class MarkerDetail extends StatefulWidget {
-  var myjson;
-  
+import 'package:scene_alert/globals.dart' as globals;
 
+class MarkerDetail extends StatefulWidget {
+  final myjson;
+  
   MarkerDetail({Key key, @required this.myjson}) : super(key: key);
 
   @override
@@ -25,7 +25,7 @@ class MarkerState extends State<MarkerDetail> {
   Widget build( BuildContext context ) {
     return WillPopScope(
         onWillPop: () {
-          // Write some code to control things, when user press Back navigation button in device navigationBar
+          // Controls back button on device
           moveToLastScreen();
         },
         child: Scaffold(
@@ -36,7 +36,7 @@ class MarkerState extends State<MarkerDetail> {
             leading: IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
-                  // Write some code to control things, when user press back button in AppBar
+                  // Controls back button on AppBar
                   moveToLastScreen();
                 }),
           ),
@@ -51,7 +51,6 @@ class MarkerState extends State<MarkerDetail> {
                     image: AssetImage('images/404_image.png'),
                     ),
                 ),
-
                 Padding(
                   padding: EdgeInsets.only(top: 5.0),
                   // child: Container(
@@ -119,6 +118,7 @@ class MarkerState extends State<MarkerDetail> {
   }
 
   void moveToLastScreen() {
+    // Moves back the original page
     Navigator.pop(context, true);
   }
 
