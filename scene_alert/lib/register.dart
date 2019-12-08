@@ -1,28 +1,24 @@
-//import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scene_alert/landing.dart';
-import 'package:scene_alert/register.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-import 'package:scene_alert/globals.dart' as globals;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class Login extends StatefulWidget {
+import 'package:scene_alert/login.dart';
+
+class Register extends StatefulWidget {
   @override
-  State<Login> createState() => LoginState();
+  State<Register> createState() => RegisterState();
 }
 
-class LoginState extends State<Login> {
+class RegisterState extends State<Register> {
 
-  String _email, _password;
+  String _user, _email, _password, _password2;
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
+  final FocusNode fnUser = FocusNode();
   final FocusNode fnEmail = FocusNode();
   final FocusNode fnPassword = FocusNode();
-
-  final storage = new FlutterSecureStorage();
-  bool rememberMe = false;
+  final FocusNode fnPassword2 = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +45,22 @@ class LoginState extends State<Login> {
                             ),
                             SizedBox(height: 50),
                             TextFormField(
+                              focusNode: fnUser,
+                              textInputAction: TextInputAction.next,
+                              onFieldSubmitted: (term) {
+                                fnUser.unfocus();
+                                FocusScope.of(context).requestFocus(fnEmail);
+                              },
+                              decoration: new InputDecoration(
+                                helperText: "Username", 
+                                focusedBorder:UnderlineInputBorder(
+                                borderSide: const BorderSide(color: Color.fromARGB( 255, 49, 182, 235 ), width: 2.0),
+                                ),
+                              ),
+                              cursorColor: Colors.black,
+                              onSaved: (input) => _user = input,
+                            ),
+                            TextFormField(
                               focusNode: fnEmail,
                               textInputAction: TextInputAction.next,
                               onFieldSubmitted: (term) {
@@ -62,11 +74,7 @@ class LoginState extends State<Login> {
                                 ),
                               ),
                               cursorColor: Colors.black,
-                              onSaved: (input) {
-                                setState(() {
-                                  _email = input;
-                                });
-                              }
+                              onSaved: (input) => _email = input,
                             ),
                             TextFormField(
                               focusNode: fnPassword,
@@ -76,50 +84,36 @@ class LoginState extends State<Login> {
                                 borderSide: const BorderSide(color: Color.fromARGB( 255, 49, 182, 235 ), width: 2.0),
                                 ),
                               ),
+                              onFieldSubmitted: (term) {
+                                fnPassword.unfocus();
+                                FocusScope.of(context).requestFocus(fnPassword2);
+                              },
                               cursorColor: Colors.black,
                               obscureText: true,
                               onSaved: (input) => _password = input,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Checkbox(
-                                  value: rememberMe,
-                                  checkColor: Colors.white,
-                                  activeColor: Color.fromARGB( 255, 49, 182, 235 ),
-                                  onChanged: (bool remember) {
-                                    setState(() {
-                                      rememberMe = remember;
-                                    });
-                                  },
+                            TextFormField(
+                              focusNode: fnPassword2,
+                              decoration: InputDecoration(
+                                helperText: "Confirm Password",
+                                focusedBorder:UnderlineInputBorder(
+                                borderSide: const BorderSide(color: Color.fromARGB( 255, 49, 182, 235 ), width: 2.0),
                                 ),
-                                Text( "Remember Me" )
-                              ],
+                              ),
+                              cursorColor: Colors.black,
+                              obscureText: true,
+                              onSaved: (input) => _password2 = input,
                             ),
                             SizedBox(height: 20),
                             Builder( builder: (context) =>
                               MaterialButton(
                                 onPressed: () { 
-                                  validate( context );
+                                  register( context );
                                 },
                                 elevation: 5,
                                 minWidth: 200,
                                 color: Color.fromARGB( 255, 49, 182, 235 ),
-                                //Labels the button with Submit
-                                child: Text('Login'),
-                              ),
-                            ),
-                            //SizedBox(height: 10),
-                            Builder( builder: (context) =>
-                              MaterialButton(
-                                onPressed: () { 
-                                  register( context );
-                                },
-                                elevation: 0,
-                                minWidth: 200,
-                                color: Colors.grey[0],
-                                //Labels the button with Submit
-                                child: Text('Register'),
+                                child: Text('Submit'),
                               ),
                             ),
                           ],
@@ -131,30 +125,30 @@ class LoginState extends State<Login> {
     );
   }
 
-  Future validate( context ) async {
-    _formkey.currentState.save();
-    var url = 'https://scene-alert.com/inc/login.php?user=' + _email + '&pass=' + _password;
-    http.Response response = await http.get(url);
-    var data = jsonDecode(response.body);
-    if( data[0] == 1 ) {
-      if( rememberMe ) {
-        await storage.write(key: _email, value: _password);
-      }
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LandingPage()),
-      );
-    }
-    else if( data[0] == -1 ) {
-      print( "Incorrect Login" );
-    }
-
-  }
-
   Future register( context ) async {
-    Navigator.push(context, MaterialPageRoute(builder: (context){
-      return Register();
-    }));
+    _formkey.currentState.save();
+
+    print( _user );
+    print( _email );
+    print( _password );
+    print( _password2 );
+
+    if( _password == _password2 ) {
+      var url = 'https://scene-alert.com/inc/register.php?user=' + _user + '&email=' + _email + '&pass=' + _password;
+      http.Response response = await http.get(url);
+      var data = jsonDecode(response.body);
+
+      if( data[0] == 1 ) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Login()),
+        );
+      }
+      else if( data[0] == -1 ) {
+        print( "Incorrect Login" );
+      }
+    }
+
   }
 
 }

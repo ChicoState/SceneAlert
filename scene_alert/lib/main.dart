@@ -15,11 +15,11 @@ import 'package:scene_alert/theme.dart' as themes;
 bool validCreds = false;
 
 void main() async {
-  validCreds = await rememberValidate();
-  final pos = await getLocation();
+   validCreds = await rememberValidate();
+  //final pos = await getLocation();
 
-  globals.lat = pos.latitude;
-  globals.lon = pos.longitude;
+  //globals.lat = pos.latitude;
+  //globals.lon = pos.longitude;
 
   runApp(MyApp());
 }
@@ -62,11 +62,19 @@ class MyAppWithTheme extends StatelessWidget {
 }
 
 Future getLocation() async {
-  GeolocationStatus geolocationStatus  = await Geolocator().checkGeolocationPermissionStatus();
+  /* Enum
+    Denied 0
+    Disabled 1
+    Granted 2
+    Restricted 3
+    Unknown 4
+  */
+  Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
+  GeolocationStatus geolocationStatus = await geolocator.checkGeolocationPermissionStatus();
 
   print( "Checking Location------------------------------------------");
   print( geolocationStatus.value );
-  Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  Position position = await geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   /*
   Position position = await Geolocator().getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
   if( !(position ?? false) ) {

@@ -1,6 +1,5 @@
 <?php
-  require_once('inc/database.php');
-  if (session_status() == PHP_SESSION_NONE) {session_start();}
+  include('inc/database.php');
 ?>
   <div id="nav-topbar">
     
@@ -41,4 +40,5 @@
   </div>
   <script type="text/javascript" src="js/clock.js"></script>
 <?php
+  $db = null;
 ?>

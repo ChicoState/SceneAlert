@@ -1,7 +1,7 @@
   
   <?php
 
-  require_once('database.php');
+  include('database.php');
   
   
   /* GetIncidentTitle()
@@ -253,6 +253,7 @@
       }
     } 
   }
+  $db = null;
 ?>
 
 

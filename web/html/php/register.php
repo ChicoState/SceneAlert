@@ -1,6 +1,5 @@
 <?php
-	require_once('../inc/database.php');
-  ERROR_REPORTING(E_ALL);
+	include('../inc/database.php');
 ?>
 
 <head>
@@ -98,4 +97,7 @@
 		</form><br/><br/>
     </div>
   </div>
+  <?php 
+  $db = null;
+  ?>
 </body>

@@ -1,5 +1,5 @@
 <?php
-  require_once('../inc/database.php');
+  include('../inc/database.php');
   if (session_status() == PHP_SESSION_NONE) {session_start();}
   
   $retarray = array(); // For the end
@@ -38,6 +38,7 @@
   }
   
   echo json_encode($retarray);
+  $db = null;
   exit();
   
 ?>
