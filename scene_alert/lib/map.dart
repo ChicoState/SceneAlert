@@ -236,12 +236,6 @@ class CrimeMapState extends State<CrimeMap> with TickerProviderStateMixin {
             Marker(
               markerId: MarkerId( i.toString() ),
               position: LatLng( double.parse(json[i][4]), double.parse(json[i][3]) ),
-              /*
-              infoWindow: InfoWindow(
-                title: json[i][0],  // Incident Report name
-                snippet: json[i][2],  // Reported by what agency
-              ),
-              */
               icon: marker,
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context){
