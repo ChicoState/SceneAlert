@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
-//import 'package:android_intent/android_intent.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -17,10 +16,10 @@ bool validCreds = false;
 
 void main() async {
    validCreds = await rememberValidate();
-  // final pos = await getLocation();
+  //final pos = await getLocation();
 
- // globals.lat = pos.latitude;
- // globals.lon = pos.longitude;
+  //globals.lat = pos.latitude;
+  //globals.lon = pos.longitude;
 
   runApp(MyApp());
 }
@@ -112,6 +111,7 @@ Future rememberValidate() async {
   var url = 'https://scene-alert.com/inc/login.php?user=' + _user + '&pass=' + _pass;
   http.Response response = await http.get(url);
   var data = jsonDecode(response.body);
+
   if( data[0] == 1 ) {
     return true;
   }

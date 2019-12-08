@@ -10,6 +10,9 @@ import 'package:scene_alert/markerDetail.dart';
 import 'package:scene_alert/report.dart';
 import 'package:scene_alert/globals.dart' as globals;
 
+//import 'package:scene_alert/sceneAlertIcons.dart' as SceneAlertIcons;
+import 'package:scene_alert/sceneAlertIcons.dart';
+
 GoogleMap _map;
 
 class CrimeMap extends StatefulWidget {
@@ -86,7 +89,7 @@ class CrimeMapState extends State<CrimeMap> with TickerProviderStateMixin {
   List<int> rangeOptions = [ 3, 5, 10, 15, 20, 30, 50, 100 ];
 
   AnimationController _aniController;
-  static const List<IconData> icons = const [ Icons.home, Icons.map, Icons.history ];
+  static const List<IconData> icons = const [ SceneAlert.policemarker, SceneAlert.firemarker, SceneAlert.medicalmarker ];
 
   // Beginning of the rendering code
   @override
