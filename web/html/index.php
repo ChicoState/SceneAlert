@@ -1,8 +1,6 @@
 <html>
   <?php
-    session_start();
     include('inc/database.php');
-    if (session_status() == PHP_SESSION_NONE) {session_start();}
   ?>
   <head>
     <title>SceneAlert - Real Time Incident Reporting</title>

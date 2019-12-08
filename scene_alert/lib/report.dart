@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Report extends StatefulWidget {
 
-  var type;
+  final type;
   Report({Key key, @required this.type}) : super(key: key);
   
   @override
