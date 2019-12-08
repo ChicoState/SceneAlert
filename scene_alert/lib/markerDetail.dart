@@ -20,7 +20,7 @@ class MarkerState extends State<MarkerDetail> {
   Marker marker;
   var myjson;
   MarkerState(this.myjson);
-
+  final userCommentString = TextEditingController();
   @override
   Widget build( BuildContext context ) {
     return WillPopScope(
@@ -78,6 +78,7 @@ class MarkerState extends State<MarkerDetail> {
                       padding: EdgeInsets.all(8.0),
                       child: TextField(
                         maxLines: 3,
+                        controller: userCommentString,
                         decoration: InputDecoration.collapsed(
                             hintText: "Enter your text here"),
                       ),
@@ -135,14 +136,15 @@ class MarkerState extends State<MarkerDetail> {
   // Convert int priority to String priority and display it to user in DropDown
 
   void addComment() async {
-    // print(globals.loggedUserId);
-    //   print(globals.loggedUserNam);
-    //   if(globals.loggedUserId == -1){
-    //     globals.loggedUserId = 100;
-    //   }
+    print(globals.loggedUserId);
+      print(globals.loggedUserNam);
+      // if(globals.loggedUserId == -1){
+      //   globals.loggedUserId = "";
+      // }
+      userCommentString;
     // timeRange = timeRange.replaceAll(new RegExp(r"\s|s"), "").toLowerCase();
-    // var url = 'https://scene-alert.com/inc/addComment.php?incident=' + "..." + '&parent=' + '...' + '&user=' + '&comment' + '...';
-    // print( url );
+    var url = 'https://scene-alert.com/inc/addComment.php?incident=' + myjson[0] + '&parent=' + null + '&userid='+ globals.loggedUserId.toString()  + '&username=' + globals.loggedUserNam  + '&comment=' + userCommentString.text;
+    print( url );
     // http.Response response = await http.post(url);
   }
 
