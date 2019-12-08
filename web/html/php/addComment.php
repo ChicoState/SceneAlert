@@ -19,6 +19,7 @@ include('../inc/database.php');
             $retarray[0] = 0;
             $retarray[1] = "Error";
         }
+    echo json_encode($retarray);
 
     $db = null;
     exit();
