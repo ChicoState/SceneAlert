@@ -36,7 +36,28 @@
       "FIRE" => "Fire Affecting Traffic",
       "MZP" => "Construction",
       "TADV" => "Traffic Advisory to Media",
-      "WW" => "Wrong Way Vehicle"
+      "WW" => "Wrong Way Vehicle",
+      "SPINOUT" => "Vehicle Spinout",
+      "FLOOD" => "Flooded Roadway",
+      "SNOW" => "Heavy Snow",
+      "CHAINS" => "Chains Required",
+      "SLIDE" => "Mud/Rock Slide",
+      "SILVER" => "Silver Alert",
+      "AMBER" => "Amber Alert",
+      "FOG" => "Dense Fog Advisory",
+      "1184" => "Traffic Control in Effect",
+      "SILVER Alert" => "Silver Alert",
+      "TADV" => "Traffic Advisory",
+      "JUMPER" => "Jumper",
+      "1182" => "Non-Injury Collision",
+      "1013" => "Adverse Road Conditions",
+      "WIND Advisory" => "High Wind Advisory",
+      "CLOSURE" => "Road Closure",
+      "CLOSURE of a Road" => "Road Closure",
+      "1166" => "Suspicious Vehicle",
+      "SIG Alert" => "Travel Alert",
+      "23114" => "Objects Falling from Insecure Load",
+      "WW" => "Wrong-way Driver"
     );
     
     $temp = explode('-', $name)[0];
@@ -46,13 +67,21 @@
   
   /* DetermineService()
     * Checks if the CHP incident involves fire/police and changes type accordingly
-    * 1=Police 2=Fire 3=EMS 4=All 5=Military
+    * 1=Police 2=Hazard 4=EMS 8=Military (7: Fire/Police/EMS)
     */
   function DetermineService($name) {
     if (!$name) {return 1;} // If no title given, assume it's a CHP Police issue
     $agencies = array(
-      "1144" => 4, "1179" => 4, "1180" => 4, "1181" => 4,
-      "1183" => 4, "20001" => 4, "CFIRE" => 2, "FIRE" => 2,
+      "1144"    => 4, "1179" => 4, "1180" => 4, "1181" => 4,
+      "1183"    => 4, "20001" => 4, "CFIRE" => 2, "FIRE" => 2,
+      "SPINOUT" => 4, "SLIDE" => 1, "SILVER" => 1, "SNOW" => 1,
+      "CHAINS"  => 1, "WIND" => 1, "20002" => 1, "1125" => 1,
+      "FLOOD"   => 1, "AMBER" => 1, "FOG" => 4, "1184" => 1,
+      "SILVER Alert" => 1, "TADV" => 1, "JUMPER" => 4,
+      "1182" => 1, "1013" => 1, "WIND Advisory" => 4,
+      "CLOSURE" => 4, "CLOSURE of a Road" => 4,
+      "1166" => 1, "SIG Alert" => 4, "23114" => 1,
+      "WW" => 4
     );
     $temp = explode('-', $name)[0];
     if ($temp) {return ($agencies[$temp] ? $agencies[$temp] : 1);}
@@ -75,156 +104,128 @@
     }
   */
   
-  // if $newIncidents[LogID] = $oldIncidents[LogID], do NOT insert into MySQL
-  // DEBUG - Later: If they match, check for new info and update MySQL. Otherwise ignore
-  $newIncidents = array();
 
   // Read latest CHP XML. If not found, terminate
+  $newIncidents = array();
   $newFile = fopen($read_new, "r") or die("Failed to read chp_incidents.xml.\n");
   
-  // Read through new file until we get to Chico Dispatch.
-  $findChico = 'Dispatch ID = "CHCC"';
-  $isChico = false;
-  
-  while(!$isChico) {
-    if (feof($newFile)) { break; }
+  $findLog = 'Log ID';
+  while(!feof($newFile)) {
     $line = fgets($newFile);
-    // If we found the Chico Dispatch Center, stop
-    if (strpos($line, $findChico)) {
-      $isChico = true;
-      break;
+    // If we found a Log ID, pay closer attention
+    if (strpos($line, $findLog)) {
+      
+      // Capture the Log ID [0]
+      preg_match_all('/"([^"]+)"/', $line, $retString);
+      $log = str_replace('"', '', $retString[0][0]);
+      
+      // 2 lines after is the Incident Type
+      fgets($newFile);
+      $line = fgets($newFile);
+      preg_match_all('/"([^"]+)"/', $line, $retString);
+      $type = str_replace('"', '', $retString[0][0]);
+      
+      // Next line is the Location [2]
+      $line = fgets($newFile);
+      preg_match_all('/"([^"]+)"/', $line, $retString);
+      $loc = str_replace('"', '', $retString[0][0]);
+      
+      // 4 lines later then that is the lat and long [3]
+      fgets($newFile); fgets($newFile); fgets($newFile);
+      $line = fgets($newFile);
+      preg_match_all('/"([^"]+)"/', $line, $retString);
+      $latlong = str_replace('"', '', $retString[0][0]);
+      
+      $newIncidents[] = array($log, $type, $loc, $latlong);
     }
   }
-  
-  if ($isChico) {
-    // Continue to loop as long as we're still in the Chico Dispatch Center
-    echo "Located CHP Incidents for Chico Dispatch area.\n";
-    $findLog = 'Log ID';
-    while(!feof($newFile) and $isChico) {
-      $line = fgets($newFile);
-      // If we found a Log ID, pay closer attention
-      if (strpos($line, $findLog)) {
-        
-        // Capture the Log ID [0]
-        preg_match_all('/"([^"]+)"/', $line, $retString);
-        $log = str_replace('"', '', $retString[0][0]);
-        
-        // 2 lines after is the Incident Type
-        fgets($newFile);
-        $line = fgets($newFile);
-        preg_match_all('/"([^"]+)"/', $line, $retString);
-        $type = str_replace('"', '', $retString[0][0]);
-        
-        // Next line is the Location [2]
-        $line = fgets($newFile);
-        preg_match_all('/"([^"]+)"/', $line, $retString);
-        $loc = str_replace('"', '', $retString[0][0]);
-        
-        // 4 lines later then that is the lat and long [3]
-        fgets($newFile); fgets($newFile); fgets($newFile);
-        $line = fgets($newFile);
-        preg_match_all('/"([^"]+)"/', $line, $retString);
-        $latlong = str_replace('"', '', $retString[0][0]);
-        
-        $newIncidents[] = array($log, $type, $loc, $latlong);
-      }
-      // Stop if we find the ending dispatch center tag
-      if (strstr($line, '</Dispatch>')) {
-        $isChico = false;
-        break;
-      }
-    }
+  foreach($newIncidents as $key => $value) {
+    echo $key.' -> 0:'.$value[0].' 1:'.$value[1].' 2:'.$value[2].' 3:'.$value[3];
+    echo "\n";
     
-    foreach($newIncidents as $key => $value) {
-      echo $key.' -> 0:'.$value[0].' 1:'.$value[1].' 2:'.$value[2].' 3:'.$value[3];
-      echo "\n";
+    $qCheck = "SELECT COUNT(*) FROM incidents WHERE chp = :log";
+    $qChk = $db->prepare($qCheck);
+    $qChk->bindParam(':log', $value[0]);
+    $qChk->execute();
+
+    // THIS IS A BANDAID!!! My computer was dying
+    $aCheck = "UPDATE incidents SET active = 1 WHERE chp = :log";
+    $aChk = $db->prepare($aCheck);
+    $aChk->bindparam(':log', $value[0]);
+    $aChk->execute();
+    /////////////////////////////
+
+    $chpLog = $qChk->fetchColumn();
+    if ($chpLog < 1) {
+      echo "New CHP Incident Detected (CHP ".$value[0].")\n";
       
-      $qCheck = "SELECT COUNT(*) FROM incidents WHERE chp = :log";
-      $qChk = $db->prepare($qCheck);
-      $qChk->bindParam(':log', $value[0]);
-      $qChk->execute();
-
-      // THIS IS A BANDAID!!! My computer was dying
-      $aCheck = "UPDATE incidents SET active = 1 WHERE chp = :log";
-      $aChk = $db->prepare($aCheck);
-      $aChk->bindparam(':log', $value[0]);
-      $aChk->execute();
-      /////////////////////////////
-
-      $chpLog = $qChk->fetchColumn();
-      if ($chpLog < 1) {
-        echo "New CHP Incident Detected (CHP ".$value[0].")\n";
+      // Check if Longitude / Latitude already exists
+      $colon = strpos($value[3], ':');
+      $lat = substr($value[3], 0, $colon);
+      
+      // Longitude in California is West, so it needs to be negative
+      echo "Converting LONGLAT integers to valid Coordinates of Degrees...\n";
+      $long = "-" . substr($value[3], $colon + 1, strlen($value[3]));
+      $latitude  = substr_replace($lat,  '.', 2, 0);
+      $longitude = substr_replace($long, '.', 4, 0);
         
-        // Check if Longitude / Latitude already exists
-        $colon = strpos($value[3], ':');
-        $lat = substr($value[3], 0, $colon);
-        // Longitude in California is West, so it needs to be negative
-        echo "Converting LONGLAT integers to valid Coordinates of Degrees...\n";
-        $long = "-" . substr($value[3], $colon + 1, strlen($value[3]));
-        $latitude  = substr_replace($lat,  '.', 2, 0);
-        $longitude = substr_replace($long, '.', 4, 0);
-          
-        echo 'LAT('.$latitude.')'."\n";
-        echo 'LONG('.$longitude.')'."\n";
-        $qGrid = "SELECT COUNT(*) AS count,idLocation AS id FROM locations WHERE longitude = :long AND latitude = :lat";
-        $gCheck = $db->prepare($qGrid);
-        $gCheck->bindParam(':lat', $latitude);
-        $gCheck->bindParam(':long', $longitude);
-        $gCheck->execute();
+      echo 'LAT('.$latitude.')'."\n";
+      echo 'LONG('.$longitude.')'."\n";
+      $qGrid = "SELECT COUNT(*) AS count,idLocation AS id FROM locations WHERE longitude = :long AND latitude = :lat";
+      $gCheck = $db->prepare($qGrid);
+      $gCheck->bindParam(':lat', $latitude);
+      $gCheck->bindParam(':long', $longitude);
+      $gCheck->execute();
+      
+      $fetcher = $gCheck->fetch(PDO::FETCH_ASSOC);
+      $locExist = $fetcher['count'];
+      $idLocn = $fetcher['id'];
+      if ($locExist < 1) {
+        echo "idLocation for (".$longitude.":".$latitude.") not found.\n";
+        echo "Generating a new idLocation for coordinates.\n";
         
-        $fetcher = $gCheck->fetch(PDO::FETCH_ASSOC);
-        $locExist = $fetcher['count'];
-        $idLocn = $fetcher['id'];
-        if ($locExist < 1) {
-          echo "idLocation for (".$longitude.":".$latitude.") not found.\n";
-          echo "Generating a new idLocation for coordinates.\n";
-          
-          // DEBUG - Must be changed later to a stored procedure that
-          // takes into account city, state, county, etc.
-          $qLoc = "SELECT AddCHPLoc(:long, :lat, :name)";
-          $locInsert = $db->prepare($qLoc);
-          $locInsert->bindParam(':long', $longitude);
-          $locInsert->bindParam(':lat', $latitude);
-          $locInsert->bindParam(':name', $value[2]);
-          
-          if ($locInsert->execute()) {
-            $idLocn = $locInsert->fetchColumn();
-            echo "Successfully added idLocation #".$idLocn."\n";
-          } else {
-            echo "Failed to add coordinates into MySQL.\n";
-            echo "The incident failed to be created due to errors.\n";
-          }
+        // DEBUG - Must be changed later to a stored procedure that
+        // takes into account city, state, county, etc.
+        $qLoc = "SELECT AddCHPLoc(:long, :lat, :name)";
+        $locInsert = $db->prepare($qLoc);
+        $locInsert->bindParam(':long', $longitude);
+        $locInsert->bindParam(':lat', $latitude);
+        $locInsert->bindParam(':name', $value[2]);
+        
+        if ($locInsert->execute()) {
+          $idLocn = $locInsert->fetchColumn();
+          echo "Successfully added idLocation #".$idLocn."\n";
         } else {
-          echo "Grid coordinates exist. Using existing SQL data.\n";
-        }
-        if ($idLocn) {
-          echo "Adding CHP Incident to SceneAlert Database...\n";
-          
-          $qInc = "SELECT InsertCHP(:loc, :deets, :ctype, :titlename, :oride, :num)";
-          $newInc = $db->prepare($qInc);
-          $newInc->bindParam(':loc', $idLocn);
-          $newInc->bindValue(':deets', 'Reported by CA Highway Patrol');
-          $newInc->bindValue(':ctype',     DetermineService($value[1]));
-          $newInc->bindParam(':titlename', GetIncidentTitle($value[1]));
-          $newInc->bindValue(':oride', 1);
-          $newInc->bindParam(':num', $value[0]);
-          if($newInc->execute()) {
-            echo "Created SceneAlert Incident #".$newInc->fetchColumn().".\n";
-          } else {
-            echo "Failed to create SceneAlert Incident due to a SQL Error.\n";
-          }
-        } else {
-          echo "Failed to create SceneAlert Incident. No idLocation found.\n";
+          echo "Failed to add coordinates into MySQL.\n";
+          echo "The incident failed to be created due to errors.\n";
         }
       } else {
-        echo "CHP Incident ".$value[0]." already exists in the MySQL Database!\n";
+        echo "Grid coordinates exist. Using existing SQL data.\n";
       }
+      if ($idLocn) {
+        echo "Adding CHP Incident to SceneAlert Database...\n";
+        
+        $qInc = "SELECT InsertCHP(:loc, :deets, :ctype, :titlename, :oride, :num)";
+        $newInc = $db->prepare($qInc);
+        $newInc->bindParam(':loc', $idLocn);
+        $newInc->bindValue(':deets', 'Reported by CA Highway Patrol');
+        $newInc->bindValue(':ctype',     DetermineService($value[1]));
+        $newInc->bindParam(':titlename', GetIncidentTitle($value[1]));
+        $newInc->bindValue(':oride', 1);
+        $newInc->bindParam(':num', $value[0]);
+        if($newInc->execute()) {
+          echo "Created SceneAlert Incident #".$newInc->fetchColumn().".\n";
+        } else {
+          echo "Failed to create SceneAlert Incident due to a SQL Error.\n";
+        }
+      } else {
+        echo "Failed to create SceneAlert Incident. No idLocation found.\n";
+      }
+    } else {
+      echo "CHP Incident ".$value[0]." already exists in the MySQL Database!\n";
     }
-    echo "Finished parsing CHP Incidents.\nTerminating.\n\n";
   }
-  else {
-    echo "No incidents currently in the Chico Dispatch area.\nNothing to do.\nTerminating.\n\n";
-  }
+  echo "Finished parsing CHP Incidents.\nTerminating.\n\n";
   echo "Cleaning up old CHP Incidents...\n";
   $q = "SELECT chp FROM incidents WHERE active = 1 AND chp IS NOT NULL";
   $oldInc = $db->prepare($q);
