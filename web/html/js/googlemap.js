@@ -88,15 +88,16 @@
           var marker  = new google.maps.Marker({
             position: latLong,
             map: gMap,
-            title: result[1],
-            icon: 'img/pins/' + result[4] + 's.png', // Choses icon img by type
+            title: result[3],
+            icon: 'img/pins/' + result[6] + 's.png', // Choses icon img by type
             size: new google.maps.Size(26, 32),
             visible: true,
             inc: {
               db: result[0],
-              iName: result[1], iDetails: result[2],
-              iCreated: result[4], iType: result[4],
-              iVotes: (result[5] - result[6]),
+              iName: result[3], iDetails: result[5],
+              iCreated: result[4], iType: result[6],
+              iVotes: (result[7] - result[8]),
+              iMaker: result[9]
             }
           });
           
@@ -104,6 +105,17 @@
           var listen = marker.addListener('click', function() {
             
             var scrW = getWidth();
+            
+            // Calculate time the incident was created
+            var currTime = new Date($.now());
+            var fromDate = parseInt(new Date(this.inc.iCreated).getTime()/1000); 
+            var toDate = parseInt(new Date(currTime).getTime()/1000);
+            var timeDiff = (toDate - fromDate)/3600;
+            var days = timeDiff / 24;
+            if (days > 47) {timeDiff = Math.ceil(days) + " days";}
+            else {timeDiff = Math.ceil(timeDiff) + " hours";}
+            
+            // Center the View
             gMap.setCenter(marker.getPosition());
             gMap.setZoom(14);
             if (scrW) { gMap.panBy(scrW * 0.145, 0); }
@@ -112,10 +124,11 @@
             $("#info-window").fadeIn(100);
             $("#info-title").html("LOADING INFORMATION");
             $("#info-title").html(this.inc.iName);
-            $("#info-creator").html("(Coming Soon!)");
-            $("#info-since").html("(Coming Soon!)");
+            $("#info-creator").html(this.inc.iMaker);
+            $("#info-since").html(timeDiff + " ago");
             var divBody = $("#info-body").find("ul");
             divBody.empty();
+            var str = this.inc.iDetails.replace(/(?:\r\n|\r|\n)/g, '</li><li>');
             divBody.append(
               "<li>" + (this.inc.iDetails) + "</li>"
             );
@@ -142,9 +155,7 @@
             for (var i = 0; i < jsn.length; i++) {
               
               // Go through and create a marker for each result from SQL
-              CreateMarker(Number(jsn[i][2]), Number(jsn[i][1]), [
-                jsn[i][0], jsn[i][3], jsn[i][5], jsn[i][4], jsn[i][6], jsn[i][7], jsn[i][8]
-              ]);
+              CreateMarker(Number(jsn[i][2]), Number(jsn[i][1]), jsn[i]);
               
               // Add to array of active calls, to check for expired markers
               idList.push(jsn[i][0]);
