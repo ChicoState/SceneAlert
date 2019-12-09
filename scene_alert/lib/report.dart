@@ -18,6 +18,9 @@ class ReportState extends State<Report>  {
 
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
+  final FocusNode fnTitle = FocusNode();
+  final FocusNode fnDesc = FocusNode();
+
   String _title, _description;
 
   @override
@@ -41,56 +44,102 @@ class ReportState extends State<Report>  {
             Form(
               key: _formkey,
               child:
-                Container(
-                  padding: new EdgeInsets.all(25.0),
-                  child:
-                    Column(
-                      children: <Widget>[
-                        Text( "Title" ),
-                        TextFormField(
-                          //focusNode: fnEmail,
-                          textInputAction: TextInputAction.next,
-                          onFieldSubmitted: (term) {
-                            //fnEmail.unfocus();
-                            //FocusScope.of(context).requestFocus(fnPassword);
-                          },
-                          decoration: new InputDecoration(
-                            //helperText: "Title", 
-                            border: OutlineInputBorder(),
-                          ),
-                          cursorColor: Colors.black,
-                          onSaved: (input) => _title = input,
-                        ),
-                        SizedBox( height: 20 ),
-                        Text( "Description" ),
-                        TextFormField(
-                          //focusNode: fnPassword,
-                          decoration: InputDecoration(
-                            //contentPadding: new EdgeInsets.symmetric(vertical: 25.0, horizontal: 10.0),
-                            border: OutlineInputBorder(),
-                            //rhelperText: "Description",
-                          ),
-                          cursorColor: Colors.black,
-                          obscureText: true,
-                          onSaved: (input) => _description = input,
-                        ),
-                        SizedBox( height: 50 ),
-                        Builder( builder: (context) =>
-                          MaterialButton(
-                            onPressed: () { 
-                              submitReport( context );
-                            },
-                            elevation: 5,
-                            minWidth: 200,
-                            color: Color.fromARGB( 255, 49, 182, 235 ),
-                            //Labels the button with Submit
-                            child: Text('Submit'),
-                          ),
-                        ),
-                      ],
-                    )
-                    )
-            )
+                Column(
+                  children: <Widget>[
+                    Container(
+                      padding: new EdgeInsets.fromLTRB(10.0,20.0,10.0,0.0),
+                      child:
+                        Column(
+                          children: <Widget>[
+                            TextFormField(
+                              focusNode: fnTitle,
+                              textInputAction: TextInputAction.next,
+                              onFieldSubmitted: (term) {
+                                fnTitle.unfocus();
+                                FocusScope.of(context).requestFocus(fnDesc);
+                              },
+                              decoration: new InputDecoration(
+                                hintText: "Title",
+                              ),
+                              cursorColor: Colors.black,
+                              onSaved: (input) => _title = input,
+                            ),
+                            SizedBox( height: 20 ),
+                            TextFormField(
+                              focusNode: fnDesc,
+                              minLines: 5,
+                              maxLines: 10,
+                              decoration: InputDecoration(
+                                hintMaxLines: 20,
+                                hintText: "Description of the incident",
+                              ),
+                              cursorColor: Colors.black,
+                              obscureText: true,
+                              onSaved: (input) => _description = input,
+                            ),
+                          ],
+                        )
+                    ),
+                    SizedBox( height: 20 ),
+                    Divider(
+                      thickness: 2.0,
+                    ),
+                    // Location Selection
+                    Builder( builder: (context) =>
+                      MaterialButton(
+                        onPressed: () { 
+                          selectLocation( context );
+                        },
+                        elevation: 5,
+                        minWidth: 200,
+                        color: Colors.grey[0],
+                        child:
+                          Row(
+                            children: <Widget>[
+                              Icon( Icons.location_on, color: Colors.grey[600] ),
+                              Text( "Select Location", style: TextStyle( color: Colors.grey[600] ) ),
+                            ],
+                          )
+                      ),
+                    ),
+                    Divider(
+                      thickness: 2.0,
+                    ),
+                    Builder( builder: (context) =>
+                      MaterialButton(
+                        onPressed: () { 
+                          selectPhoto( context );
+                        },
+                        elevation: 5,
+                        minWidth: 200,
+                        color: Colors.grey[0],
+                        child:
+                          Row(
+                            children: <Widget>[
+                              Icon( Icons.camera_enhance, color: Colors.grey[600] ),
+                              Text( "Add Photo or Video", style: TextStyle( color: Colors.grey[600] ) ),
+                            ],
+                          )
+                      ),
+                    ),
+                    Divider(
+                      thickness: 2.0,
+                    ),
+                    SizedBox( height: 20 ),
+                    Builder( builder: (context) =>
+                      MaterialButton(
+                        onPressed: () { 
+                          submitReport( context );
+                        },
+                        elevation: 5,
+                        minWidth: 200,
+                        color: Color.fromARGB( 255, 49, 182, 235 ),
+                        child: Text('Submit'),
+                      ),
+                    ),
+                  ],
+                ),
+            ),
         )
     );
   }
@@ -100,5 +149,13 @@ class ReportState extends State<Report>  {
 
     print( _title );
     print( _description );
+  }
+
+  Future selectLocation( context ) async {
+    print( "LocationPressed" );
+  }
+
+  Future selectPhoto( context ) async {
+    print( "PhotoPressed" );
   }
 }
