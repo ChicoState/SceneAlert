@@ -15,9 +15,9 @@ class LandingPage extends StatefulWidget {
 
 class LandingPageState extends State<LandingPage> {
 
-  int _selectedPage = 1;
+  int _selectedPage = 0;
   final _pageOptions = [
-    Logout(),
+    //Logout(),
     //Center( child: Text('Future Widget') ),
     CrimeMap(),
     CrimeHistory(),
@@ -65,6 +65,7 @@ class LandingPageState extends State<LandingPage> {
             });
           },
           items: [
+            /*
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               activeIcon: ( () {
@@ -77,6 +78,7 @@ class LandingPageState extends State<LandingPage> {
               } () ),  
               title: Text('Home'),
             ),
+            */
             BottomNavigationBarItem(
               icon: Icon(Icons.map),
               activeIcon: Icon( Icons.map, color: Theme.of(context).primaryColor),
