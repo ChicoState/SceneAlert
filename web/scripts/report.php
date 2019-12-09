@@ -36,10 +36,11 @@
         $iQuery->bindParam(4, $posInfo['reporter']);
         $iQuery->bindParam(5, $posInfo['details']);
 
-        if ($iQuery->execute()) {
+        if( $iQuery->execute() ) {
             $retarray[0] = 1;
             $retarray[1] = "Successful.";
-        } else {
+        }
+        else {
             $retarray[0] = 0;
             $retarray[1] = "Query Failed.";
         }
@@ -47,8 +48,45 @@
         echo json_encode($retarray);
     }
     else {
-        echo "Not found";
-        echo $searchLocation->fetch(PDO::FETCH_ASSOC);
+        echo "Not found\n";
+        
+        $retarray = array(); // For the end
+  
+        $posInfo = array(
+            "num"    => $_GET['num'] ),
+            "street" => $_GET['str'] ),
+            "title"  => $_GET['title'] ),
+            "zip"    => $_GET['postal'] ),
+            "city"   => $_GET['city'] ),
+            "state"  => $_GET['state'] ),
+            "county" => $_GET['county'] ),
+            "nation" => $_GET['nation'] ),
+            "long"   => $_GET['longt'] ),
+            "latt"   => $_GET['latt'] ),
+        );
+
+        $iQuery = $db->prepare("SELECT NewLocation(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $iQuery->bindParam(1,  $posInfo['num']);
+        $iQuery->bindParam(2,  $posInfo['street']);
+        $iQuery->bindParam(3,  $posInfo['title']);
+        $iQuery->bindParam(4,  $posInfo['zip']);
+        $iQuery->bindParam(5,  $posInfo['city']);
+        $iQuery->bindParam(6,  $posInfo['state']);
+        $iQuery->bindParam(7,  $posInfo['county']);
+        $iQuery->bindParam(8,  $posInfo['nation']);
+        $iQuery->bindParam(9,  $posInfo['long']);
+        $iQuery->bindParam(10, $posInfo['latt']);
+
+        if($iQuery->execute()) {
+            $retarray[0] = 1;
+            $retarray[1] = $iQuery->fetchColumn();
+        }
+        else {
+            $retarray[0] = 0;
+            $retarray[1] = "Failed to insert new location";
+        }
+
+        echo json_encode($retarray);
     }
 
     $db = null;

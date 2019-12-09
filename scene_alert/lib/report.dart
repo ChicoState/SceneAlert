@@ -152,10 +152,10 @@ class ReportState extends State<Report>  {
   }
 
   Future selectLocation( context ) async {
-    print( "LocationPressed" );
+    print( "Location Pressed" );
   }
 
   Future selectPhoto( context ) async {
-    print( "PhotoPressed" );
+    print( "Photo Pressed" );
   }
 }
