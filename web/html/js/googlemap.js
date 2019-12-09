@@ -2,6 +2,7 @@
       var marks = []; // Keeps tracks of markers {0:idIncident, 1:Object}
       var listn = []; // List of listeners {0:idIncident, 1:Object}
       var gMap;
+      var markTime = null;
       
       
       /* HasMarker()
@@ -77,6 +78,43 @@
         }
       }
       
+      
+      /* TimeDifference()
+       * Returns the time in a readable string of the elapsed time
+       * @param incTime The time the incident was created, in Epoch
+       * @returns String
+       */
+      function TimeDifference(incTime) {
+        
+        var fromDate = parseInt(new Date(incTime).getTime()/1000); 
+        var toDate   = parseInt(new Date($.now()).getTime()/1000);
+        var s        = (toDate - fromDate);
+        
+        // 172800 = 2 Days / 48 Hours
+        if (s < 60) {
+          if (s == 1) return ("1 second");
+          return (s + " seconds");
+        }
+        else if (s < 3600) {
+          if (s < 120) return ("1 minute");
+          return (Math.floor(s/60) + " minutes");
+        }
+        else if (s < 172800) {
+          if (s < 7200) return ("1 hour");
+          return (Math.floor(s/3600) + "hours");
+        }
+        else {
+          return (Math.floor(s) + " days");
+        }
+        return "na"
+      }
+      
+      /* Call an interval/timeout on this while div is open */
+      function UpdateMarkerTime(mapMarker) {
+        $("#info-since").html((TimeDifference(mapMarker.inc.iCreated) + " ago"));
+        //if ( !(("#info-window").is(':visible')) ) {clearInterval(markTime);}
+      }
+      
       /* CreateMarker()
        * Creates a marker if it doesn't already exist
        * param Result {[0]id, title, details, created, type, upvote, downvote}
@@ -106,15 +144,6 @@
             
             var scrW = getWidth();
             
-            // Calculate time the incident was created
-            var currTime = new Date($.now());
-            var fromDate = parseInt(new Date(this.inc.iCreated).getTime()/1000); 
-            var toDate = parseInt(new Date(currTime).getTime()/1000);
-            var timeDiff = (toDate - fromDate)/3600;
-            var days = timeDiff / 24;
-            if (days > 47) {timeDiff = Math.ceil(days) + " days";}
-            else {timeDiff = Math.ceil(timeDiff) + " hours";}
-            
             // Center the View
             gMap.setCenter(marker.getPosition());
             gMap.setZoom(14);
@@ -125,7 +154,7 @@
             $("#info-title").html("LOADING INFORMATION");
             $("#info-title").html(this.inc.iName);
             $("#info-creator").html(this.inc.iMaker);
-            $("#info-since").html(timeDiff + " ago");
+            UpdateMarkerTime(this);
             var divBody = $("#info-body").find("ul");
             divBody.empty();
             var str = this.inc.iDetails.replace(/(?:\r\n|\r|\n)/g, '</li><li>');
@@ -135,6 +164,7 @@
             $("#info-vcount").html(this.inc.iVotes);
             $("#info-title").html(this.inc.iName);
             
+            //var markTime = setInterval(UpdateMarkerTime, 1000, this);
           });
           marks.push([result[0], marker]); // Add to marker tracker by idIncident
           listn.push([result[0], listen]); // Corresponding listener
