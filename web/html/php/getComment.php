@@ -2,29 +2,33 @@
     include('../inc/database.php');
 
  $idIncident = $_GET['incident'];
-    $retarray = array();
+    $errorMsg = NULL;
+    $dataMsg = "";
+	$dataArr = array();
     // if( $fetcher < 1 ) {
         $insertion = $db->prepare(
             "SELECT idComment, username, commentText
                 FROM comments JOIN accounts
                 ON comments.idUser = accounts.idUser
-                WHERE idIncident = 100340"
+                WHERE idIncident = $idIncident"
         );
 	
         if( $insertion->execute() ){ 
-            if ($insertion->rowCount() > 0) {
-              foreach($insertion->fetchAll() as $row) {
-                array_push($retarray, array(
-                  $row['idComment'], $row['username'], $row['commentText']
-                ));
-              }
-	}
+        $jsonarray = array();
+        while( $row = $insertion->fetch(PDO::FETCH_ASSOC) ) {
+                $jsonarray[] = array(
+                    $row['idComment'], $row['username'], $row['commentText']
+                );
+            }
+        $msg = json_encode( $jsonarray );
+	$errorMsg = 1;
         }
         else {
-            $retarray[0] = 0;
-            $retarray[1] = "Error";
+            $errorMsg = 0;
+            $msg = "Error";
         }
-     echo json_encode($retarray);    
+	$retarray = array($errorMsg, $msg);
+	echo json_encode($retarray); 
     $db = null;
     exit();
 ?>
