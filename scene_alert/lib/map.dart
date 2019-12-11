@@ -1,16 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'dart:math' as math;
-
-import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math' as math;
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:scene_alert/globals.dart' as globals;
 import 'package:scene_alert/markerDetail.dart';
 import 'package:scene_alert/report.dart';
-import 'package:scene_alert/globals.dart' as globals;
-
-//import 'package:scene_alert/sceneAlertIcons.dart' as SceneAlertIcons;
 import 'package:scene_alert/sceneAlertIcons.dart';
 
 GoogleMap _map;
@@ -215,10 +213,11 @@ class CrimeMapState extends State<CrimeMap> with TickerProviderStateMixin {
     var url = 'https://scene-alert.com/inc/getincidents.php?' + 
       'lat=' + globals.lat.toString() + '&lon=' + globals.lon.toString() +'&radius=' + radius.toString();
     http.Response response = await http.get(url);
+    print(url);
     var data = jsonDecode(response.body);
-
+   
     BitmapDescriptor marker;
-
+     print(data);
     if( data[0] == 0 ) {
       var json = jsonDecode(data[1]);
       for( var i = 0; i < json.length; i++ ) {
@@ -238,6 +237,7 @@ class CrimeMapState extends State<CrimeMap> with TickerProviderStateMixin {
               position: LatLng( double.parse(json[i][4]), double.parse(json[i][3]) ),
               icon: marker,
               onTap: () {
+                print(json);
                 Navigator.push(context, MaterialPageRoute(builder: (context){
                   return MarkerDetail( myjson: json[i]);
                 }));

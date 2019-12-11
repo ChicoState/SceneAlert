@@ -1,12 +1,12 @@
-//import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:scene_alert/landing.dart';
-import 'package:scene_alert/register.dart';
-import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-import 'package:scene_alert/globals.dart' as globals;
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:scene_alert/globals.dart' as globals;
+import 'package:scene_alert/landing.dart';
+import 'package:scene_alert/register.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -29,7 +29,6 @@ class LoginState extends State<Login> {
     return MaterialApp(
       home:
         Scaffold(
-          //resizeToAvoidBottomInset: false,
           body:
             SingleChildScrollView( 
               child:
@@ -105,11 +104,9 @@ class LoginState extends State<Login> {
                                 elevation: 5,
                                 minWidth: 200,
                                 color: Color.fromARGB( 255, 49, 182, 235 ),
-                                //Labels the button with Submit
                                 child: Text('Login'),
                               ),
                             ),
-                            //SizedBox(height: 10),
                             Builder( builder: (context) =>
                               MaterialButton(
                                 onPressed: () { 
@@ -118,7 +115,6 @@ class LoginState extends State<Login> {
                                 elevation: 0,
                                 minWidth: 200,
                                 color: Colors.grey[0],
-                                //Labels the button with Submit
                                 child: Text('Register'),
                               ),
                             ),
@@ -139,6 +135,8 @@ class LoginState extends State<Login> {
     if( data[0] == 1 ) {
       if( rememberMe ) {
         await storage.write(key: _email, value: _password);
+        globals.loggedUserId = data[2];
+        globals.loggedUserNam = data[3];
       }
       Navigator.pushReplacement(
         context,
