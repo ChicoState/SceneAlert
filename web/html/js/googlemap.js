@@ -177,6 +177,17 @@
       function UpdateReport(dbNumber) {
         if (dbNumber) {
           console.log('dbNumber ['+dbNumber+']!');
+          $.ajax({
+            url: "../php/update_report.php",
+            type: 'POST',
+            data: {dbid:dbNumber},
+            success: function(result) {
+              
+            },
+            error: function(result) {
+              console.log("Failed. ["+result.responseText+"]");
+            }
+          });
         } else {
           console.log('No dbNumber Given!');
         }
