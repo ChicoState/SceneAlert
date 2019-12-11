@@ -153,7 +153,7 @@
     <!-- Infowindow on Pin Click -->
     <div id="info-window" style="display: none;">
       <div id="info-details">
-        <div id="info-title">THIS IS JUST A TEST</div>
+        <div id="info-title"></div>
         <div id="info-report">
           Created By
           <span id="info-creator"></span> about 
@@ -170,11 +170,22 @@
         
         </ul>
       </div>
+      <div id="info-closure">
+        <table>
+          <tr>
+            <td colspan="2"><textarea id="info-newnote"></textarea></td>
+          </tr>
+          <tr>
+            <td><button onclick="CloseReport()" disabled>Close Report</button></td>
+            <td><button id="info-update" onclick="UpdateReport()">Submit Update</button></td>
+          </tr>
+        </table>
+      </div>
       <div id="info-votes">
         <div id="info-vup">
           <img src="img/vote-up.png" width="32px" height="32px"/>
         </div>
-        <div id="info-vcount">18</div>
+        <div id="info-vcount">0</div>
         <div id="info-vdn">
           <img src="img/vote-down.png" width="32px" height="32px"/>
         </div>
