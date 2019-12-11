@@ -159,7 +159,7 @@
             divBody.empty();
             var str = this.inc.iDetails.replace(/(?:\r\n|\r|\n)/g, '</li><li>');
             divBody.append(
-              "<li>" + (this.inc.iDetails) + "</li>"
+              "<li>" + (str) + "</li>"
             );
             $("#info-vcount").html(this.inc.iVotes);
             $("#info-title").html(this.inc.iName);
