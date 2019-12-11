@@ -163,8 +163,10 @@
             );
             $("#info-vcount").html(this.inc.iVotes);
             $("#info-title").html(this.inc.iName);
+            $("#info-update").attr('onclick', 'UpdateReport('+ this.inc.db +')');
             
             //var markTime = setInterval(UpdateMarkerTime, 1000, this);
+            
           });
           marks.push([result[0], marker]); // Add to marker tracker by idIncident
           listn.push([result[0], listen]); // Corresponding listener
@@ -172,6 +174,13 @@
         }
       }
       
+      function UpdateReport(dbNumber) {
+        if (dbNumber) {
+          console.log('dbNumber ['+dbNumber+']!');
+        } else {
+          console.log('No dbNumber Given!');
+        }
+      }
       
       /* LoadMarkers()
        * Loads current incident markers when map loads
