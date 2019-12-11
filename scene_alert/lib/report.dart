@@ -1,5 +1,8 @@
+import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:scene_alert/globals.dart' as globals;
 import 'package:scene_alert/location.dart';
@@ -155,15 +158,21 @@ class ReportState extends State<Report>  {
 
     print( _title );
     print( _description );
+
+    double demoLat = 39.730125;
+    double demoLon = -121.8450071;
+
+    var url = 'https://scene-alert.com/inc/report.php?' + 
+      'lat=' + demoLat.toString() + '&lon=' + demoLon.toString()
+      + '&title=' + _title + '&type=' + 1.toString() + '&reporter=' + globals.loggedUserNam
+      + '&details=' + _description;
+    http.Response response = await http.get(url);
+    var data = jsonDecode(response.body);
+
+    Navigator.pop(context, true);
   }
 
   Future selectLocation( context ) async {
-
-    //var lat = 39.7297708;
-    //var lon = -121.8449898;
-
-    //print( lat.toString() + " " + lon.toString() );
-
     Navigator.push(context, MaterialPageRoute(builder: (context){
       return LocationSelect(locationData: locationData);
     }));
@@ -173,6 +182,7 @@ class ReportState extends State<Report>  {
   }
 
   Future selectPhoto( context ) async {
+    print( globals.tmpLat.toString() + " " + globals.tmpLon.toString() );
     print( "Photo Pressed" );
   }
 }
