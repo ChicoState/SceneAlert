@@ -114,7 +114,6 @@ class CrimeHistoryState extends State<CrimeHistory> {
       globals.lat.toString() + '&lon=' + globals.lon.toString() + '&radius=' + globals.radius.toString() + '&time=' + timeRange;
     http.Response response = await http.get(url);
     var data = jsonDecode(response.body);
-
     if( data[0] == 0 ) {
       var json = jsonDecode(data[1]);
       

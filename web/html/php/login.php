@@ -25,8 +25,9 @@
                 
                 $retarray[0] = 1; // 1 indicates login success
                 $retarray[1] = "Login was Successful";
+                //adds username and userid to be stored on app for data submission
                 $retarray[2] = $acct['idUser'];
-                $retarray[2] = $acct['username'];
+                $retarray[3] = $acct['username'];
             }
             else {
                 $retarray[0] = 0; // 0 indicates login failure

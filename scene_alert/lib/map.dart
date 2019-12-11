@@ -212,10 +212,11 @@ class CrimeMapState extends State<CrimeMap> with TickerProviderStateMixin {
     var url = 'https://scene-alert.com/inc/getincidents.php?' + 
       'lat=' + globals.lat.toString() + '&lon=' + globals.lon.toString() +'&radius=' + radius.toString();
     http.Response response = await http.get(url);
+    print(url);
     var data = jsonDecode(response.body);
-
+   
     BitmapDescriptor marker;
-
+     print(data);
     if( data[0] == 0 ) {
       var json = jsonDecode(data[1]);
       for( var i = 0; i < json.length; i++ ) {
@@ -235,6 +236,7 @@ class CrimeMapState extends State<CrimeMap> with TickerProviderStateMixin {
               position: LatLng( double.parse(json[i][4]), double.parse(json[i][3]) ),
               icon: marker,
               onTap: () {
+                print(json);
                 Navigator.push(context, MaterialPageRoute(builder: (context){
                   return MarkerDetail( myjson: json[i]);
                 }));

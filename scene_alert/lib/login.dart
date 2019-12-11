@@ -135,6 +135,8 @@ class LoginState extends State<Login> {
     if( data[0] == 1 ) {
       if( rememberMe ) {
         await storage.write(key: _email, value: _password);
+        globals.loggedUserId = data[2];
+        globals.loggedUserNam = data[3];
       }
       Navigator.pushReplacement(
         context,
