@@ -82,7 +82,6 @@ class CrimeMapState extends State<CrimeMap> with TickerProviderStateMixin {
   BitmapDescriptor fireMarkerIcon;
   BitmapDescriptor multiMarkerIcon;
 
-
   double radius = 0;
   List<int> rangeOptions = [ 3, 5, 10, 15, 20, 30, 50, 100 ];
 

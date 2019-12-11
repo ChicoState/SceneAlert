@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+
+import 'package:scene_alert/globals.dart' as globals;
+import 'package:scene_alert/location.dart';
 
 class Report extends StatefulWidget {
 
@@ -22,6 +26,8 @@ class ReportState extends State<Report>  {
   final FocusNode fnDesc = FocusNode();
 
   String _title, _description;
+
+  var locationData = [ globals.lat, globals.lon ];
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +80,6 @@ class ReportState extends State<Report>  {
                                 hintText: "Description of the incident",
                               ),
                               cursorColor: Colors.black,
-                              obscureText: true,
                               onSaved: (input) => _description = input,
                             ),
                           ],
@@ -105,6 +110,7 @@ class ReportState extends State<Report>  {
                     Divider(
                       thickness: 2.0,
                     ),
+                    // Photo Selection
                     Builder( builder: (context) =>
                       MaterialButton(
                         onPressed: () { 
@@ -152,7 +158,18 @@ class ReportState extends State<Report>  {
   }
 
   Future selectLocation( context ) async {
+
+    //var lat = 39.7297708;
+    //var lon = -121.8449898;
+
+    //print( lat.toString() + " " + lon.toString() );
+
+    Navigator.push(context, MaterialPageRoute(builder: (context){
+      return LocationSelect(locationData: locationData);
+    }));
+
     print( "Location Pressed" );
+    print( locationData[0].toString() + " " + locationData[1].toString() );
   }
 
   Future selectPhoto( context ) async {
