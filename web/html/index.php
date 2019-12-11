@@ -182,11 +182,15 @@
     </div>
     
     <?php include ('footer.php'); ?>
+    
     <!-- Load the Google Map -->
     <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBH1jW5Aqd8lHL7RoiiKx9COdioIRdGs8Q&callback=initMap"
       type="text/javascript">
     </script> 
+    
+    <div id="alpha"><div class="corner-ribbon">DEV VERSION</div></div>
+    
   </body>
   <?php $db = null; ?>
 </html>
