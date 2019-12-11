@@ -32,6 +32,8 @@ class CrimeMapState extends State<CrimeMap> with TickerProviderStateMixin {
 
   String _mapStyle;
 
+  Timer timer;
+
   /*
     Overrides the initial state so data is loaded before the map is
   */
@@ -39,6 +41,7 @@ class CrimeMapState extends State<CrimeMap> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
+    timer = Timer.periodic( Duration(seconds: 15), (Timer t) => getCHP( globals.radius ) );
     getCHP( 3 );
 
     _aniController = new AnimationController(
@@ -216,7 +219,7 @@ class CrimeMapState extends State<CrimeMap> with TickerProviderStateMixin {
     var data = jsonDecode(response.body);
    
     BitmapDescriptor marker;
-     print(data);
+    myMarkers.clear();
     if( data[0] == 0 ) {
       var json = jsonDecode(data[1]);
       for( var i = 0; i < json.length; i++ ) {
@@ -269,5 +272,9 @@ class CrimeMapState extends State<CrimeMap> with TickerProviderStateMixin {
         controller.setMapStyle( "[]" );
       }
     });
+  }
+
+  Future updateMap( context ) async {
+    getCHP( globals.radius );
   }
 }

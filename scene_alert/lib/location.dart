@@ -21,9 +21,6 @@ class LocationSelectState extends State<LocationSelect> {
   GoogleMapController _controller;
   Set<Marker> myMarkers = {};
 
-  var lat;
-  var lon;
-
   static final CameraPosition curLocation = CameraPosition(
     target: LatLng( globals.lat, globals.lon ),
     zoom: 16,
@@ -81,6 +78,10 @@ class LocationSelectState extends State<LocationSelect> {
                     backgroundColor: Theme.of(context).accentColor,
                     child: new Icon(Icons.check, color: Theme.of(context).primaryColor),
                     onPressed: () {
+                      setState(() {
+                        globals.tmpLat = globals.lat;
+                        globals.tmpLon = globals.lon;
+                      });
                       Navigator.pop(context, true);
                     },
                   ),
@@ -124,8 +125,8 @@ class LocationSelectState extends State<LocationSelect> {
     );
 
     setState(() {
-      lat = position.target.latitude;
-      lon = position.target.longitude;
+      globals.tmpLat = position.target.latitude;
+      globals.tmpLon = position.target.longitude;
     });
   }
 
