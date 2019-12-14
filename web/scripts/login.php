@@ -1,12 +1,12 @@
 <?php
-  include('../inc/database.php');
+    include('database.php');
   
-	$usr = $_POST['user'];
-	$pass = $_POST['pass'];
-  
+	$usr = $_GET['user'];
+	$pass = $_GET['pass'];
+
 	$stmt = $db->prepare(
-        "SELECT * FROM accounts WHERE email = :user LIMIT 1"
-    );
+            "SELECT * FROM accounts WHERE email = :user LIMIT 1"
+        );
 	$stmt->bindParam(':user', $usr);
   
     $retarray = array();
@@ -25,9 +25,6 @@
                 
                 $retarray[0] = 1; // 1 indicates login success
                 $retarray[1] = "Login was Successful";
-                //adds username and userid to be stored on app for data submission
-                $retarray[2] = $acct['idUser'];
-                $retarray[3] = $acct['username'];
             }
             else {
                 $retarray[0] = 0; // 0 indicates login failure
@@ -46,6 +43,7 @@
 
     // If result exists, verify the information
     echo json_encode($retarray);
-    $db = null;
+  $db = null;
     exit();
 ?>
+

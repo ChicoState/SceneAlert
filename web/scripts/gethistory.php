@@ -1,6 +1,5 @@
 <?php
-    require_once('../inc/database.php');
-    if (session_status() == PHP_SESSION_NONE) {session_start();}
+    include('database.php');
 
     $lat = $_GET['lat'];
     $lon = $_GET['lon'];
@@ -91,6 +90,6 @@
     $retarray = array( $err, $msg );
 
     echo json_encode($retarray);
-
+    $db = null;
     exit();
 ?>

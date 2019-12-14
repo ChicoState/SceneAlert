@@ -1,7 +1,6 @@
 <html>
   <?php
-    require_once('inc/database.php');
-    if (session_status() == PHP_SESSION_NONE) {session_start();}
+    include('inc/database.php');
   ?>
   <head>
     <title>SceneAlert - Real Time Incident Reporting</title>
@@ -154,7 +153,7 @@
     <!-- Infowindow on Pin Click -->
     <div id="info-window" style="display: none;">
       <div id="info-details">
-        <div id="info-title">THIS IS JUST A TEST</div>
+        <div id="info-title"></div>
         <div id="info-report">
           Created By
           <span id="info-creator"></span> about 
@@ -171,11 +170,22 @@
         
         </ul>
       </div>
+      <div id="info-closure">
+        <table>
+          <tr>
+            <td colspan="2"><textarea id="info-newnote"></textarea></td>
+          </tr>
+          <tr>
+            <td><button id="info-closer" onclick="CloseReport()">Close Report</button></td>
+            <td><button id="info-update" onclick="UpdateReport()" disabled>Submit Update</button></td>
+          </tr>
+        </table>
+      </div>
       <div id="info-votes">
         <div id="info-vup">
           <img src="img/vote-up.png" width="32px" height="32px"/>
         </div>
-        <div id="info-vcount">18</div>
+        <div id="info-vcount">0</div>
         <div id="info-vdn">
           <img src="img/vote-down.png" width="32px" height="32px"/>
         </div>
@@ -183,11 +193,15 @@
     </div>
     
     <?php include ('footer.php'); ?>
+    
     <!-- Load the Google Map -->
     <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBH1jW5Aqd8lHL7RoiiKx9COdioIRdGs8Q&callback=initMap"
       type="text/javascript">
     </script> 
+    
+    <div id="alpha"><div class="corner-ribbon">DEV VERSION</div></div>
+    
   </body>
-  
+  <?php $db = null; ?>
 </html>

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 
 import 'package:scene_alert/globals.dart' as globals;
 import 'package:scene_alert/theme.dart';
@@ -18,7 +18,7 @@ class SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        // Write some code to control things, when user press Back navigation button in device navigationBar
+        // Controls back button on device
         Navigator.pop(context, true);
       },
       child:

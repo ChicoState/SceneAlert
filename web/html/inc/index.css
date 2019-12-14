@@ -8,6 +8,26 @@ body {
   background-color: silver;
 }
 
+#alpha {
+  overflow: hidden;
+}
+.corner-ribbon {
+  width: 20%;
+  background: #e43;
+  position: fixed;
+  text-align: center;
+  line-height: 50px;
+  letter-spacing: 1px;
+  color: #f0f0f0;
+  top: auto;
+  right: -5%;
+  bottom: 5%;
+  left: auto;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  font-weight: bold;
+}
+
 /*
   Google Map & Legend Layout
 */

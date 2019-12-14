@@ -1,8 +1,15 @@
+import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:scene_alert/globals.dart' as globals;
+import 'package:scene_alert/location.dart';
 
 class Report extends StatefulWidget {
 
-  var type;
+  final type;
   Report({Key key, @required this.type}) : super(key: key);
   
   @override
@@ -18,7 +25,12 @@ class ReportState extends State<Report>  {
 
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
+  final FocusNode fnTitle = FocusNode();
+  final FocusNode fnDesc = FocusNode();
+
   String _title, _description;
+
+  var locationData = [ globals.lat, globals.lon ];
 
   @override
   Widget build(BuildContext context) {
@@ -41,56 +53,102 @@ class ReportState extends State<Report>  {
             Form(
               key: _formkey,
               child:
-                Container(
-                  padding: new EdgeInsets.all(25.0),
-                  child:
-                    Column(
-                      children: <Widget>[
-                        Text( "Title" ),
-                        TextFormField(
-                          //focusNode: fnEmail,
-                          textInputAction: TextInputAction.next,
-                          onFieldSubmitted: (term) {
-                            //fnEmail.unfocus();
-                            //FocusScope.of(context).requestFocus(fnPassword);
-                          },
-                          decoration: new InputDecoration(
-                            //helperText: "Title", 
-                            border: OutlineInputBorder(),
-                          ),
-                          cursorColor: Colors.black,
-                          onSaved: (input) => _title = input,
-                        ),
-                        SizedBox( height: 20 ),
-                        Text( "Description" ),
-                        TextFormField(
-                          //focusNode: fnPassword,
-                          decoration: InputDecoration(
-                            //contentPadding: new EdgeInsets.symmetric(vertical: 25.0, horizontal: 10.0),
-                            border: OutlineInputBorder(),
-                            //rhelperText: "Description",
-                          ),
-                          cursorColor: Colors.black,
-                          obscureText: true,
-                          onSaved: (input) => _description = input,
-                        ),
-                        SizedBox( height: 50 ),
-                        Builder( builder: (context) =>
-                          MaterialButton(
-                            onPressed: () { 
-                              submitReport( context );
-                            },
-                            elevation: 5,
-                            minWidth: 200,
-                            color: Color.fromARGB( 255, 49, 182, 235 ),
-                            //Labels the button with Submit
-                            child: Text('Submit'),
-                          ),
-                        ),
-                      ],
-                    )
-                    )
-            )
+                Column(
+                  children: <Widget>[
+                    Container(
+                      padding: new EdgeInsets.fromLTRB(10.0,20.0,10.0,0.0),
+                      child:
+                        Column(
+                          children: <Widget>[
+                            TextFormField(
+                              focusNode: fnTitle,
+                              textInputAction: TextInputAction.next,
+                              onFieldSubmitted: (term) {
+                                fnTitle.unfocus();
+                                FocusScope.of(context).requestFocus(fnDesc);
+                              },
+                              decoration: new InputDecoration(
+                                hintText: "Title",
+                              ),
+                              cursorColor: Colors.black,
+                              onSaved: (input) => _title = input,
+                            ),
+                            SizedBox( height: 20 ),
+                            TextFormField(
+                              focusNode: fnDesc,
+                              minLines: 5,
+                              maxLines: 10,
+                              decoration: InputDecoration(
+                                hintMaxLines: 20,
+                                hintText: "Description of the incident",
+                              ),
+                              cursorColor: Colors.black,
+                              onSaved: (input) => _description = input,
+                            ),
+                          ],
+                        )
+                    ),
+                    SizedBox( height: 20 ),
+                    Divider(
+                      thickness: 2.0,
+                    ),
+                    // Location Selection
+                    Builder( builder: (context) =>
+                      MaterialButton(
+                        onPressed: () { 
+                          selectLocation( context );
+                        },
+                        elevation: 5,
+                        minWidth: 200,
+                        color: Colors.grey[0],
+                        child:
+                          Row(
+                            children: <Widget>[
+                              Icon( Icons.location_on, color: Colors.grey[600] ),
+                              Text( "Select Location", style: TextStyle( color: Colors.grey[600] ) ),
+                            ],
+                          )
+                      ),
+                    ),
+                    Divider(
+                      thickness: 2.0,
+                    ),
+                    // Photo Selection
+                    Builder( builder: (context) =>
+                      MaterialButton(
+                        onPressed: () { 
+                          selectPhoto( context );
+                        },
+                        elevation: 5,
+                        minWidth: 200,
+                        color: Colors.grey[0],
+                        child:
+                          Row(
+                            children: <Widget>[
+                              Icon( Icons.camera_enhance, color: Colors.grey[600] ),
+                              Text( "Add Photo or Video", style: TextStyle( color: Colors.grey[600] ) ),
+                            ],
+                          )
+                      ),
+                    ),
+                    Divider(
+                      thickness: 2.0,
+                    ),
+                    SizedBox( height: 20 ),
+                    Builder( builder: (context) =>
+                      MaterialButton(
+                        onPressed: () { 
+                          submitReport( context );
+                        },
+                        elevation: 5,
+                        minWidth: 200,
+                        color: Color.fromARGB( 255, 49, 182, 235 ),
+                        child: Text('Submit'),
+                      ),
+                    ),
+                  ],
+                ),
+            ),
         )
     );
   }
@@ -100,5 +158,31 @@ class ReportState extends State<Report>  {
 
     print( _title );
     print( _description );
+
+    double demoLat = 39.730125;
+    double demoLon = -121.8450071;
+
+    var url = 'https://scene-alert.com/inc/report.php?' + 
+      'lat=' + demoLat.toString() + '&lon=' + demoLon.toString()
+      + '&title=' + _title + '&type=' + 1.toString() + '&reporter=' + globals.loggedUserNam
+      + '&details=' + _description;
+    http.Response response = await http.get(url);
+    var data = jsonDecode(response.body);
+
+    Navigator.pop(context, true);
+  }
+
+  Future selectLocation( context ) async {
+    Navigator.push(context, MaterialPageRoute(builder: (context){
+      return LocationSelect(locationData: locationData);
+    }));
+
+    print( "Location Pressed" );
+    print( locationData[0].toString() + " " + locationData[1].toString() );
+  }
+
+  Future selectPhoto( context ) async {
+    print( globals.tmpLat.toString() + " " + globals.tmpLon.toString() );
+    print( "Photo Pressed" );
   }
 }

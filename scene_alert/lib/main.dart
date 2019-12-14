@@ -1,26 +1,25 @@
+import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
-//import 'package:android_intent/android_intent.dart';
 import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'dart:convert';
+import 'package:provider/provider.dart';
 
+import 'package:scene_alert/globals.dart' as globals;
 import 'package:scene_alert/landing.dart';
 import 'package:scene_alert/login.dart';
-import 'package:scene_alert/globals.dart' as globals;
 import 'package:scene_alert/theme.dart';
 import 'package:scene_alert/theme.dart' as themes;
 
 bool validCreds = false;
 
 void main() async {
-  validCreds = await rememberValidate();
+   validCreds = await rememberValidate();
   final pos = await getLocation();
 
-  globals.lat = pos.latitude;
-  globals.lon = pos.longitude;
+  //globals.lat = pos.latitude;
+  //globals.lon = pos.longitude;
 
   runApp(MyApp());
 }
@@ -52,7 +51,6 @@ class MyAppWithTheme extends StatelessWidget {
   @override
   Widget build( BuildContext context ) {
     final theme = Provider.of<ThemeChanger>(context);
-    //theme.setLightTheme();
     return MaterialApp(
       home: ( () { 
         return validCreds ? LandingPage() : Login();
@@ -70,12 +68,14 @@ Future getLocation() async {
     Restricted 3
     Unknown 4
   */
-  Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
-  GeolocationStatus geolocationStatus = await geolocator.checkGeolocationPermissionStatus();
+  //Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
+  //GeolocationStatus geolocationStatus = await geolocator.checkGeolocationPermissionStatus();
+  GeolocationStatus geolocationStatus = await Geolocator().checkGeolocationPermissionStatus();
 
   print( "Checking Location------------------------------------------");
   print( geolocationStatus.value );
-  Position position = await geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  //Position position = await geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   /*
   Position position = await Geolocator().getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
   if( !(position ?? false) ) {
@@ -114,6 +114,8 @@ Future rememberValidate() async {
   var data = jsonDecode(response.body);
 
   if( data[0] == 1 ) {
+    globals.loggedUserId = data[2];
+    globals.loggedUserNam = data[3];
     return true;
   }
   else if( data[0] == -1 ) {

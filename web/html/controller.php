@@ -1,6 +1,4 @@
 <?php
-  require_once('inc/database.php');
-  if (session_status() == PHP_SESSION_NONE) {session_start();}
 ?>
     <div id="call-control">
     
@@ -10,14 +8,14 @@
       <div id="call-search">
         <table>
           <tr>
-            <th colspan="2">Search for Address</th>
+            <th colspan="2">Search for Address<br>(Not Implemented)</th>
           </tr>
           <tr>
             <td width="70%">
               <input type="text" id="sr-addr" name="sr-addr" placeholder="123 Easy Street">
             </td>
             <td width="30%">
-              <button onclick="SearchAddress()">Search</button>
+              <button onclick="SearchAddress()" disabled>Search</button>
             </td>
           </th>
         </table>
