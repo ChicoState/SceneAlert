@@ -58,7 +58,18 @@ class SettingsState extends State<Settings> {
                       });
                       storeMode();
                     },
-                  )
+                  ),
+                  MaterialButton(
+                    child: Text("Logout"),
+                    elevation: 5,
+                    minWidth: 200,
+                    color: Color.fromARGB( 255, 49, 182, 235 ),
+                    onPressed: () {
+                      deleteVal();
+                      print( "Logout:" );
+                      print( globals.radius );
+                    },
+                  ),
                 ],
               )
           )
@@ -68,5 +79,9 @@ class SettingsState extends State<Settings> {
 
   Future storeMode() async {
     await storage.write(key: "darkMode", value: globals.darkMode.toString() );
+  }
+
+  Future deleteVal() async {
+    await storage.deleteAll();
   }
 }

@@ -1,6 +1,16 @@
+import 'dart:async';
+import 'dart:ui';
+
+import 'package:mockito/mockito.dart';
+
+import 'package:flutter/services.dart';
+import 'dart:typed_data';
 import 'dart:convert';
+import 'dart:io';
+import 'package:glob/glob.dart';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/material.dart';
 import 'package:scene_alert/main.dart';
 import 'package:scene_alert/globals.dart' as globals;
 import 'package:scene_alert/history.dart';
@@ -12,39 +22,42 @@ import 'package:scene_alert/markerDetail.dart';
 import 'package:scene_alert/register.dart';
 import 'package:scene_alert/report.dart';
 import 'package:scene_alert/settings.dart';
+import 'package:scene_alert/sceneAlertIcons.dart';
 
 void main() {
-  testWidgets('Login screen should appear', (tester) async {
-    await tester.pumpWidget(new MyApp());
-    expect(find.text('Login'), findsOneWidget);
-  });
-
-  testWidgets('Testing Login', (tester) async {
-    await tester.pumpWidget(Login());
-    expect(find.text('Email'), findsOneWidget);
-    expect(find.text('Password'), findsOneWidget);
-    expect(find.text('Remember Me'), findsOneWidget);
-    expect(find.text('Dark Mode'), findsNothing);
-    expect(find.text('Register'), findsOneWidget);
-  });
 
   testWidgets('Login screen should appear', (tester) async {
     await tester.pumpWidget(new MyApp());
     expect(find.text('Login'), findsOneWidget);
   });
+
+  testWidgets('Landing Page appears', (tester) async {
+    await tester.pumpWidget(new LandingPage());
+    expect(find.text('Scene Alert'), findsOneWidget);
+  });
+
+  testWidgets('Register Page appears', (tester) async {
+    await tester.pumpWidget(new Register());
+    expect(find.text('Submit'), findsOneWidget);
+  });
+
+  test('Icon Loading', () async {
+    expect( SceneAlert.firemarker, IconData(0xe800, fontFamily: 'SceneAlert') );
+  });
+
   test('Broken Comment Get', () async {
     globals.testing = true;
     commentClass state = new commentClass();
     List<myComment> coms = await state.getComments(1);
     expect(coms.length, 0);
   });
+
   test('Working Comment Get', () async {
     globals.testing = true;
     commentClass state = new commentClass();
     List<myComment> coms = await state.getComments(110047);
-    int test = 0;
-    //  print(coms);
-    if (coms.length >= 0) {
+    int test =0;
+    if(coms.length >= 0){
       test = 1;
     }
     expect(test, 1);
@@ -53,7 +66,7 @@ void main() {
   test('Broken Make Comment Bad User', () async {
     globals.testing = true;
     commentClass state = new commentClass();
-    String coms = await state.addComment(0, -1, 0, 0);
+    String coms = await state.addComment(0,-1,0,0);
     expect(coms, "Error:NotLogged");
   });
 
@@ -61,7 +74,7 @@ void main() {
     globals.testing = true;
     commentClass state = new commentClass();
     String t;
-    String coms = await state.addComment(0, 4, 0, t);
+    String coms = await state.addComment(0,4,0,t);
     expect(coms, "Error:NoText");
   });
 
@@ -69,7 +82,8 @@ void main() {
     globals.testing = true;
     commentClass state = new commentClass();
     String t = "hi";
-    String coms = await state.addComment(0, 4, "testerUser", t);
+    String coms = await state.addComment(0,4,"testerUser",t);
     expect(coms, "Success");
   });
+
 }
