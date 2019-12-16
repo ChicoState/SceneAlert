@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scene_alert/main.dart';
 import 'package:scene_alert/globals.dart' as globals;
@@ -16,4 +18,51 @@ void main() {
     await tester.pumpWidget(new MyApp());
     expect(find.text('Login'), findsOneWidget);
   });
+
+  test('Broken Comment Get', () async {
+  globals.testing = true;
+   commentClass state = new commentClass();
+   List<myComment> coms = await state.getComments(1);
+   expect(coms.length, 0);
+
+  });
+  test('Working Comment Get', () async {
+  globals.testing = true;
+   commentClass state = new commentClass();
+   List<myComment> coms = await state.getComments(110047);
+   int test =0;
+  //  print(coms);
+   if(coms.length >= 0){
+     test = 1;
+   }
+   expect(test, 1);
+
+  });
+
+  test('Broken Make Comment Bad User', () async {
+      globals.testing = true;
+   commentClass state = new commentClass();
+   String coms = await state.addComment(0,-1,0,0);
+   expect(coms, "Error:NotLogged");
+
+  });
+
+  test('Broken Make Comment No Text', () async {
+    globals.testing = true;
+   commentClass state = new commentClass();
+   String t;
+   String coms = await state.addComment(0,4,0,t);
+   expect(coms, "Error:NoText");
+
+  });
+
+    test('Working Make Comment', () async {
+    globals.testing = true;
+   commentClass state = new commentClass();
+   String t = "hi";
+   String coms = await state.addComment(0,4,"testerUser",t);
+   expect(coms, "Success");
+
+  });
+   
 }
