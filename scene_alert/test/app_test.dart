@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:mockito/mockito.dart';
 
@@ -21,6 +22,7 @@ import 'package:scene_alert/markerDetail.dart';
 import 'package:scene_alert/register.dart';
 import 'package:scene_alert/report.dart';
 import 'package:scene_alert/settings.dart';
+import 'package:scene_alert/sceneAlertIcons.dart';
 
 void main() {
 
@@ -39,14 +41,9 @@ void main() {
     expect(find.text('Submit'), findsOneWidget);
   });
 
-  testWidgets('Report Page appears', (tester) async {
-    await tester.pumpWidget(new Report( type: ""));
-    expect(find.text('Select Location'), findsOneWidget);
-  });
+  test('Icon Loading', () async {
 
-  testWidgets('Location Page appears', (tester) async {
-    await tester.pumpWidget(new LocationSelect(locationData: null));
-    expect(find.byKey( Key("Submit Location") ), findsOneWidget);
+    expect( SceneAlert.firemarker, IconData(0xe800, fontFamily: 'SceneAlert') );
   });
 
   test('Broken Comment Get', () async {

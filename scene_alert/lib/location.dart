@@ -75,16 +75,17 @@ class LocationSelectState extends State<LocationSelect> {
               right: 10,
               child: 
                 FloatingActionButton(
-                    backgroundColor: Theme.of(context).accentColor,
-                    child: new Icon(Icons.check, color: Theme.of(context).primaryColor),
-                    onPressed: () {
-                      setState(() {
-                        globals.tmpLat = globals.lat;
-                        globals.tmpLon = globals.lon;
-                      });
-                      Navigator.pop(context, true);
-                    },
-                  ),
+                  key: Key("Submit Location"),
+                  backgroundColor: Theme.of(context).accentColor,
+                  child: new Icon(Icons.check, color: Theme.of(context).primaryColor),
+                  onPressed: () {
+                    setState(() {
+                      globals.tmpLat = globals.lat;
+                      globals.tmpLon = globals.lon;
+                    });
+                    Navigator.pop(context, true);
+                  },
+                ),
             ),
           ],
         )
