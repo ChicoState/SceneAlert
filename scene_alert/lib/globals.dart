@@ -6,3 +6,4 @@ int radius = 3;
 bool darkMode = false;
 String loggedUserNam = "Error";
 String loggedUserId = "-1";
+bool testing = false;
