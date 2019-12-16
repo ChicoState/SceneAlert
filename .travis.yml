@@ -16,7 +16,7 @@ before_script:
   - gem install coveralls-lcov
   - cd ./scene_alert
 script:
-  - ../flutter/bin/flutter test
+  - ../flutter/bin/flutter test --coverage test/*
 after_success:
   - coveralls-lcov coverage/lcov.info
 cache:
