@@ -176,8 +176,8 @@
             <td colspan="2"><textarea id="info-newnote"></textarea></td>
           </tr>
           <tr>
-            <td><button onclick="CloseReport()" disabled>Close Report</button></td>
-            <td><button id="info-update" onclick="UpdateReport()">Submit Update</button></td>
+            <td><button id="info-closer" onclick="CloseReport()">Close Report</button></td>
+            <td><button id="info-update" onclick="UpdateReport()" disabled>Submit Update</button></td>
           </tr>
         </table>
       </div>

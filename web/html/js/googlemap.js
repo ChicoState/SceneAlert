@@ -164,6 +164,7 @@
             $("#info-vcount").html(this.inc.iVotes);
             $("#info-title").html(this.inc.iName);
             $("#info-update").attr('onclick', 'UpdateReport('+ this.inc.db +')');
+            $("#info-closer").attr('onclick', 'CloseReport('+ this.inc.db +')');
             
             //var markTime = setInterval(UpdateMarkerTime, 1000, this);
             
@@ -171,6 +172,25 @@
           marks.push([result[0], marker]); // Add to marker tracker by idIncident
           listn.push([result[0], listen]); // Corresponding listener
         
+        }
+      }
+      
+      function CloseReport(dbNumber) {
+        if (dbNumber) {
+          console.log('dbNumber ['+dbNumber+']!');
+          $.ajax({
+            url: "../php/close_report.php",
+            type: 'POST',
+            data: {dbid:dbNumber},
+            success: function(result) {
+              
+            },
+            error: function(result) {
+              console.log("Failed. ["+result.responseText+"]");
+            }
+          });
+        } else {
+          console.log('No dbNumber Given!');
         }
       }
       

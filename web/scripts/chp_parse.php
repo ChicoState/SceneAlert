@@ -93,18 +93,16 @@
 
   // Variable init
   $read_new = "files/chp_incidents.xml";
-  $read_old = "files/chp_incidents_old.xml";
   
   /*   Organization:
     $newIncidents = {
        [0] = (Log ID)
        [1] = (LogType/The type of Call),
        [2] = (Latitude),
-       [3] = (Longitude)
+       [3] = (Longitude),
+       [4] = (Details)
     }
   */
-  
-
   // Read latest CHP XML. If not found, terminate
   $newIncidents = array();
   $newFile = fopen($read_new, "r") or die("Failed to read chp_incidents.xml.\n");
@@ -136,12 +134,24 @@
       preg_match_all('/"([^"]+)"/', $line, $retString);
       $latlong = str_replace('"', '', $retString[0][0]);
       
-      $newIncidents[] = array($log, $type, $loc, $latlong);
+      // Next line, until "</LogDetails>" is is the...well, details.
+      $line    = fgets($newFile);
+      $stopper = "</LogDetails>";
+      $deets   = "";
+      while (strpos($line, $stopper) == False) {
+        if (strpos($line, "<IncidentDetail>")) {
+          preg_match_all('/<IncidentDetail>\"(.*?)\"<\/IncidentDetail>/s', $line, $matches);
+          $deets = $deets . implode(' ', $matches[1]) . "\r\n";
+        }
+        $line = fgets($newFile);
+      }
+      
+      if ($deets == "") { $deets = "Reported by CHP Dispatch\r\n"; }
+      $newIncidents[] = array($log, $type, $loc, $latlong, $deets);
     }
   }
+  echo "Received ".count($newIncidents)." Incidents.";
   foreach($newIncidents as $key => $value) {
-    echo $key.' -> 0:'.$value[0].' 1:'.$value[1].' 2:'.$value[2].' 3:'.$value[3];
-    echo "\n";
     
     $qCheck = "SELECT COUNT(*) FROM incidents WHERE chp = :log";
     $qChk = $db->prepare($qCheck);
@@ -164,13 +174,10 @@
       $lat = substr($value[3], 0, $colon);
       
       // Longitude in California is West, so it needs to be negative
-      echo "Converting LONGLAT integers to valid Coordinates of Degrees...\n";
       $long = "-" . substr($value[3], $colon + 1, strlen($value[3]));
       $latitude  = substr_replace($lat,  '.', 2, 0);
       $longitude = substr_replace($long, '.', 4, 0);
         
-      echo 'LAT('.$latitude.')'."\n";
-      echo 'LONG('.$longitude.')'."\n";
       $qGrid = "SELECT COUNT(*) AS count,idLocation AS id FROM locations WHERE longitude = :long AND latitude = :lat";
       $gCheck = $db->prepare($qGrid);
       $gCheck->bindParam(':lat', $latitude);
@@ -181,7 +188,6 @@
       $locExist = $fetcher['count'];
       $idLocn = $fetcher['id'];
       if ($locExist < 1) {
-        echo "idLocation for (".$longitude.":".$latitude.") not found.\n";
         echo "Generating a new idLocation for coordinates.\n";
         
         // DEBUG - Must be changed later to a stored procedure that
@@ -197,18 +203,14 @@
           echo "Successfully added idLocation #".$idLocn."\n";
         } else {
           echo "Failed to add coordinates into MySQL.\n";
-          echo "The incident failed to be created due to errors.\n";
         }
-      } else {
-        echo "Grid coordinates exist. Using existing SQL data.\n";
       }
       if ($idLocn) {
-        echo "Adding CHP Incident to SceneAlert Database...\n";
         
         $qInc = "SELECT InsertCHP(:loc, :deets, :ctype, :titlename, :oride, :num)";
         $newInc = $db->prepare($qInc);
         $newInc->bindParam(':loc', $idLocn);
-        $newInc->bindValue(':deets', 'Reported by CA Highway Patrol');
+        $newInc->bindValue(':deets', $value[4]);
         $newInc->bindValue(':ctype',     DetermineService($value[1]));
         $newInc->bindParam(':titlename', GetIncidentTitle($value[1]));
         $newInc->bindValue(':oride', 1);
