@@ -15,8 +15,8 @@ import 'package:scene_alert/theme.dart' as themes;
 bool validCreds = false;
 
 void main() async {
-   validCreds = await rememberValidate();
-  final pos = await getLocation();
+  validCreds = await rememberValidate();
+  //final pos = await getLocation();
 
   //globals.lat = pos.latitude;
   //globals.lon = pos.longitude;
