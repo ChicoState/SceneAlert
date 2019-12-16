@@ -50,11 +50,7 @@ void main() {
     await tester.pumpWidget(new MyApp());
     expect(find.text('Login'), findsOneWidget);
   });
-//borken?
-  // testWidgets('Landing Page appears', (tester) async {
-  //   await tester.pumpWidget(new LandingPage());
-  //   expect(find.text('Scene Alert'), findsOneWidget);
-  // });
+
   testWidgets('All Login screen Text Test', (tester) async {
     await tester.pumpWidget(new MyApp());
     expect(find.text('Login'), findsOneWidget);
