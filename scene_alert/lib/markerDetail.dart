@@ -14,7 +14,6 @@ class MarkerDetail extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    //print(myjson);
     return MarkerState(myjson);
   }
 }

@@ -23,17 +23,36 @@ import 'package:scene_alert/register.dart';
 import 'package:scene_alert/report.dart';
 import 'package:scene_alert/settings.dart';
 import 'package:scene_alert/sceneAlertIcons.dart';
+import 'package:scene_alert/logout.dart';
+import 'package:scene_alert/theme.dart';
+import 'package:scene_alert/secondPage.dart';
 
 void main() {
+
+  Widget makeTestableWidget({Widget child}) {
+    return MaterialApp(
+      home: child,
+    );
+  }
+
+  Widget ThemeWidget({ThemeData theme}) {
+    return MaterialApp(
+      home: Container(),
+      theme: theme,
+    );
+  }
 
   testWidgets('Login screen should appear', (tester) async {
     await tester.pumpWidget(new MyApp());
     expect(find.text('Login'), findsOneWidget);
   });
 
-  testWidgets('Landing Page appears', (tester) async {
-    await tester.pumpWidget(new LandingPage());
-    expect(find.text('Scene Alert'), findsOneWidget);
+  testWidgets('All Login screen Text Test', (tester) async {
+    await tester.pumpWidget(new MyApp());
+    expect(find.text('Login'), findsOneWidget);
+    expect(find.text('Email'), findsOneWidget);
+    expect(find.text('Password'), findsOneWidget);
+    expect(find.text('Register'), findsOneWidget);
   });
 
   testWidgets('Register Page appears', (tester) async {
@@ -85,5 +104,35 @@ void main() {
     String coms = await state.addComment(0,4,"testerUser",t);
     expect(coms, "Success");
   });
+
+
+  testWidgets('MarkerDetailWidgetTest', (tester) async {
+    var t = jsonEncode("[test, 1, tt, -121.8450071, 39.730125, 110352]");
+    await tester.pumpWidget(makeTestableWidget( child: new MarkerDetail(myjson: t)));
+    expect(find.text('Description: '), findsOneWidget);
+  });
+
+  testWidgets('Login screen should appear', (WidgetTester tester) async {
+    await tester.pumpWidget(makeTestableWidget( child: new Logout()));
+    expect(find.text('Logout'), findsOneWidget);
+    
+  });
+
+
+      testWidgets('Dark Theme', (WidgetTester tester) async {
+    await tester.pumpWidget(ThemeWidget( theme: darkTheme));
+  });
+      testWidgets('LightTHeme', (WidgetTester tester) async {
+    await tester.pumpWidget(ThemeWidget( theme: lightTheme));
+  });
+
+        testWidgets('Second Page', (WidgetTester tester) async {
+    await tester.pumpWidget(makeTestableWidget( child: new SecondPage(payload: "hi!",)));
+    expect(find.text('Second Page - Payload:'), findsOneWidget); 
+  });
+
+
+
+
 
 }

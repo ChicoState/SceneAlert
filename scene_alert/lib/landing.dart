@@ -28,7 +28,7 @@ class LandingPageState extends State<LandingPage> {
     return MaterialApp(
       title: 'Scene Alert',
 
-      //theme: Provider.of<ThemeChanger>(context).getTheme(),
+      theme: Provider.of<ThemeChanger>(context).getTheme(),
 
       home: Scaffold(
         appBar: AppBar(
