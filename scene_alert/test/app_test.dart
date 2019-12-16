@@ -35,6 +35,8 @@ void main() {
     );
   }
 
+
+
   testWidgets('Login screen should appear', (tester) async {
     await tester.pumpWidget(new MyApp());
     expect(find.text('Login'), findsOneWidget);
@@ -82,28 +84,34 @@ void main() {
    String t = "hi";
    String coms = await state.addComment(0,4,"testerUser",t);
    expect(coms, "Success");
-
-  });
-
+    });
   testWidgets('MarkerDetailWidgetTest', (tester) async {
     var t = jsonEncode("[test, 1, tt, -121.8450071, 39.730125, 110352]");
     await tester.pumpWidget(makeTestableWidget( child: new MarkerDetail(myjson: t)));
     expect(find.text('Description: '), findsOneWidget);
   });
 
-  testWidgets('Logout Test', (WidgetTester tester) async {
+  testWidgets('Login screen should appear', (WidgetTester tester) async {
     await tester.pumpWidget(makeTestableWidget( child: new Logout()));
     expect(find.text('Logout'), findsOneWidget);
     
   });
-      testWidgets('Dark Theme Test', (WidgetTester tester) async {
-    await tester.pumpWidget(ThemeWidget( theme: darkTheme));
+
+    testWidgets('Login screen should appear', (WidgetTester tester) async {
+    await tester.pumpWidget(makeTestableWidget( child: new Logout()));
+    expect(find.text('Logout'), findsOneWidget);
+    
   });
-      testWidgets('Light Theme Test', (WidgetTester tester) async {
+
+      testWidgets('Login screen should appear', (WidgetTester tester) async {
+    await tester.pumpWidget(ThemeWidget( theme: darkTheme));
+    //expect(find.text(''), findsOneWidget); 
+  });
+      testWidgets('Login screen should appear', (WidgetTester tester) async {
     await tester.pumpWidget(ThemeWidget( theme: lightTheme));
   });
 
-        testWidgets('Second Page Widget', (WidgetTester tester) async {
+        testWidgets('Login screen should appear', (WidgetTester tester) async {
     await tester.pumpWidget(makeTestableWidget( child: new SecondPage(payload: "hi!",)));
     expect(find.text('Second Page - Payload:'), findsOneWidget); 
   });

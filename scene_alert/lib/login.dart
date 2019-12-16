@@ -48,6 +48,7 @@ class LoginState extends State<Login> {
                             ),
                             SizedBox(height: 50),
                             TextFormField(
+                              key: Key('Email'),
                               focusNode: fnEmail,
                               textInputAction: TextInputAction.next,
                               onFieldSubmitted: (term) {
@@ -68,6 +69,7 @@ class LoginState extends State<Login> {
                               }
                             ),
                             TextFormField(
+                              key: Key('Password'),
                               focusNode: fnPassword,
                               decoration: InputDecoration(
                                 helperText: "Password",
@@ -98,6 +100,7 @@ class LoginState extends State<Login> {
                             SizedBox(height: 20),
                             Builder( builder: (context) =>
                               MaterialButton(
+                                key: Key('Login'),
                                 onPressed: () { 
                                   validate( context );
                                 },

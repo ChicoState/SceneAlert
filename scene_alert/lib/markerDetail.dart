@@ -187,6 +187,7 @@ class commentClass{
     var url = 'https://scene-alert.com/inc/getComment.php?incident=' + curId.toString();
     http.Response response = await http.get(url);
     var data;
+  //print(curId);
      try { 
       data = jsonDecode(response.body);
     } on Exception catch (_) {
