@@ -13,8 +13,9 @@ addons:
 before_script:
   - git clone https://github.com/flutter/flutter.git -b beta
   - ./flutter/bin/flutter doctor
+  - cd ./scene_alert
 script:
-  - ./flutter/bin/flutter test scene_alert/tests/
+  - ./flutter/bin/flutter test
 cache:
   directories:
     - $HOME/.pub-cache
