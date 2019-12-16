@@ -28,6 +28,7 @@ class MarkerDetail extends StatefulWidget {
 
 class MarkerState extends State<MarkerDetail> {
   String appBarTitle;
+  commentClass tt;
   Marker marker;
   var myjson;
   MarkerState(this.myjson);
@@ -146,7 +147,7 @@ class MarkerState extends State<MarkerDetail> {
 Widget commentWidget() {
 
     return    FutureBuilder(
-              future: getComments(),
+              future: tt.getComments(myjson[5]),
               builder: (BuildContext context, AsyncSnapshot snapshot ) {
                 if(snapshot.data == null){
                    return Center( child: Text("Loading"));
@@ -160,7 +161,7 @@ Widget commentWidget() {
                   shrinkWrap: true,
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
-                              leading:    Icon(Icons.account_circle,size: 30.0,),
+                              leading:   Icon(Icons.account_circle,size: 30.0,),
                               title: Text(snapshot.data[index].text + ""),
                               subtitle: Text(snapshot.data[index].user + ""),
                               trailing: Icon(Icons.more_vert),
@@ -196,25 +197,28 @@ Widget commentWidget() {
     
   }
 
-  Future<List<myComment>> getComments() async {
-    var url = 'https://scene-alert.com/inc/getComment.php?incident=' + myjson[5];
+}
+class commentClass {
+  Future<List<myComment>> getComments(var json) async {
+    var url = 'https://scene-alert.com/inc/getComment.php?incident=' + json;
     http.Response response = await http.get(url);
-
+    print(json.toString());
     var data = jsonDecode(response.body);
     //for some reason jsonDecode was not working when trying to access the fields in the comments array so I had to use regex
     //not ideal but works for the show case 
+    print("hi");
      if( data[0] == 1 ) {
        var myJ = jsonDecode(data[1]);
+       print(myJ);
       List<myComment> coms = [];
       for(var u in myJ){
-        RegExp exp = new RegExp(r"\[([0-9]+), ([a-z0-9A-Z]+), ([a-z0-9A-Z\]\.\+\?\! \-]+)]");
-        var match = exp.firstMatch(u.toString());
-        myComment c = myComment(0 , match.group(2) , match.group(3));
+        // print(u);
+        // print(u[0] + " " + u[1] + " " + u[2]);
+        // RegExp exp = new RegExp(r"\[([0-9]+), ([a-z0-9A-Z]+), ([a-z0-9A-Z\]\.\+\?\! \-]+)]");
+        // var match = exp.firstMatch(u.toString());
+        myComment c = myComment(int.parse(u[0]) , u[1].toString() , u[2].toString());
         coms.add(c);
       }
-      
-    
-      
       return coms;
     }
     else {
@@ -222,5 +226,4 @@ Widget commentWidget() {
       return new List<myComment>(0);
     }
   }
-
 }
