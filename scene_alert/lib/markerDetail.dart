@@ -29,17 +29,18 @@ class MarkerDetail extends StatefulWidget {
 class MarkerState extends State<MarkerDetail> {
   String appBarTitle;
   Marker marker;
+  commentClass tt;
   var myjson;
   MarkerState(this.myjson);
   final userCommentString = TextEditingController();
 
   //   Future<List<myComment>> commentList;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   commentList = getComments();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    tt = new commentClass();
+  }
   
 
 
@@ -110,8 +111,9 @@ class MarkerState extends State<MarkerDetail> {
                             textScaleFactor: 1.5,
                           ),
                           onPressed: () {
-
-                            addComment();
+                            // print(userCommentString.text.toString());
+                           tt.addComment(myjson[5], globals.loggedUserId, globals.loggedUserNam, userCommentString.text.toString()) ;
+                             userCommentString.clear();
                             setState(() {});
                           },
                         ),
@@ -146,7 +148,7 @@ class MarkerState extends State<MarkerDetail> {
 Widget commentWidget() {
 
     return    FutureBuilder(
-              future: getComments(),
+              future: tt.getComments(myjson[5]),
               builder: (BuildContext context, AsyncSnapshot snapshot ) {
                 if(snapshot.data == null){
                    return Center( child: Text("Loading"));
@@ -178,43 +180,34 @@ Widget commentWidget() {
     // Moves back the original page
     Navigator.pop(context, true);
   }
+}
 
-  void addComment() async {
-    var url;
-          
-      if(globals.loggedUserId == -1){
-        return;
-      }
-    
-    // timeRange = timeRange.replaceAll(new RegExp(r"\s|s"), "").toLowerCase();
-    if(userCommentString.text != null){
-     url = 'https://scene-alert.com/inc/addComment.php?incident=' + myjson[5] + '&parent=null'  + '&userid='+ globals.loggedUserId.toString()  + '&username=' + globals.loggedUserNam  + '&comment=' + userCommentString.text;
-      http.Response response = await http.post(url);
-      userCommentString.clear();
-    }
-
-    
-  }
-
-  Future<List<myComment>> getComments() async {
-    var url = 'https://scene-alert.com/inc/getComment.php?incident=' + myjson[5];
+class commentClass{
+    Future<List<myComment>> getComments(var curId) async {
+    var url = 'https://scene-alert.com/inc/getComment.php?incident=' + curId.toString();
     http.Response response = await http.get(url);
-
-    var data = jsonDecode(response.body);
+    var data;
+  //print(curId);
+     try { 
+      data = jsonDecode(response.body);
+    } on Exception catch (_) {
+        return new List<myComment>(0);
+    }
     //for some reason jsonDecode was not working when trying to access the fields in the comments array so I had to use regex
     //not ideal but works for the show case 
+
      if( data[0] == 1 ) {
        var myJ = jsonDecode(data[1]);
       List<myComment> coms = [];
       for(var u in myJ){
-        RegExp exp = new RegExp(r"\[([0-9]+), ([a-z0-9A-Z]+), ([a-z0-9A-Z\]\.\+\?\! \-]+)]");
-        var match = exp.firstMatch(u.toString());
-        myComment c = myComment(0 , match.group(2) , match.group(3));
+        // print(u);
+        // print(u[0] + " " + u[1] + " " + u[2]);
+        // RegExp exp = new RegExp(r"\[([0-9]+), ([a-z0-9A-Z]+), ([a-z0-9A-Z\]\.\+\?\! \-]+)]");
+        // var match = exp.firstMatch(u.toString());
+        
+        myComment c = myComment(int.parse(u[0]) , u[1].toString() , u[2].toString());
         coms.add(c);
       }
-      
-    
-      
       return coms;
     }
     else {
@@ -223,4 +216,21 @@ Widget commentWidget() {
     }
   }
 
+    Future<String> addComment(var incidentId, var userId, var userNam, var userText) async {
+    var url;
+          
+      if(userId == -1){
+        return "Error:NotLogged";
+      }
+    //  userCommentString.clear();
+    //userCommentString.text
+    // timeRange = timeRange.replaceAll(new RegExp(r"\s|s"), "").toLowerCase();
+    if(userText != null){
+     url = 'https://scene-alert.com/inc/addComment.php?incident=' + incidentId.toString() + '&parent=null'  + '&userid='+ userId.toString()  + '&username=' + userNam.toString() + '&comment=' + userText.toString();
+      http.Response response = await http.post(url);
+      return "Success";
+    }
+    return "Error:NoText";
+    
+  }
 }
