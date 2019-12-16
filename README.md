@@ -1,6 +1,6 @@
 # SceneAlert
-[![Build Status](https://travis-ci.org/mrteddi/SceneAlert.svg?branch=master)](https://travis-ci.org/mrteddi/SceneAlert)
-[![Coverage Status](https://coveralls.io/repos/github/mrteddi/SceneAlert/badge.svg?branch=master)](https://coveralls.io/github/mrteddi/SceneAlert?branch=master)
+[![Build Status](https://travis-ci.org/mrteddi/SceneAlert.svg?branch=master&service=github)](https://travis-ci.org/mrteddi/SceneAlert)
+[![Coverage Status](https://coveralls.io/repos/github/mrteddi/SceneAlert/badge.svg?branch=master&service=github)](https://coveralls.io/github/mrteddi/SceneAlert?branch=master)
 
 Application for reporting crime, fires, and other events that affects you and your neighbors.
 
