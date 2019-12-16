@@ -41,8 +41,8 @@ class CrimeMapState extends State<CrimeMap> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    timer = Timer.periodic( Duration(seconds: 15), (Timer t) => getCHP( globals.radius ) );
-    getCHP( 3 );
+    //timer = Timer.periodic( Duration(seconds: 15), (Timer t) => getCHP( globals.radius ) );
+    //getCHP( 3 );
 
     _aniController = new AnimationController(
       vsync: this,
