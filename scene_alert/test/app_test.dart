@@ -16,4 +16,17 @@ void main() {
     await tester.pumpWidget(new MyApp());
     expect(find.text('Login'), findsOneWidget);
   });
+  testWidgets('Testing Login', (tester) async {
+    await tester.pumpWidget(Login());
+    expect(find.text('Email'), findsOneWidget);
+    expect(find.text('Password'), findsOneWidget);
+    expect(find.text('Remember Me'), findsOneWidget);
+    expect(find.text('Dark Mode'), findsNothing);
+    expect(find.text('Register'), findsOneWidget);
+  });
+ 
+   testWidgets('Login screen should appear', (tester) async {
+    await tester.pumpWidget(new MyApp());
+    expect(find.text('Login'), findsOneWidget);
+  });
 }
