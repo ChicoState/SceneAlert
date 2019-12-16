@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `scalert` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `scalert`;
 -- MySQL dump 10.13  Distrib 8.0.16, for Win64 (x86_64)
 --
 -- Host: rhapidfyre.com    Database: scalert
@@ -554,4 +556,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-16 11:29:10
+-- Dump completed on 2019-12-16 13:06:16
