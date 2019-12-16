@@ -42,7 +42,6 @@ void main() {
   });
 
   test('Icon Loading', () async {
-
     expect( SceneAlert.firemarker, IconData(0xe800, fontFamily: 'SceneAlert') );
   });
 
