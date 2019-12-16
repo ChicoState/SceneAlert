@@ -35,6 +35,13 @@ void main() {
     await tester.pumpWidget(new LandingPage());
     expect(find.text('Scene Alert'), findsOneWidget);
   });
+  testWidgets('All Login screen Text Test', (tester) async {
+    await tester.pumpWidget(new MyApp());
+    expect(find.text('Login'), findsOneWidget);
+    expect(find.text('Email'), findsOneWidget);
+    expect(find.text('Password'), findsOneWidget);
+    expect(find.text('Register'), findsOneWidget);
+  });
 
   testWidgets('Register Page appears', (tester) async {
     await tester.pumpWidget(new Register());
