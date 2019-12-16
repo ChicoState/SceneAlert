@@ -13,9 +13,12 @@ addons:
 before_script:
   - git clone https://github.com/flutter/flutter.git -b beta
   - ./flutter/bin/flutter doctor
+  - gem install coveralls-lcov
   - cd ./scene_alert
 script:
   - ../flutter/bin/flutter test
+after_success:
+  - coveralls-lcov coverage/lcov.info
 cache:
   directories:
     - $HOME/.pub-cache
