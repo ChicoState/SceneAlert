@@ -29,9 +29,6 @@ import 'package:scene_alert/secondPage.dart';
 
 void main() {
 
-
-
-
    Widget makeTestableWidget({Widget child}) {
 
       return MaterialApp(
@@ -46,6 +43,7 @@ void main() {
         theme: theme,
     );
      }
+
   testWidgets('Login screen should appear', (tester) async {
     await tester.pumpWidget(new MyApp());
     expect(find.text('Login'), findsOneWidget);
